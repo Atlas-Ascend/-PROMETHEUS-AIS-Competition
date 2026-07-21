@@ -3,166 +3,93 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#05070a">
-  <meta name="description" content="PROMETHEUS Operator Console, a deterministic Command-to-Proof competition demonstration.">
-  <title>PROMETHEUS · Operator Console</title>
-  <link rel="stylesheet" href="assets/operator-console.css">
-  <link rel="stylesheet" href="assets/case-study.css">
+  <meta name="theme-color" content="#04070b">
+  <meta name="description" content="PROMETHEUS elite three-minute Command-to-Proof demonstration.">
+  <title>PROMETHEUS · Elite Command-to-Proof Demo</title>
+  <link rel="stylesheet" href="assets/elite-demo.css">
 </head>
 <body>
-  <div class="ops-shell">
-    <aside class="ops-rail" aria-label="PROMETHEUS operator navigation">
-      <a class="brand" href="#overview"><span class="brand-mark">P</span><span><b>PROMETHEUS</b><small>V-1.1.1 · OPERATOR CONSOLE</small></span></a>
-      <div class="rail-status"><div><small>NODE</small><b>PUBLIC PROOF</b></div><div><small>MODE</small><b>DETERMINISTIC</b></div></div>
-      <nav class="nav" id="system-nav"></nav>
-      <div class="rail-foot"><b>BUILD TRUTH VERIFIED</b><small>5/5 TESTS · 8/8 ARTIFACTS · HASH SEALED</small></div>
-    </aside>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><b>PROMETHEUS V-1.1.1</b><small>ELITE THREE-MINUTE COMMAND-TO-PROOF DEMONSTRATION</small></div>
+      <div class="metric"><small>MISSION</small><b>PROM-COMP-EDGE-001</b></div>
+      <div class="metric"><small>CLOCK</small><b id="clock">T+00:00</b></div>
+      <div class="metric"><small>RELEASE</small><b id="release">LOCKED</b></div>
+    </header>
 
-    <div class="ops-main">
-      <header class="mission-ribbon">
-        <div class="ribbon-title"><b>PROMETHEUS COMMAND-TO-PROOF</b><small>NASA-GRADE OPERATOR PRESENTATION · COMPETITION EDITION</small></div>
-        <div class="ribbon-metric"><small>MISSION</small><b>PROM-COMP-001</b></div>
-        <div class="ribbon-metric"><small>RUN</small><b id="ribbon-run">STAGED</b></div>
-        <div class="ribbon-metric"><small>CLOCK</small><b id="ribbon-clock">T+00:00</b></div>
-        <div class="ribbon-metric"><small>PROOF</small><b id="ribbon-proof">0%</b></div>
-        <div class="ribbon-metric good"><small>RELEASE</small><b id="ribbon-release">LOCKED</b></div>
-      </header>
+    <section class="hero">
+      <article class="panel intro">
+        <p class="eyebrow">SELF-PROVING AI ENGINEERING ORGANISM</p>
+        <h1>One impossible mission. Eight systems. Three minutes.</h1>
+        <p>PROMETHEUS receives a compound failure storm: conflicting requirements, malformed and poisoned input, duplicate execution, secret exposure, dependency loss, corrupted evidence, and rollback pressure. The existing system fabric must resolve the entire mission without replacing the architecture.</p>
+        <div class="actions">
+          <button class="btn primary" id="launch" type="button">IGNITE 3:00 DEMONSTRATION</button>
+          <button class="btn" id="replay" type="button" disabled>REPLAY</button>
+          <a class="btn" href="proofgrid/FINAL_RECEIPT.json">INSPECT RECEIPT</a>
+        </div>
+      </article>
+      <article class="panel core">
+        <div class="ring" id="ring"><span><small>BUILD TRUTH</small><b id="proof">0%</b><small id="core-state">MISSION READY</small></span></div>
+      </article>
+    </section>
 
-      <main>
-        <section class="section hero" id="overview">
-          <article class="panel hero-copy">
-            <p class="eyebrow">SELF-PROVING AI ENGINEERING ORGANISM</p>
-            <h1>Watch software move from command to evidence-backed release truth.</h1>
-            <p class="lede">PROMETHEUS admits a mission, generates candidate routes, reproduces a real failure, blocks unsupported promotion, changes runtime behavior, verifies the result, preserves the successful capability, and authorizes release only when the proof survives inspection.</p>
-            <div class="hero-actions">
-              <button class="btn primary" id="start-demo" type="button">IGNITE FULL MISSION</button>
-              <button class="btn secondary" id="hero-verified" type="button">LOAD VERIFIED OUTCOME</button>
-              <a class="btn" href="proofgrid/FINAL_RECEIPT.json">OPEN PROOF RECEIPT</a>
-            </div>
-          </article>
-          <article class="panel proof-orb-panel" aria-label="PROMETHEUS proof readiness core">
-            <div class="orb-metrics"><div><small>TESTS</small><b>5 / 5</b></div><div><small>ARTIFACTS</small><b>8 / 8</b></div><div><small>GENOME</small><b>REUSED</b></div><div><small>FAILURES</small><b>1 → 0</b></div></div>
-            <div class="proof-orb"><span><small>BUILD TRUTH</small><b id="readiness">100%</b><span>PROMOTION AUTHORIZED</span></span></div>
-          </article>
-        </section>
+    <section class="panel mission">
+      <div class="mission-head"><div><p class="eyebrow">EXISTING SYSTEM FABRIC</p><h2>Eight specialized systems execute one governed mission.</h2><p>No feature tour. No added organs. Every second advances the operation.</p></div><b id="packet">PKT-000 · READY</b></div>
+      <div class="pipeline" id="pipeline"></div>
+      <div class="edge-grid" id="edge-grid"></div>
+    </section>
 
-        <section class="section" id="cockpit">
-          <div class="section-head"><div><p class="eyebrow">MISSION OPERATIONS</p><h2>The entire proof chain, synchronized</h2><p>One state engine controls terminal events, code movement, packet transport, handoff acknowledgement, telemetry, agent visualizations, evidence, receipt state, and release authority.</p></div></div>
-          <article class="panel cockpit">
-            <div class="control-bar">
-              <div class="control-status"><span>STATE <b id="control-state">READY</b></span><span>ACTIVE <b id="control-agent">PROMETHEUS</b></span><span>PACKET <b id="control-packet">MISSION</b></span></div>
-              <div class="speed-control"><label for="speed-select">SPEED</label><select id="speed-select"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div>
-              <div class="control-row"><button class="btn primary" id="cockpit-run" type="button">RUN</button><button class="btn" id="cockpit-pause" type="button">PAUSE</button><button class="btn" id="cockpit-step" type="button">STEP</button><button class="btn danger" id="cockpit-reset" type="button">RESET</button><button class="btn secondary" id="cockpit-skip" type="button">VERIFIED STATE</button></div>
-            </div>
+    <section class="stage-grid">
+      <article class="panel stage">
+        <div class="stage-kicker" id="stage-kicker">AWAITING IGNITION</div>
+        <h2 id="stage-title">PROMETHEUS IS READY</h2>
+        <p id="stage-copy">The complete mission begins with one command and consumes the full three-minute demonstration window.</p>
+        <pre class="terminal" id="terminal">[READY] PROM-COMP-EDGE-001 staged
+[READY] eight-system handoff fabric online
+[READY] seven-edge-condition mission armed</pre>
+      </article>
+      <aside class="side">
+        <article class="panel telemetry">
+          <p class="eyebrow">LIVE TELEMETRY</p>
+          <div class="bars">
+            <div class="bar-row"><span>PROOF</span><div class="track"><div class="fill" id="bar-proof"></div></div><b id="v-proof">0%</b></div>
+            <div class="bar-row"><span>EVIDENCE</span><div class="track"><div class="fill" id="bar-evidence"></div></div><b id="v-evidence">0%</b></div>
+            <div class="bar-row"><span>CLAIMS</span><div class="track"><div class="fill" id="bar-claims"></div></div><b id="v-claims">0%</b></div>
+            <div class="bar-row"><span>READINESS</span><div class="track"><div class="fill" id="bar-readiness"></div></div><b id="v-readiness">0%</b></div>
+            <div class="bar-row"><span>LOAD</span><div class="track"><div class="fill" id="bar-load"></div></div><b id="v-load">0%</b></div>
+          </div>
+        </article>
+        <article class="panel evidence">
+          <p class="eyebrow">MISSION EVIDENCE</p>
+          <div class="evidence-list">
+            <div class="evidence-item"><span>Candidates evaluated</span><b id="ev-routes">0 / 3</b></div>
+            <div class="evidence-item"><span>Edge conditions</span><b id="ev-failure">PENDING</b></div>
+            <div class="evidence-item"><span>Promotion gate</span><b id="ev-gate">LOCKED</b></div>
+            <div class="evidence-item"><span>Tests</span><b id="ev-tests">0 / 5</b></div>
+            <div class="evidence-item"><span>Artifacts</span><b id="ev-artifacts">0 / 8</b></div>
+            <div class="evidence-item"><span>Capability reuse</span><b id="ev-reuse">PENDING</b></div>
+          </div>
+        </article>
+      </aside>
+    </section>
 
-            <div class="status-grid">
-              <div class="status-card"><small>ACTIVE AGENT</small><b id="live-agent">PROMETHEUS</b></div><div class="status-card"><small>MISSION PHASE</small><b id="live-phase">IGNITION</b></div><div class="status-card"><small>PACKET</small><b id="live-packet">MISSION</b></div><div class="status-card"><small>GATE</small><b id="live-gate">READY</b></div><div class="status-card"><small>PROOF</small><b id="live-proof">0%</b></div><div class="status-card"><small>QUEUE</small><b id="live-queue">0</b></div><div class="status-card"><small>RECEIPT</small><b id="live-receipt">PENDING</b></div><div class="status-card"><small>GENOME</small><b id="live-genome">UNEXTRACTED</b></div>
-            </div>
+    <section class="panel verdict" id="verdict">
+      <p class="eyebrow">BUILD TRUTH VERDICT</p>
+      <h2>PROMOTION AUTHORIZED</h2>
+      <p>Seven edge conditions were reproduced, denied, repaired, verified, preserved, and successfully inherited by a related mission.</p>
+      <div class="verdict-grid">
+        <div><small>ROUTES</small><b>3 EVALUATED</b></div>
+        <div><small>EDGE CONDITIONS</small><b>7 CLOSED</b></div>
+        <div><small>TESTS</small><b>5 / 5</b></div>
+        <div><small>ARTIFACTS</small><b>8 / 8</b></div>
+        <div><small>FAILED ACTIONS</small><b>1 → 0</b></div>
+        <div><small>BLOCKERS</small><b>0</b></div>
+      </div>
+      <div class="publication">SERVERFORGE ENVELOPE SEALED · #live-case-study · #proof-index · EDEN PUBLICATION READY</div>
+    </section>
 
-            <div class="dual-console">
-              <div class="terminal-stack">
-                <article class="console"><div class="console-head"><i></i><i></i><i></i><b>LIVE COMMAND-TO-PROOF TERMINAL</b><span id="terminal-clock">T+00:00</span></div><pre id="mission-terminal" aria-live="polite"></pre></article>
-                <article class="console"><div class="console-head"><i></i><i></i><i></i><b>BEHAVIORAL CODE TRANSFORMATION</b><span id="code-state">BASELINE</span></div><div class="code-compare"><div class="code-pane"><h4>BEFORE / FAILURE PATH</h4><pre id="code-before"></pre></div><div class="code-pane"><h4>AFTER / VERIFIED PATH</h4><pre id="code-after"></pre></div></div></article>
-              </div>
-
-              <div class="handoff-stack">
-                <article class="handoff-map"><div class="console-head"><i></i><i></i><i></i><b>CANONICAL AGENT HANDOFF FABRIC</b><span id="fabric-state">MISSION READY</span></div><div class="handoff-grid" id="agent-fabric"></div><div class="packet-runway"><div class="packet" id="fabric-packet"><b>MISSION</b><span>PKT-000</span></div></div></article>
-                <div class="handoff-ledger"><div><small>SOURCE</small><b id="handoff-source">PROMETHEUS</b></div><div><small>DESTINATION</small><b id="handoff-target">AIS-Ω</b></div><div><small>ACK</small><b id="handoff-ack">STAGED</b></div><div><small>LATENCY</small><b id="live-latency">18ms</b></div></div>
-              </div>
-            </div>
-
-            <div class="telemetry">
-              <article class="chart-panel"><div class="chart-head"><span>GLOBAL MISSION TELEMETRY · PROOF / EVIDENCE / CLAIM SUPPORT / RELEASE READINESS</span><b id="global-graph-value">0%</b></div><svg viewBox="0 0 800 150" preserveAspectRatio="none" aria-label="Global mission telemetry"><line class="gridline" x1="0" y1="37" x2="800" y2="37"></line><line class="gridline" x1="0" y1="75" x2="800" y2="75"></line><line class="gridline" x1="0" y1="113" x2="800" y2="113"></line><polyline class="series-proof" id="series-proof" points="0,140"></polyline><polyline class="series-evidence" id="series-evidence" points="0,140"></polyline><polyline class="series-claims" id="series-claims" points="0,140"></polyline><polyline class="series-readiness" id="series-readiness" points="0,140"></polyline></svg></article>
-              <article class="dial-panel"><div class="dial-ring" id="proof-dial"><span><b id="proof-dial-value">0%</b><small>PROOF CONFIDENCE</small></span></div></article>
-              <article class="dial-panel"><div class="dial-ring cyan" id="load-dial"><span><b id="load-dial-value">12%</b><small>ORCHESTRATION LOAD</small></span></div></article>
-              <article class="numbers-panel"><div><small>PACKETS</small><b id="live-packets">0</b></div><div><small>HANDOFFS</small><b id="live-handoffs">0</b></div><div><small>TESTS</small><b id="live-tests">0 / 5</b></div><div><small>ARTIFACTS</small><b id="live-artifacts">0 / 8</b></div><div><small>CLAIMS</small><b id="live-claims">0 / 4</b></div><div><small>BLOCKERS</small><b id="live-blockers">0</b></div><div><small>REUSE</small><b id="live-reuse">PENDING</b></div><div><small>RELEASE</small><b id="live-release">LOCKED</b></div></article>
-            </div>
-          </article>
-        </section>
-
-        <section class="section" id="agents">
-          <div class="section-head"><div><p class="eyebrow">EIGHT CANONICAL AGENTS</p><h2>Eight systems, eight distinct visual languages</h2><p>Each system is presented according to its real responsibility. The page does not reuse one generic waveform eight times.</p></div></div>
-          <div class="agent-matrix" id="agent-matrix"></div>
-        </section>
-
-        <section class="section" id="case-study">
-          <div class="section-head"><div><p class="eyebrow">GHOST ATLAS INSTITUTE · SERVERFORGE FIELD REPORT</p><h2>PROMETHEUS Forge: a screenshot-grounded operational case study</h2><p>A technical account of how EDEN, Codex, PROMETHEUS, ServerForge, Discord, repository evidence, and the public node form one inspectable engineering lineage without disclosing protected internals.</p></div></div>
-          <article class="panel gai-case-study">
-            <header class="case-report-head" id="case-report-head"></header>
-            <div class="case-evidence-strip" id="case-evidence-strip"></div>
-            <div class="case-flow" id="case-flow"></div>
-
-            <div class="case-primary-grid">
-              <article class="case-server-observation" id="case-server-observation"></article>
-              <article class="case-receipt-exhibit" id="case-receipt-exhibit"></article>
-            </div>
-
-            <article class="case-channel-architecture">
-              <div class="case-panel-title"><div><small>OBSERVED DISCORD INFORMATION ARCHITECTURE</small><h3>Operational channels and explicit non-inference</h3></div><span>EVIDENCE OBJECT E-01</span></div>
-              <div class="case-channel-map" id="case-channel-map"></div>
-            </article>
-
-            <article class="case-methodology">
-              <div class="case-panel-title"><div><small>GHOST ATLAS INSTITUTE METHOD</small><h3>How the public claim is constructed without distortion</h3></div><span>FAIL-CLOSED REPORTING</span></div>
-              <div class="case-method" id="case-method"></div>
-            </article>
-
-            <div class="case-analysis-grid">
-              <article class="case-timeline-panel">
-                <div class="case-panel-title"><div><small>CAMPAIGN LINEAGE</small><h3>Observed and corroborated timeline</h3></div><span>ORDERED EVENTS</span></div>
-                <div class="case-timeline" id="case-timeline"></div>
-              </article>
-              <article class="case-findings">
-                <div class="case-panel-title"><div><small>TECHNICAL FINDINGS</small><h3>What the evidence supports</h3></div><span>BOUNDED CLAIMS</span></div>
-                <ul class="case-proof-list" id="case-proof-list"></ul>
-              </article>
-            </div>
-
-            <article class="case-limitations">
-              <div class="case-panel-title"><div><small>LIMITATIONS REGISTER</small><h3>What is not claimed</h3></div><span>NO INFERENCE DRIFT</span></div>
-              <ul class="case-limitations-list" id="case-limitations"></ul>
-            </article>
-
-            <article class="case-credibility-model">
-              <div class="case-panel-title"><div><small>GHOST ATLAS CREDIBILITY MODEL</small><h3>Provenance, separation, corroboration, reproducibility, and disclosure control</h3></div><span>INSTITUTIONAL METHOD</span></div>
-              <div class="case-credibility" id="case-credibility"></div>
-            </article>
-
-            <article class="case-publication-boundary">
-              <div class="case-panel-title"><div><small>INTELLECTUAL PROPERTY BOUNDARY</small><h3>Credible enough to inspect, narrow enough to protect</h3></div><span>PUBLIC / PRIVATE SPLIT</span></div>
-              <div class="privacy-boundary" id="privacy-boundary"></div>
-            </article>
-
-            <article class="case-recording-sequence">
-              <div class="case-panel-title"><div><small>YOUTUBE PRESENTATION PATH</small><h3>How to show the case study without losing the judge</h3></div><span>RECORDING READY</span></div>
-              <ol class="case-recording-list" id="case-recording"></ol>
-            </article>
-          </article>
-        </section>
-
-        <section class="section" id="challenge">
-          <div class="section-head"><div><p class="eyebrow">JUDGE CHALLENGE MODE</p><h2>Choose what PROMETHEUS must defend</h2><p>The presentation transitions from persuasion to independent verification.</p></div></div>
-          <article class="panel challenge"><div class="challenge-buttons"><button class="active" data-challenge="receipt" type="button">VERIFY RECEIPT</button><button data-challenge="evidence" type="button">VERIFY EVIDENCE</button><button data-challenge="claims" type="button">VERIFY CLAIMS</button><button data-challenge="submission" type="button">VERIFY READINESS</button></div><div class="challenge-console"><code id="challenge-output">python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json</code><button id="challenge-copy" type="button">COPY</button><a id="challenge-link" href="proofgrid/FINAL_RECEIPT.json">OPEN ARTIFACT</a></div></article>
-        </section>
-
-        <section class="section final-ledger" id="final-proof">
-          <article class="panel verdict-panel"><div class="verdict-mark">◆</div><p class="eyebrow">PROOFGRID VERDICT</p><h2>PROMOTION AUTHORIZED</h2><p>Five tests passed. Eight artifacts verified. Receipt hash sealed. Capability Genome reused. Failed actions reduced from one to zero.</p><div class="verdict-metrics"><div><small>TESTS</small><b>5 / 5</b></div><div><small>ARTIFACTS</small><b>8 / 8</b></div><div><small>HASH</small><b>VERIFIED</b></div><div><small>GENOME</small><b>REUSED</b></div></div><div class="hero-actions"><button class="btn primary" id="replay" type="button">OPEN PROOF THEATER</button><a class="btn" href="proofgrid/FINAL_RECEIPT.json">INSPECT RECEIPT</a></div></article>
-          <article class="panel submission-panel"><p class="eyebrow">NEXT HUMAN ACTIONS</p><h2>Record and submit</h2><ol><li>Run the full proof theater in a clean browser window.</li><li>Record the final three-minute YouTube demonstration.</li><li>Upload the public video and capture its URL.</li><li>Add repository, live demo, video, and Codex feedback details to the submission.</li><li>Perform the final submission check and submit.</li></ol><a href="documentation/SUBMISSION_KIT.md">Open submission kit →</a></article>
-        </section>
-      </main>
-      <footer><span>PROMETHEUS AIS COMPETITION EDITION</span><span>REPAIR · PROVE · REMEMBER · EVOLVE</span></footer>
-    </div>
+    <footer class="footer">PROMETHEUS · REPAIR · PROVE · REMEMBER · EVOLVE</footer>
   </div>
-
-  <section class="theater" id="proof-theater" hidden role="dialog" aria-modal="true" aria-labelledby="theater-title">
-    <div class="theater-inner">
-      <header class="theater-head"><div><p class="eyebrow">PROMETHEUS FULL-SCREEN RUN</p><b id="theater-title">COMMAND-TO-PROOF THEATER</b></div><div class="control-row"><span class="mono" id="theater-clock">T+00:00</span><button class="btn danger" id="theater-close" type="button">CLOSE</button></div></header>
-      <div class="theater-grid-layout"><aside class="theater-column"><p class="eyebrow">CANONICAL AGENTS</p><div class="theater-agent-list" id="organ-stack"></div></aside><main class="theater-column theater-stage"><p class="eyebrow" id="stage-kicker">AWAITING IGNITION</p><h2 id="stage-title">PROMETHEUS IS READY</h2><p id="stage-narrative">The same state engine drives the terminal, packets, telemetry, evidence, and verdict.</p><div class="theater-core" id="proof-core"><span><small>BUILD TRUTH</small><b id="core-value">READY</b><small id="core-subtitle">EVIDENCE GOVERNED</small></span></div><pre class="theater-terminal" id="theater-terminal-output"></pre><div class="theater-actions"><button class="btn primary" id="theater-launch" type="button">IGNITE COMMAND-TO-PROOF</button><button class="btn secondary" id="theater-skip" type="button">SKIP TO VERIFIED RESULTS</button></div></main><aside class="theater-column"><p class="eyebrow">EVIDENCE STREAM</p><div class="theater-evidence" id="evidence-stream"></div><div class="verdict-metrics"><div><small>TESTS</small><b id="metric-tests">0 / 5</b></div><div><small>ARTIFACTS</small><b id="metric-artifacts">0 / 8</b></div><div><small>RECEIPT</small><b id="metric-receipt">PENDING</b></div><div><small>GENOME</small><b id="metric-genome">UNEXTRACTED</b></div></div></aside></div>
-      <div class="theater-verdict" id="verdict-card" hidden tabindex="-1"><p class="eyebrow">PROOFGRID VERDICT</p><h2>PROMOTION AUTHORIZED</h2><p>5/5 tests · 8/8 artifacts · receipt hash verified · Genome reused · 1 failed action → 0 failed actions</p><div class="theater-actions"><button class="btn primary" id="theater-replay" type="button">RUN IT AGAIN</button><button class="btn" id="verdict-close" type="button">RETURN TO CONSOLE</button></div></div>
-    </div>
-  </section>
-
-  <script src="assets/app.js"></script>
-  <script src="assets/case-study.js"></script>
+  <script src="assets/elite-demo.js"></script>
 </body>
 </html>
