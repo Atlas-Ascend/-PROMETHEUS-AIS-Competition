@@ -28,25 +28,34 @@
     ]
   },
   "pipeline": [
-    {"stage":"IGNITION","organ":"PROMETHEUS","state":"verified","detail":"Mission admitted to the governed build loop."},
-    {"stage":"ROUTE FORGE","organ":"AIS-Ω","state":"verified","detail":"Three distinct candidate routes evaluated."},
-    {"stage":"TRIAL BY FIRE","organ":"Adversarial Twin","state":"failed","detail":"Duplicate consequential operation reproduced."},
-    {"stage":"PROMOTION GATE","organ":"SECA","state":"blocked","detail":"Unsupported promotion denied."},
-    {"stage":"REPAIR FORGE","organ":"HYDRA","state":"repaired","detail":"Idempotent replay guard changed runtime behavior."},
-    {"stage":"PROOF GRID","organ":"ProofGrid","state":"verified","detail":"Tests, artifacts, receipt and hashes verified."},
-    {"stage":"FLAME PRESERVED","organ":"Capability Genome","state":"created","detail":"Repair compiled into PG-CG-REPLAY-GUARD-001."},
-    {"stage":"INHERITANCE","organ":"Build Truth","state":"promoted","detail":"Related task reused the Genome with measured improvement."}
+    {"stage":"IGNITION","organ":"PROMETHEUS","state":"ADMITTED","packet":"MISSION","detail":"Mission admitted to the governed build loop."},
+    {"stage":"ROUTE FORGE","organ":"AIS-Ω","state":"ROUTED","packet":"CANDIDATES","detail":"Three distinct candidate routes evaluated; route-c selected."},
+    {"stage":"TRIAL BY FIRE","organ":"Adversarial Twin","state":"FAILED","packet":"FAILURE","detail":"Duplicate consequential operation reproduced under controlled conditions."},
+    {"stage":"PROMOTION GATE","organ":"SECA","state":"BLOCKED","packet":"DENIAL","detail":"Unsupported promotion denied while the defect remained unproven."},
+    {"stage":"REPAIR FORGE","organ":"HYDRA","state":"REPAIRED","packet":"REPAIR","detail":"Idempotent replay guard changed runtime behavior."},
+    {"stage":"PROOF GRID","organ":"ProofGrid","state":"VERIFIED","packet":"EVIDENCE","detail":"Five tests, eight artifacts, the receipt and its hashes verified."},
+    {"stage":"FLAME PRESERVED","organ":"Capability Genome","state":"PRESERVED","packet":"GENOME","detail":"Verified repair compiled into PG-CG-REPLAY-GUARD-001."},
+    {"stage":"INHERITANCE","organ":"Build Truth","state":"AUTHORIZED","packet":"PROMOTION","detail":"Related task reused the Genome; Build Truth authorized promotion."}
   ],
   "systems": [
-    {"id":"prometheus","name":"PROMETHEUS","role":"Mission Orchestrator","status":"ACTIVE","accent":"amber","summary":"Admits the mission and governs the complete Command-to-Proof sequence.","metrics":[["Packet","MISSION"],["State","ADMITTED"],["Stage","01"]]},
-    {"id":"ais","name":"AIS-Ω","role":"Candidate Route Engine","status":"ACTIVE","accent":"cyan","summary":"Generates and evaluates three distinct implementation routes.","metrics":[["Packet","CANDIDATES"],["State","ROUTED"],["Stage","02"]]},
-    {"id":"adversarial","name":"Adversarial Twin","role":"Failure Reproduction","status":"ADVERSARIAL","accent":"red","summary":"Reproduces the bounded duplicate-operation failure under controlled conditions.","metrics":[["Packet","FAILURE"],["State","FAILED"],["Stage","03"]]},
-    {"id":"seca","name":"SECA","role":"Fail-Closed Promotion Gate","status":"ENFORCED","accent":"red","summary":"Denies unsupported promotion until repair and proof exist.","metrics":[["Packet","DENIAL"],["State","BLOCKED"],["Stage","04"]]},
-    {"id":"hydra","name":"HYDRA","role":"Behavioral Repair Forge","status":"VERIFIED","accent":"orange","summary":"Applies the idempotent replay guard and proves behavior changed.","metrics":[["Packet","REPAIR"],["State","REPAIRED"],["Stage","05"]]},
-    {"id":"proofgrid","name":"ProofGrid","role":"Evidence and Receipt Verification","status":"VERIFIED","accent":"green","summary":"Verifies tests, artifacts, hashes, receipt integrity, and promotion evidence.","metrics":[["Packet","EVIDENCE"],["State","VERIFIED"],["Stage","06"]]},
-    {"id":"genome","name":"Capability Genome","role":"Verified Capability Memory","status":"REUSED","accent":"violet","summary":"Preserves the successful repair with applicability and exclusions.","metrics":[["Packet","GENOME"],["State","PRESERVED"],["Stage","07"]]},
-    {"id":"buildtruth","name":"Build Truth","role":"Release Authority","status":"AUTHORITATIVE","accent":"gold","summary":"Authorizes promotion only after the complete evidence chain closes.","metrics":[["Packet","PROMOTION"],["State","AUTHORIZED"],["Stage","08"]]}
+    {"id":"prometheus","name":"PROMETHEUS","role":"Mission Orchestrator","visual":"Mission orchestration graph","summary":"Admits the mission, binds acceptance gates and maintains the authoritative run state.","primary_metrics":["Mission completeness","Acceptance coverage","Packets dispatched","Campaign phase"]},
+    {"id":"ais","name":"AIS-Ω","role":"Candidate Route Engine","visual":"Branching route evaluation","summary":"Generates distinct implementation routes, compares them and selects the strongest candidate.","primary_metrics":["Candidates generated","Routes rejected","Selected route","Selection confidence"]},
+    {"id":"adversarial","name":"Adversarial Twin","role":"Failure Reproduction","visual":"Contradiction pressure trace","summary":"Attacks the selected route and reproduces the bounded duplicate-operation defect.","primary_metrics":["Probes executed","Failure reproducibility","Defect severity","Contradiction pressure"]},
+    {"id":"seca","name":"SECA","role":"Fail-Closed Promotion Gate","visual":"Locked promotion gate","summary":"Denies unsupported completion until behavior change and proof are present.","primary_metrics":["Claims inspected","Unsupported claims","Gate confidence","Policy satisfaction"]},
+    {"id":"hydra","name":"HYDRA","role":"Behavioral Repair Forge","visual":"Before-and-after repair delta","summary":"Applies the idempotent replay guard and exposes the exact behavioral change.","primary_metrics":["Repair attempts","Behavior delta","Regression risk","Repair confidence"]},
+    {"id":"proofgrid","name":"ProofGrid","role":"Evidence and Receipt Verification","visual":"Stepwise evidence accumulation","summary":"Verifies tests, artifacts, hashes and the final promotion receipt.","primary_metrics":["Tests passed","Artifacts verified","Hash completeness","Receipt confidence"]},
+    {"id":"genome","name":"Capability Genome","role":"Verified Capability Memory","visual":"Applicability and inheritance map","summary":"Preserves the repair with explicit triggers, scope, exclusions and reuse evidence.","primary_metrics":["Applicability coverage","Exclusion coverage","Reuse readiness","Inheritance confidence"]},
+    {"id":"buildtruth","name":"Build Truth","role":"Release Authority","visual":"Canonical release ledger","summary":"Adjudicates supported claims, contradictions, blockers and release authorization.","primary_metrics":["Supported claims","Contradictions","Open blockers","Release readiness"]}
   ],
+  "telemetry": {
+    "proof": [8,16,28,35,58,82,94,100],
+    "evidence": [4,8,16,22,35,86,96,100],
+    "claims": [12,24,38,46,61,84,95,100],
+    "readiness": [10,18,25,0,42,76,90,100],
+    "load": [18,42,77,68,91,73,64,52],
+    "latency": [18,26,41,33,22,17,14,9],
+    "packets": [1,3,6,10,15,21,28,36]
+  },
   "seca": {
     "decision": "PROMOTION DENIED",
     "reason": "Duplicate consequential operation was not replay-safe.",
@@ -79,11 +88,41 @@
     "repair_strategy": "enable_idempotent_replay_guard",
     "reuse": {"task":"PROM-COMP-002 · Publish replay-safe release manifest","outcome":"replay_safely_ignored","improvement":"1 failed action → 0 failed actions"}
   },
+  "serverforge_case_study": {
+    "title": "EDEN-to-Proof Observability Case Study",
+    "thesis": "A local AI engineering campaign was executed inside EDEN, observed by ServerForge, verified by PROMETHEUS and published as a reproducible public evidence surface.",
+    "flow": [
+      {"label":"01 · EDEN","name":"Local execution body","detail":"Windows-based project workspace, runtime, tools and repository access used to perform the engineering work."},
+      {"label":"02 · CODEX","name":"Implementation accelerator","detail":"Worked against the real competition repository to implement, debug, integrate and harden the build."},
+      {"label":"03 · PROMETHEUS","name":"Command-to-Proof authority","detail":"Generated candidates, challenged claims, repaired behavior, verified artifacts and issued proof receipts."},
+      {"label":"04 · SERVERFORGE","name":"Observability transport","detail":"Captured sanitized mission events, recovery state, publications and evidence lineage for the case study."},
+      {"label":"05 · PUBLIC NODE","name":"Judge-facing proof surface","detail":"GitHub Pages publishes the deterministic interface, receipts, Genome and documentation when EDEN is offline."}
+    ],
+    "timeline": [
+      {"time":"T+00:00","actor":"EDEN","event":"Competition repository and local execution environment staged."},
+      {"time":"T+00:18","actor":"CODEX","event":"Ignition kernel, CLI, tests and public interface implemented against the real workspace."},
+      {"time":"T+01:04","actor":"PROMETHEUS","event":"Bounded replay failure reproduced and unsupported promotion denied."},
+      {"time":"T+01:26","actor":"HYDRA","event":"Idempotent replay guard changed runtime behavior."},
+      {"time":"T+01:52","actor":"PROOFGRID","event":"Five tests and eight evidence artifacts verified; receipt sealed."},
+      {"time":"T+02:12","actor":"SERVERFORGE","event":"Sanitized campaign events and verified outcome published to the observability case study."},
+      {"time":"T+02:30","actor":"BUILD TRUTH","event":"Capability reuse verified and promotion authorized."}
+    ],
+    "proof_points": [
+      "The engineering occurred against a real local repository and executable runtime, not inside a mock website.",
+      "Codex accelerated implementation while the human creator retained architecture, product direction and release authority.",
+      "PROMETHEUS refused its own unsupported success claim before repair and verification.",
+      "ServerForge preserved a sanitized operational narrative without publishing credentials, private prompts or local machine state.",
+      "The public site remains independently available when the EDEN machine is offline.",
+      "Machine-readable receipts and artifact hashes provide an inspection path beyond the presentation."
+    ],
+    "privacy_boundary": "Public disclosure is limited to system roles, observable state transitions, test outcomes, artifact lineage, proof receipts and high-level deployment topology. Private prompts, proprietary routing logic, patent-sensitive mechanisms, credentials, machine paths, private repositories and broader estate implementation details remain excluded."
+  },
   "documentation": [
     {"name":"Quickstart","path":"documentation/QUICKSTART.md","description":"Run, verify and inspect the competition package."},
     {"name":"Judge brief","path":"documentation/JUDGE_BRIEF.md","description":"The competition thesis, proof chain and scoring surface."},
+    {"name":"Operator console specification","path":"documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md","description":"Presentation architecture, telemetry contract and system visualization rules."},
+    {"name":"EDEN and ServerForge case study","path":"documentation/EDEN_SERVERFORGE_CASE_STUDY.md","description":"IP-safe account of local execution, observability and public evidence delivery."},
     {"name":"Three-minute demo","path":"documentation/DEMO_SCRIPT.md","description":"A precise judge-facing demonstration sequence."},
-    {"name":"ProofGrid receipt","path":"proofgrid/FINAL_RECEIPT.json","description":"Machine-readable promotion receipt and artifact hashes."},
-    {"name":"Capability Genome","path":"genomes/CAPABILITY_GENOME.json","description":"Reusable repair knowledge with scope and exclusions."}
+    {"name":"ProofGrid receipt","path":"proofgrid/FINAL_RECEIPT.json","description":"Machine-readable promotion receipt and artifact hashes."}
   ]
 }
