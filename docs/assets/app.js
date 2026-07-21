@@ -1,191 +1,394 @@
-const $ = (selector, root = document) => root.querySelector(selector);
-const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const row = (label, value) => `<div class="data-row"><small>${esc(label)}</small><code>${esc(value)}</code></div>`;
+(() => {
+  "use strict";
 
-const AGENTS = [
-  { id: "prometheus", name: "PROMETHEUS", role: "Mission Orchestrator", accent: "amber" },
-  { id: "ais", name: "AIS-Ω", role: "Candidate Route Engine", accent: "cyan" },
-  { id: "adversarial", name: "Adversarial Twin", role: "Failure Reproduction", accent: "red" },
-  { id: "seca", name: "SECA", role: "Fail-Closed Promotion Gate", accent: "red" },
-  { id: "hydra", name: "HYDRA", role: "Behavioral Repair Forge", accent: "orange" },
-  { id: "proofgrid", name: "ProofGrid", role: "Evidence and Receipt Verification", accent: "green" },
-  { id: "genome", name: "Capability Genome", role: "Verified Capability Memory", accent: "violet" },
-  { id: "buildtruth", name: "Build Truth", role: "Release Authority", accent: "gold" }
-];
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 
-const PACKETS = ["MISSION","CANDIDATES","FAILURE","DENIAL","REPAIR","EVIDENCE","GENOME","PROMOTION"];
-const CORE = ["INTENT","3 ROUTES","FAILURE","BLOCKED","REPAIRED","VERIFIED","GENOME","PROMOTED"];
-const CONFIDENCE = [12,24,36,42,61,82,94,100];
-const LOADS = [18,42,77,68,91,73,64,52];
-const LATENCIES = [18,26,41,33,22,17,14,9];
-const STATES = ["ADMITTED","ROUTED","FAILED","BLOCKED","REPAIRED","VERIFIED","PRESERVED","AUTHORIZED"];
-const telemetryPattern = [78,70,62,74,55,66,48,57,39,49,31,42,25,34,19,29,15,23];
-const AGENT_PATTERNS = AGENTS.map((_, i) => Array.from({length:18}, (_, j) => 92 - ((j * (i + 2) * 7 + i * 11) % 68)));
-const CHALLENGES = {
-  receipt: ["python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json","proofgrid/FINAL_RECEIPT.json"],
-  evidence: ["python -m prometheus.cli contest evidence-verify","proofgrid/TEST_RESULTS.json"],
-  claims: ["python -m prometheus.cli contest claims-verify","proofgrid/SECA_DECISION.json"],
-  submission: ["python -m prometheus.cli contest submission-check","documentation/COMPETITION_READINESS.md"]
-};
+  const AGENT_COLORS = ["#ffbd59","#5de3ff","#ff6578","#ff6578","#ff9f4a","#54e0a4","#b58cff","#ffd77d"];
+  const CORE = ["INTENT","3 ROUTES","FAILURE","BLOCKED","REPAIRED","VERIFIED","GENOME","PROMOTED"];
+  const CHALLENGES = {
+    receipt:["python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json","proofgrid/FINAL_RECEIPT.json"],
+    evidence:["python -m prometheus.cli contest evidence-verify","proofgrid/TEST_RESULTS.json"],
+    claims:["python -m prometheus.cli contest claims-verify","proofgrid/SECA_DECISION.json"],
+    submission:["python -m prometheus.cli contest submission-check","documentation/COMPETITION_READINESS.md"]
+  };
 
-let data;
-let runId = 0;
-let timers = [];
-let intervals = [];
-let stageIndex = 0;
-let ambientTimer;
-let terminalStart = 0;
-let lastFocusedElement;
+  let data;
+  let stage = -1;
+  let runToken = 0;
+  let timer = null;
+  let clockTimer = null;
+  let paused = false;
+  let running = false;
+  let startedAt = 0;
+  let lastFocus = null;
 
-async function load() {
-  const response = await fetch("./data/demo.json", { cache: "no-store" });
-  if (!response.ok) throw new Error(`demo data ${response.status}`);
-  data = await response.json();
-  normalizeData();
-  renderStatic();
-  bind();
-  resetMission();
-  startAmbient();
-}
+  const beforeCode = [
+    "def execute(operation_id, payload):",
+    "    digest_value = digest(payload)",
+    "    if operation_id in operations:",
+    "        raise ReplayDetected(operation_id)",
+    "    operations[operation_id] = digest_value",
+    "    return 'executed'"
+  ].join("\n");
 
-function normalizeData() {
-  data.pipeline = data.pipeline.slice(0, 8).map((item, index) => ({ ...item, organ: AGENTS[index].name }));
-  data.systems = AGENTS.map((agent, index) => ({
-    id: agent.id,
-    name: agent.name,
-    role: agent.role,
-    status: index === 7 ? "AUTHORITATIVE" : index === 2 ? "ADVERSARIAL" : "ACTIVE",
-    accent: agent.accent,
-    summary: data.pipeline[index].detail,
-    metrics: [["Packet", PACKETS[index]],["State", STATES[index]],["Stage", String(index + 1).padStart(2,"0")]]
-  }));
-}
+  const afterCode = [
+    "def execute(operation_id, payload, *, idempotent=False):",
+    "    digest_value = digest(payload)",
+    "    previous = operations.get(operation_id)",
+    "    if previous is not None:",
+    "        if idempotent and previous == digest_value:",
+    "            return 'replay_safely_ignored'",
+    "        raise ReplayDetected(operation_id)",
+    "    operations[operation_id] = digest_value",
+    "    return 'executed'"
+  ].join("\n");
 
-function renderStatic() {
-  document.title = `${data.product.name} ${data.product.version} · Unified Command-to-Proof Console`;
-  $("#release-metrics").innerHTML = [
-    ["MISSION", data.mission.id],["AGENTS", "8 / 8"],["TESTS", "5 / 5"],["ARTIFACTS", "8 / 8"],["PROMOTION", "AUTHORIZED"]
-  ].map(([k,v]) => `<div class="metric-tile"><small>${k}</small><b>${v}</b></div>`).join("");
+  async function init() {
+    const response = await fetch("./data/demo.json", {cache:"no-store"});
+    if (!response.ok) throw new Error(`demo data ${response.status}`);
+    data = await response.json();
+    renderNavigation();
+    renderAgents();
+    renderCaseStudy();
+    renderTheaterAgents();
+    bindControls();
+    resetAll();
+  }
 
-  $("#mission-card").innerHTML = row("Mission ID", data.mission.id)+row("Title", data.mission.title)+row("Objective", data.mission.objective)+row("Acceptance gates", data.mission.acceptance.length);
-  $("#proof-card").innerHTML = row("Receipt", data.proofgrid.receipt_id)+row("Status", data.proofgrid.status)+row("Promotion", data.proofgrid.promotion)+row("Tests", "5 passed / 0 failed")+row("Artifacts", "8 / 8 verified")+row("Receipt hash", data.proofgrid.receipt_hash);
-  $("#seca-card").innerHTML = row("Decision", data.seca.decision)+row("Reason", data.seca.reason)+row("Failure", data.seca.failure_signature)+row("Resolution", data.seca.resolution);
-  $("#hydra-card").innerHTML = row("Repair", data.hydra.repair_id)+row("Strategy", data.hydra.strategy)+row("Before", data.hydra.before)+row("After", data.hydra.after)+row("Behavior changed", data.hydra.behavior_changed);
-  $("#genome-card").innerHTML = row("Genome", data.genome.genome_id)+row("Trigger", data.genome.trigger)+row("Strategy", data.genome.repair_strategy)+row("Reuse", data.genome.reuse.improvement);
+  function renderNavigation() {
+    const entries = [
+      ["overview","Overview","Mission thesis"],
+      ["cockpit","Cockpit","Live command-to-proof"],
+      ["agents","Agents","Eight visual systems"],
+      ["case-study","ServerForge","EDEN case study"],
+      ["challenge","Challenge","Independent verification"],
+      ["final-proof","Verdict","Submission handoff"]
+    ];
+    $("#system-nav").innerHTML = entries.map((entry,index) => `<a class="${index===0?"active":""}" href="#${entry[0]}"><i></i><span><b>${entry[1]}</b><small>${entry[2]}</small></span></a>`).join("");
+  }
 
-  $("#pipeline").innerHTML = data.pipeline.map((item,index) => `<li data-pipeline-stage="${index}"><div class="pipeline-step"><span>${String(index+1).padStart(2,"0")}</span><i class="dot"></i></div><b>${esc(item.stage)}</b><p>${esc(item.organ)} · ${esc(item.state)}</p></li>`).join("");
-  $("#agent-fabric").innerHTML = AGENTS.map((agent,index) => `<div class="fabric-agent" data-fabric-stage="${index}"><small>${String(index+1).padStart(2,"0")} · ${PACKETS[index]}</small><b>${esc(agent.name)}</b><span>${esc(agent.role)}</span><i></i></div>`).join("");
-  $("#organ-stack").innerHTML = AGENTS.map((agent,index) => `<div class="organ-node" data-organ="${index}"><b>${esc(agent.name)}</b><span>${esc(agent.role)}</span><i class="handoff-port"></i></div>`).join("");
-  $("#theater-pipeline").innerHTML = data.pipeline.map((item,index) => `<div class="theater-step" data-step="${index}"><b>${String(index+1).padStart(2,"0")} · ${esc(item.stage)}</b><span>${esc(item.organ)}</span><i class="packet-track"><i class="packet"></i></i></div>`).join("");
+  function renderAgents() {
+    $("#agent-fabric").innerHTML = data.systems.map((system,index) => `<div class="agent-node" data-node="${index}"><small>${String(index+1).padStart(2,"0")} · ${esc(data.pipeline[index].packet)}</small><b>${esc(system.name)}</b><span>${esc(system.role)}</span><i></i></div>`).join("");
+    $("#agent-matrix").innerHTML = data.systems.map((system,index) => agentCard(system,index)).join("");
+  }
 
-  $("#agent-graph-grid").innerHTML = AGENTS.map((agent,index) => `<article class="agent-graph-card" id="system-${agent.id}" data-agent-card="${index}"><header><div><small>${String(index+1).padStart(2,"0")} · ${PACKETS[index]}</small><h3>${esc(agent.name)}</h3><p>${esc(agent.role)}</p></div><span class="agent-state">STANDBY</span></header><svg viewBox="0 0 240 72" preserveAspectRatio="none" aria-label="${esc(agent.name)} activity graph"><line x1="0" y1="18" x2="240" y2="18"></line><line x1="0" y1="36" x2="240" y2="36"></line><line x1="0" y1="54" x2="240" y2="54"></line><polyline id="agent-line-${index}" points="0,66"></polyline></svg><footer><span>LOAD <b id="agent-load-${index}">0%</b></span><span>LATENCY <b id="agent-latency-${index}">--</b></span><span>PACKETS <b id="agent-packets-${index}">0</b></span></footer></article>`).join("");
+  function agentCard(system,index) {
+    const insightValues = agentInsightValues(index);
+    return `<article class="panel agent-card" id="system-${system.id}" data-agent-card="${index}" style="--agent-color:${AGENT_COLORS[index]}">
+      <header><div><p class="eyebrow">${String(index+1).padStart(2,"0")} · ${esc(data.pipeline[index].packet)}</p><h3>${esc(system.name)}</h3><p>${esc(system.role)} · ${esc(system.visual)}</p></div><span class="agent-badge" data-agent-state="${index}">STANDBY</span></header>
+      <div class="agent-body"><div class="agent-visual">${agentVisualization(index)}</div><div class="agent-insight">${system.primary_metrics.map((metric,i)=>`<div><small>${esc(metric)}</small><b id="agent-metric-${index}-${i}">${esc(insightValues[i])}</b></div>`).join("")}</div></div>
+      <p class="agent-narrative">${esc(system.summary)}</p>
+    </article>`;
+  }
 
-  $("#systems-grid").innerHTML = data.systems.map(system => `<article class="system-card" id="map-${system.id}"><div class="system-top"><span class="dot accent-${system.accent}"></span><span class="system-badge accent-${system.accent}">${system.status}</span></div><h3>${esc(system.name)}</h3><div class="role">${esc(system.role)}</div><p>${esc(system.summary)}</p><div class="mini-metrics">${system.metrics.map(m => `<div class="mini-metric"><span>${esc(m[0])}</span><b>${esc(m[1])}</b></div>`).join("")}</div></article>`).join("");
+  function agentVisualization(index) {
+    if (index === 1) return `<div class="branch-map"><div><b>route-a</b><small>REJECTED</small></div><div><b>route-b</b><small>REJECTED</small></div><div class="selected"><b>route-c</b><small>SELECTED</small></div></div>`;
+    if (index === 3) return `<div class="gate-visual"><div class="gate-door" id="seca-gate">PROMOTION LOCKED</div></div>`;
+    if (index === 4) return `<div class="delta-visual"><div class="delta-box"><b>ReplayDetected</b><small>BEFORE</small></div><b>→</b><div class="delta-box good"><b>Safely ignored</b><small>AFTER</small></div></div>`;
+    if (index === 5) return `<div class="proof-steps"><div><span>TESTS</span><div class="bar"><i style="width:100%"></i></div><b>5/5</b></div><div><span>ARTIFACTS</span><div class="bar"><i style="width:100%"></i></div><b>8/8</b></div><div><span>HASH CHAIN</span><div class="bar"><i style="width:100%"></i></div><b>PASS</b></div><div><span>RECEIPT</span><div class="bar"><i style="width:100%"></i></div><b>SEALED</b></div></div>`;
+    if (index === 6) return `<div class="genome-visual"><div><b>TRIGGER</b><small>Stable operation ID repeats</small></div><div><b>APPLICABILITY</b><small>Deterministic payload hash</small></div><div><b>EXCLUSION</b><small>Conflicting payload</small></div><div><b>REUSE</b><small>1 failure → 0 failures</small></div></div>`;
+    if (index === 7) return `<div class="truth-ledger"><div><span>Supported claims</span><b>4 / 4</b></div><div><span>Contradictions</span><b>0</b></div><div><span>Open blockers</span><b>0</b></div><div><span>Release readiness</span><b>100%</b></div></div>`;
+    return `<div class="agent-chart"><svg viewBox="0 0 420 160" preserveAspectRatio="none" aria-label="${esc(data.systems[index].name)} telemetry"><line class="gridline" x1="0" y1="40" x2="420" y2="40"></line><line class="gridline" x1="0" y1="80" x2="420" y2="80"></line><line class="gridline" x1="0" y1="120" x2="420" y2="120"></line><polyline id="agent-line-${index}" points="0,145"></polyline></svg></div>`;
+  }
 
-  $("#system-nav").innerHTML = [{name:"Overview",role:"Mission Cockpit",anchor:"overview"},...AGENTS.map(a=>({name:a.name,role:a.role,anchor:`system-${a.id}`}))].map((item,index)=>`<a class="nav-link ${index===0?"active":""}" href="#${item.anchor}"><i class="nav-icon accent-${index===0?"amber":AGENTS[index-1].accent}"></i><span class="nav-copy"><b>${esc(item.name)}</b><small>${esc(item.role)}</small></span></a>`).join("");
-  $("#docs-list").innerHTML = data.documentation.map(d=>`<a class="doc-link" href="${esc(d.path)}"><div><b>${esc(d.name)}</b><small>${esc(d.description)}</small></div><span>↗</span></a>`).join("");
+  function agentInsightValues(index) {
+    return [
+      ["0%","0 / 5","0","IGNITION"],
+      ["3","2","route-c","84%"],
+      ["4","YES","HIGH","92%"],
+      ["4","1","100%","0%"],
+      ["1","CHANGED","LOW","94%"],
+      ["5 / 5","8 / 8","100%","100%"],
+      ["100%","100%","READY","100%"],
+      ["4 / 4","0","0","100%"]
+    ][index];
+  }
 
-  $("#theater-telemetry").innerHTML = `<p class="hud-label">MISSION TELEMETRY</p><div class="gauge-row"><div class="gauge"><svg viewBox="0 0 120 70"><path class="gauge-bg" d="M15 60 A45 45 0 0 1 105 60"/><path id="gauge-proof" class="gauge-fg" d="M15 60 A45 45 0 0 1 105 60"/></svg><b id="gauge-proof-value">0%</b><span>PROOF</span></div><div class="gauge"><svg viewBox="0 0 120 70"><path class="gauge-bg" d="M15 60 A45 45 0 0 1 105 60"/><path id="gauge-load" class="gauge-fg cyan" d="M15 60 A45 45 0 0 1 105 60"/></svg><b id="gauge-load-value">0%</b><span>LOAD</span></div></div><svg id="telemetry-graph" viewBox="0 0 300 90" preserveAspectRatio="none"><polyline id="telemetry-line" points="0,80"></polyline></svg><div class="telemetry-legend"><span>Latency <b id="latency">18ms</b></span><span>Packets <b id="packet-count">0</b></span><span>Agents <b id="agent-count">1</b></span></div>`;
-}
+  function renderCaseStudy() {
+    const cs = data.serverforge_case_study;
+    $("#case-flow").innerHTML = cs.flow.map(item => `<div class="case-node"><small>${esc(item.label)}</small><b>${esc(item.name)}</b><span>${esc(item.detail)}</span></div>`).join("");
+    $("#case-timeline").innerHTML = cs.timeline.map(item => `<div class="timeline-item"><time>${esc(item.time)}</time><b>${esc(item.actor)}</b><span>${esc(item.event)}</span></div>`).join("");
+    $("#case-proof-list").innerHTML = cs.proof_points.map(point => `<li>${esc(point)}</li>`).join("");
+    $("#privacy-boundary").textContent = cs.privacy_boundary;
+  }
 
-function bind() {
-  const bindClick = (selector, handler) => $(selector)?.addEventListener("click", handler);
-  bindClick("#start-demo", () => openTheater(false));
-  bindClick("#replay", () => openTheater(false));
-  bindClick("#hero-verified", () => openTheater(true));
-  bindClick("#cockpit-run", () => runMission(false));
-  bindClick("#cockpit-skip", () => runMission(true));
-  bindClick("#theater-close", closeTheater);
-  bindClick("#theater-launch", runTheater);
-  bindClick("#theater-replay", runTheater);
-  bindClick("#verdict-close", closeTheater);
-  bindClick("#theater-skip", event => { event.preventDefault(); event.stopPropagation(); finishTheater({ immediate: true, source: "SKIP CONTROL" }); });
-  $$('[data-challenge]').forEach(button => button.addEventListener("click", () => selectChallenge(button.dataset.challenge)));
-  bindClick("#challenge-copy", copyChallenge);
-  document.addEventListener("keydown", event => { if (event.key === "Escape" && !$("#proof-theater")?.hidden) closeTheater(); });
-}
+  function renderTheaterAgents() {
+    $("#organ-stack").innerHTML = data.systems.map((system,index)=>`<div class="theater-agent" data-theater-agent="${index}"><b>${String(index+1).padStart(2,"0")} · ${esc(system.name)}</b><small>${esc(system.role)}</small></div>`).join("");
+  }
 
-function clearAll() { timers.forEach(clearTimeout); intervals.forEach(clearInterval); timers=[]; intervals=[]; }
-function later(fn, ms) { const id=setTimeout(fn,ms); timers.push(id); return id; }
-function every(fn, ms) { const id=setInterval(fn,ms); intervals.push(id); return id; }
-function stamp(offset=0) { const seconds=Math.floor((Date.now()-terminalStart)/1000)+offset; return `T+${String(Math.floor(seconds/60)).padStart(2,"0")}:${String(seconds%60).padStart(2,"0")}`; }
+  function bindControls() {
+    $("#start-demo").addEventListener("click", () => openTheater(false));
+    $("#replay").addEventListener("click", () => openTheater(false));
+    $("#hero-verified").addEventListener("click", () => openTheater(true));
+    $("#cockpit-run").addEventListener("click", runMission);
+    $("#cockpit-pause").addEventListener("click", togglePause);
+    $("#cockpit-step").addEventListener("click", stepMission);
+    $("#cockpit-reset").addEventListener("click", resetAll);
+    $("#cockpit-skip").addEventListener("click", () => loadVerified(false));
+    $("#theater-close").addEventListener("click", closeTheater);
+    $("#verdict-close").addEventListener("click", closeTheater);
+    $("#theater-launch").addEventListener("click", runTheater);
+    $("#theater-replay").addEventListener("click", runTheater);
+    $("#theater-skip").addEventListener("click", () => loadVerified(true));
+    $$('[data-challenge]').forEach(button => button.addEventListener("click", () => selectChallenge(button.dataset.challenge)));
+    $("#challenge-copy").addEventListener("click", copyChallenge);
+    document.addEventListener("keydown", event => { if (event.key === "Escape" && !$("#proof-theater").hidden) closeTheater(); });
+  }
 
-function terminalLine(source, message, type="info") { return `${stamp()}  ${type.toUpperCase().padEnd(8)}  ${source.padEnd(20)}  ${message}`; }
-function appendTerminal(source,message,type="info",target="#mission-terminal") { const el=$(target); if(!el) return; el.textContent += `${el.textContent?"\n":""}${terminalLine(source,message,type)}`; el.scrollTop=el.scrollHeight; }
+  function resetAll() {
+    stopTimers();
+    stage = -1; paused = false; running = false; startedAt = Date.now();
+    $("#mission-terminal").textContent = terminalLine("READY","PROMETHEUS","mission PROM-COMP-001 staged") + "\n" + terminalLine("GUARD","BUILD TRUTH","unsupported completion claims disabled");
+    $("#theater-terminal-output").textContent = "PROMETHEUS> awaiting ignition";
+    $("#code-before").textContent = beforeCode;
+    $("#code-after").textContent = "Repair not yet applied.";
+    $("#code-state").textContent = "BASELINE";
+    $("#verdict-card").hidden = true;
+    updateStage(-1);
+    setButtonState();
+  }
 
-function resetMission() {
-  clearAll(); stageIndex=0; terminalStart=Date.now();
-  $("#mission-terminal").textContent = terminalLine("PROMETHEUS","mission PROM-COMP-001 loaded","ready")+"\n"+terminalLine("BUILD TRUTH","unsupported completion claims disabled","guard");
-  $("#theater-terminal-output").textContent = "PROMETHEUS> awaiting ignition";
-  updateStage(-1);
-  resetGraphs();
-}
+  function runMission() {
+    if (running && paused) { paused = false; scheduleNext(); setButtonState(); return; }
+    if (running) return;
+    resetAll(); running = true; startedAt = Date.now(); runToken += 1; startClock(); advanceMission(runToken);
+  }
 
-function runMission(skip=false) {
-  runId += 1; const current=runId; resetMission(); terminalStart=Date.now();
-  if(skip){ for(let i=0;i<8;i++) applyStage(i,true); return; }
-  applyStage(0); for(let i=1;i<8;i++) later(()=>{ if(current===runId) applyStage(i); },i*1450); 
-}
+  function stepMission() {
+    if (!running) { running = true; paused = true; startedAt = Date.now(); }
+    clearTimeout(timer);
+    if (stage < 7) applyStage(stage + 1, false);
+    else finish(false);
+    setButtonState();
+  }
 
-function applyStage(index, instant=false) {
-  stageIndex=index; const item=data.pipeline[index], agent=AGENTS[index];
-  updateStage(index);
-  appendTerminal(agent.name, item.detail, index===2?"error":index===3?"blocked":index===4?"repair":"verified");
-  if(index>0) appendTerminal("HANDOFF",`${AGENTS[index-1].name} -> ${agent.name}  ${PACKETS[index]}  PKT-${String(index).padStart(3,"0")}`,"packet");
-  updateAgentGraph(index);
-  if(index===7) appendTerminal("PROOFGRID",`receipt ${data.proofgrid.receipt_id} hash verified`,"sealed");
-  if(instant && index===7) $("#mission-terminal").scrollTop=$("#mission-terminal").scrollHeight;
-}
+  function togglePause() {
+    if (!running) return;
+    paused = !paused;
+    if (!paused) scheduleNext(); else clearTimeout(timer);
+    setButtonState();
+  }
 
-function updateStage(index) {
-  const ready=index<0, i=Math.max(index,0), item=data.pipeline[i], agent=AGENTS[i];
-  $("#live-agent").textContent=ready?"PROMETHEUS":agent.name;
-  $("#live-phase").textContent=ready?"IGNITION":item.stage;
-  $("#live-packet").textContent=ready?"MISSION":PACKETS[i];
-  $("#live-gate").textContent=ready?"READY":STATES[i];
-  $("#live-proof").textContent=`${ready?0:CONFIDENCE[i]}%`;
-  $("#fabric-state").textContent=ready?"MISSION READY":`${agent.name} · ${STATES[i]}`;
-  $("#live-latency").textContent=`${ready?18:LATENCIES[i]}ms`;
-  $("#live-packets").textContent=String(ready?0:(i+1)*(i+2)/2);
-  $("#live-queue").textContent=i===2?"1":"0";
-  $("#live-receipt").textContent=i<5?"PENDING":i===5?"HASHING":"SEALED";
-  $("#fabric-packet b").textContent=ready?"MISSION":PACKETS[i];
-  $("#fabric-packet span").textContent=`PKT-${String(ready?0:i).padStart(3,"0")}`;
-  $("#global-graph-value").textContent=`${ready?0:CONFIDENCE[i]}%`;
-  setDial("proof",ready?0:CONFIDENCE[i]); setDial("load",ready?12:LOADS[i]);
-  $("#global-graph-line").setAttribute("points", graphPoints(telemetryPattern.slice(0, ready?1:Math.min(18,(i+1)*2+2)),800,150));
-  $$(".fabric-agent").forEach((n,j)=>{n.classList.toggle("active",j===index);n.classList.toggle("done",index>=0&&j<index);n.classList.toggle("failure",(index===2||index===3)&&j===index);});
-  $$("[data-pipeline-stage]").forEach((n,j)=>{n.classList.toggle("active",j===index);n.classList.toggle("complete",index>=0&&j<=index);});
-  $("#progress-bar").style.width=`${ready?0:((i+1)/8)*100}%`;
-}
+  function advanceMission(token) {
+    if (token !== runToken || paused) return;
+    if (stage >= 7) { finish(false); return; }
+    applyStage(stage + 1, false);
+    scheduleNext(token);
+  }
 
-function graphPoints(values,w,h) { if(values.length===1) return `0,${h-10}`; return values.map((v,i)=>`${Math.round(i/(values.length-1)*w)},${Math.round(v/100*(h-20)+10)}`).join(" "); }
-function resetGraphs(){ AGENTS.forEach((_,i)=>{ $(`#agent-line-${i}`)?.setAttribute("points","0,66"); $(`#agent-load-${i}`).textContent="0%"; $(`#agent-latency-${i}`).textContent="--"; $(`#agent-packets-${i}`).textContent="0"; const card=$(`[data-agent-card="${i}"]`); card?.classList.remove("active","done","failure"); card?.querySelector(".agent-state")?.replaceChildren(document.createTextNode("STANDBY")); }); }
-function updateAgentGraph(index){ AGENTS.forEach((_,i)=>{ const card=$(`[data-agent-card="${i}"]`); card?.classList.toggle("active",i===index); card?.classList.toggle("done",i<index); card?.classList.toggle("failure",i===index&&(index===2||index===3)); if(i<=index){$(`#agent-line-${i}`).setAttribute("points",graphPoints(AGENT_PATTERNS[i],240,72));$(`#agent-load-${i}`).textContent=`${LOADS[i]}%`;$(`#agent-latency-${i}`).textContent=`${LATENCIES[i]}ms`;$(`#agent-packets-${i}`).textContent=String(i+1);card.querySelector(".agent-state").textContent=i===index?STATES[i]:"COMPLETE";} }); }
-function setDial(id,value){ const ring=$(`#${id}-dial`); const label=$(`#${id}-dial-value`); ring?.style.setProperty("--value",String(value)); if(label) label.textContent=`${value}%`; }
+  function scheduleNext(token = runToken) {
+    clearTimeout(timer);
+    if (!running || paused) return;
+    const speed = Number($("#speed-select").value || 1);
+    timer = setTimeout(() => advanceMission(token), 1500 / speed);
+  }
 
-function startAmbient(){ if(ambientTimer) clearInterval(ambientTimer); let index=-1; ambientTimer=setInterval(()=>{ if(!$("#proof-theater")?.hidden) return; index=(index+1)%8; applyStage(index); },2200); }
+  function applyStage(index, instant) {
+    stage = index;
+    const item = data.pipeline[index];
+    const previous = index > 0 ? data.pipeline[index-1] : null;
+    updateStage(index);
+    appendTerminal(item.state, item.organ, item.detail);
+    if (previous) appendTerminal("HANDOFF","HANDOFF",`${previous.organ} -> ${item.organ} ${item.packet} PKT-${String(index).padStart(3,"0")} ACK`);
+    appendEvidence(item.organ,item.detail,index===2||index===3?"failure":index===4?"repair":"verified");
+    if (index === 4) {
+      $("#code-after").textContent = afterCode;
+      $("#code-state").textContent = "BEHAVIOR CHANGED";
+    }
+    if (instant && index === 7) finish(false);
+  }
 
-function openTheater(skip){ lastFocusedElement=document.activeElement; const theater=$("#proof-theater"); theater.hidden=false; document.body.classList.add("theater-open"); resetTheater(); if(skip) later(()=>finishTheater({immediate:true,source:"SKIP CONTROL"}),100); else $("#theater-launch")?.focus(); }
-function closeTheater(){ runId+=1; clearAll(); const theater=$("#proof-theater"); theater.hidden=true; theater.setAttribute("aria-busy","false"); document.body.classList.remove("theater-open"); lastFocusedElement?.focus?.(); startAmbient(); }
+  function updateStage(index) {
+    const ready = index < 0;
+    const i = Math.max(0,index);
+    const item = data.pipeline[i];
+    const proof = ready ? 0 : data.telemetry.proof[i];
+    const load = ready ? 12 : data.telemetry.load[i];
+    const latency = ready ? 18 : data.telemetry.latency[i];
+    const packets = ready ? 0 : data.telemetry.packets[i];
+    const source = ready || i === 0 ? "PROMETHEUS" : data.pipeline[i-1].organ;
+    const target = ready ? "AIS-Ω" : item.organ;
 
-function resetTheater(){ clearAll(); const theater=$("#proof-theater"); theater.className="proof-theater"; theater.setAttribute("aria-busy","false"); $("#verdict-card").hidden=true; $("#stage-kicker").textContent="AWAITING IGNITION"; $("#stage-title").textContent="PROMETHEUS IS READY"; $("#stage-narrative").textContent="Watch the same eight agents move through terminal code, handoffs, packets, graphs, repair, proof, memory, and promotion."; $("#core-value").textContent="READY"; $("#core-subtitle").textContent="EVIDENCE GOVERNED"; $("#proof-core").className="proof-core"; $("#theater-terminal-output").textContent="PROMETHEUS> mission PROM-COMP-001 staged\nBUILD_TRUTH> unsupported completion claims disabled"; $("#evidence-stream").innerHTML="<div class='evidence-line'><strong>[PROMETHEUS]</strong> Canonical eight-agent graph online.</div>"; $$(".theater-step,.organ-node").forEach(n=>n.classList.remove("active","done","handoff","packet-moving")); $("#metric-tests").textContent="0 / 5"; $("#metric-artifacts").textContent="0 / 8"; $("#metric-receipt").textContent="PENDING"; $("#metric-genome").textContent="UNEXTRACTED"; setGauge("proof",0);setGauge("load",12);$("#latency").textContent="18ms";$("#packet-count").textContent="0";$("#agent-count").textContent="1";$("#telemetry-line").setAttribute("points","0,80");$("#theater-clock").textContent="T+00:00";$("#theater-launch").disabled=false;$("#theater-launch").textContent="IGNITE COMMAND-TO-PROOF";$("#theater-skip").disabled=false;$("#theater-skip").textContent="SKIP TO VERIFIED RESULTS"; }
+    setText("#control-state", ready?"READY":item.state);
+    setText("#control-agent", ready?"PROMETHEUS":item.organ);
+    setText("#control-packet", ready?"MISSION":item.packet);
+    setText("#live-agent", ready?"PROMETHEUS":item.organ);
+    setText("#live-phase", ready?"IGNITION":item.stage);
+    setText("#live-packet", ready?"MISSION":item.packet);
+    setText("#live-gate", ready?"READY":item.state);
+    setText("#live-proof", `${proof}%`);
+    setText("#live-queue", i===2?"1":"0");
+    setText("#live-receipt", ready||i<5?"PENDING":i===5?"HASHING":"SEALED");
+    setText("#live-genome", ready||i<6?"UNEXTRACTED":i===6?"PRESERVED":"REUSED");
+    setText("#handoff-source", source);
+    setText("#handoff-target", target);
+    setText("#handoff-ack", ready?"STAGED":"ACKNOWLEDGED");
+    setText("#live-latency", `${latency}ms`);
+    setText("#live-packets", String(packets));
+    setText("#live-handoffs", String(ready?0:i));
+    setText("#live-tests", i<5?"0 / 5":i===5?"5 / 5":"5 / 5");
+    setText("#live-artifacts", i<5?"0 / 8":i===5?"8 / 8":"8 / 8");
+    setText("#live-claims", `${ready?0:Math.min(4,Math.ceil((i+1)/2))} / 4`);
+    setText("#live-blockers", i===3?"1":"0");
+    setText("#live-reuse", i<6?"PENDING":i===6?"READY":"VERIFIED");
+    setText("#live-release", i<3?"LOCKED":i===3?"DENIED":i<7?"REVIEW":"AUTHORIZED");
+    setText("#global-graph-value", `${proof}%`);
+    setText("#proof-dial-value", `${proof}%`);
+    setText("#load-dial-value", `${load}%`);
+    setText("#ribbon-proof", `${proof}%`);
+    setText("#ribbon-release", ready||i<3?"LOCKED":i===3?"DENIED":i<7?"REVIEW":"AUTHORIZED");
+    setText("#fabric-state", ready?"MISSION READY":`${item.organ} · ${item.state}`);
+    $("#proof-dial").style.setProperty("--v",String(proof));
+    $("#load-dial").style.setProperty("--v",String(load));
+    $("#fabric-packet b").textContent = ready?"MISSION":item.packet;
+    $("#fabric-packet span").textContent = `PKT-${String(ready?0:i).padStart(3,"0")}`;
+    $("#fabric-packet").style.transform = `translateX(${ready?0:(i/7)*Math.max(0,$(".packet-runway").clientWidth-172)}px)`;
 
-function runTheater(){ runId+=1; const current=runId; resetTheater(); const theater=$("#proof-theater"); theater.classList.add("running");theater.setAttribute("aria-busy","true");$("#theater-launch").disabled=true;$("#theater-launch").textContent="LIVE MISSION RUNNING"; terminalStart=Date.now(); every(()=>{const s=Math.floor((Date.now()-terminalStart)/1000);$("#theater-clock").textContent=`T+${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;},250); startTheaterTelemetry(); later(()=>advance(current,0),350); }
+    $$("[data-node]").forEach((node,j)=>{ node.classList.toggle("active",j===index); node.classList.toggle("done",index>=0&&j<index); node.classList.toggle("failure",(index===2||index===3)&&j===index); });
+    $$("[data-agent-card]").forEach((card,j)=>{ card.style.opacity = index<0?"1":j<=index?"1":".55"; const badge=card.querySelector("[data-agent-state]"); if(badge) badge.textContent=j<index?"COMPLETE":j===index?item.state:"STANDBY"; });
+    drawGlobalSeries(i,ready);
+    drawAgentCharts(i,ready);
+  }
 
-function advance(current,index){ if(current!==runId)return; if(index>=8){finishTheater({source:"PIPELINE"});return;} const item=data.pipeline[index],agent=AGENTS[index]; $$(".theater-step").forEach((n,j)=>{n.classList.toggle("active",j===index);n.classList.toggle("done",j<index);}); $$(".organ-node").forEach((n,j)=>{n.classList.toggle("active",j===index);n.classList.toggle("done",j<index);n.classList.toggle("handoff",j===index||j===index-1);}); animatePacket(index); $("#stage-kicker").textContent=`${String(index+1).padStart(2,"0")} / 08 · ${agent.name}`;$("#stage-title").textContent=item.stage;$("#stage-narrative").textContent=item.detail;$("#core-value").textContent=CORE[index];$("#core-subtitle").textContent=STATES[index]; const theater=$("#proof-theater"),core=$("#proof-core");theater.classList.remove("failure","success");core.className="proof-core";if(index===2||index===3){theater.classList.add("failure");core.classList.add("fail");}if(index>=4)core.classList.add("success"); appendEvidence(agent.name,item.detail,index===2||index===3?"fail":index===4?"repair":""); appendTheaterTerminal(agent.name,item.detail,index); if(index>0){appendEvidence("HANDOFF",`${AGENTS[index-1].name} → ${agent.name} · ${PACKETS[index]} packet acknowledged`);appendTheaterTerminal("HANDOFF",`${AGENTS[index-1].name} -> ${agent.name} ${PACKETS[index]} PKT-${String(index).padStart(3,"0")}`,index);} updateMetrics(index); later(()=>advance(current,index+1),1450); }
+  function drawGlobalSeries(index,ready) {
+    const slice = values => ready ? [values[0]] : values.slice(0,index+1);
+    $("#series-proof").setAttribute("points",points(slice(data.telemetry.proof),800,150));
+    $("#series-evidence").setAttribute("points",points(slice(data.telemetry.evidence),800,150));
+    $("#series-claims").setAttribute("points",points(slice(data.telemetry.claims),800,150));
+    $("#series-readiness").setAttribute("points",points(slice(data.telemetry.readiness),800,150));
+  }
 
-function appendTheaterTerminal(source,message,index){ const el=$("#theater-terminal-output");el.textContent+=`\n${stamp()}  ${PACKETS[Math.max(0,index)].padEnd(10)} ${source.padEnd(20)} ${message}`;el.scrollTop=el.scrollHeight; }
-function animatePacket(index){const step=$(`.theater-step[data-step="${index}"]`);if(!step)return;step.classList.remove("packet-moving");void step.offsetWidth;step.classList.add("packet-moving");$("#packet-count").textContent=String((index+1)*(index+2)/2);}
-function updateMetrics(index){setGauge("proof",CONFIDENCE[index]);setGauge("load",LOADS[index]);$("#agent-count").textContent=String(index+1);$("#latency").textContent=`${LATENCIES[index]}ms`;if(index>=4)$("#metric-tests").textContent=`${Math.min(5,index-3)} / 5`;if(index>=5){$("#metric-artifacts").textContent=`${Math.min(8,(index-4)*4)} / 8`;$("#metric-receipt").textContent="HASHING";}if(index>=6)$("#metric-genome").textContent="EXTRACTED";}
-function setGauge(id,value){const path=$(`#gauge-${id}`),label=$(`#gauge-${id}-value`);if(!path||!label)return;const length=141.4;path.style.strokeDasharray=String(length);path.style.strokeDashoffset=String(length-(length*value/100));label.textContent=`${value}%`;}
-function startTheaterTelemetry(){let idx=0;every(()=>{idx=(idx+1)%telemetryPattern.length;$("#telemetry-line").setAttribute("points",graphPoints(telemetryPattern.slice(0,idx+1),300,90));},180);}
-function appendEvidence(source,message,kind=""){const stream=$("#evidence-stream");const line=document.createElement("div");line.className=`evidence-line ${kind}`.trim();line.innerHTML=`<strong>[${esc(source)}]</strong> ${esc(message)}`;stream.appendChild(line);stream.scrollTop=stream.scrollHeight;}
+  function drawAgentCharts(index,ready) {
+    [0,2].forEach(agentIndex => {
+      const line = $(`#agent-line-${agentIndex}`);
+      if (!line) return;
+      const base = agentIndex===0 ? data.telemetry.claims : [5,12,20,35,92,70,55,44];
+      const values = ready ? [base[0]] : base.slice(0,Math.min(index+1,base.length));
+      line.setAttribute("points",points(values,420,160));
+    });
+  }
 
-function finishTheater({ immediate = false, source = "PIPELINE" } = {}) { runId+=1; const verdictRun=runId; clearAll(); const theater=$("#proof-theater");theater.hidden=false;theater.classList.remove("running","failure");theater.classList.add("success");theater.setAttribute("aria-busy","false");$$(".theater-step,.organ-node").forEach(n=>{n.classList.remove("active","handoff","packet-moving");n.classList.add("done");});$("#stage-kicker").textContent="08 / 08 · BUILD TRUTH";$("#stage-title").textContent="PROMOTION AUTHORIZED";$("#stage-narrative").textContent="All eight PROMETHEUS agents completed the same canonical handoff chain. ProofGrid verified the evidence, Capability Genome preserved the repair, and Build Truth authorized promotion.";$("#core-value").textContent="PROVEN";$("#core-subtitle").textContent="PROMOTION AUTHORIZED";$("#proof-core").className="proof-core success";setGauge("proof",100);setGauge("load",52);$("#metric-tests").textContent="5 / 5";$("#metric-artifacts").textContent="8 / 8";$("#metric-receipt").textContent="VERIFIED";$("#metric-genome").textContent="REUSED";$("#agent-count").textContent="8";$("#latency").textContent="9ms";$("#packet-count").textContent="36";if(source==="SKIP CONTROL")appendEvidence("DEMO CONTROL","Fast-forwarded to the stored verified outcome.");appendEvidence("PROOFGRID","Receipt hash verified. Build Truth authorizes promotion.");appendEvidence("CAPABILITY GENOME","PG-CG-REPLAY-GUARD-001 reused. Failure count reduced 1 → 0.");$("#theater-terminal-output").textContent+="\nT+00:12  SEALED     PROOFGRID            receipt hash verified\nT+00:13  PROMOTION  BUILD TRUTH          PROMOTION AUTHORIZED";$("#theater-launch").disabled=false;$("#theater-launch").textContent="RUN FULL REPLAY";$("#theater-skip").disabled=true;$("#theater-skip").textContent="VERIFIED RESULTS LOADED";const showVerdict=()=>{if(verdictRun!==runId)return;const verdict=$("#verdict-card");verdict.hidden=false;verdict.focus();};if(immediate)showVerdict();else later(showVerdict,600); }
+  function points(values,width,height) {
+    if (values.length === 1) return `0,${height-10}`;
+    return values.map((value,index)=>`${Math.round(index/(values.length-1)*width)},${Math.round(height-10-(value/100)*(height-20))}`).join(" ");
+  }
 
-function selectChallenge(key){const [command,href]=CHALLENGES[key]||CHALLENGES.receipt;$$('[data-challenge]').forEach(b=>b.classList.toggle("active",b.dataset.challenge===key));$("#challenge-output").textContent=command;$("#challenge-link").href=href;}
-async function copyChallenge(){const value=$("#challenge-output").textContent;try{await navigator.clipboard.writeText(value);}catch{const area=document.createElement("textarea");area.value=value;document.body.appendChild(area);area.select();document.execCommand("copy");area.remove();}$("#challenge-copy").textContent="COPIED";later(()=>$("#challenge-copy").textContent="COPY",1200);}
+  function appendTerminal(type,source,message,target="#mission-terminal") {
+    const el = $(target); if (!el) return;
+    el.textContent += `${el.textContent?"\n":""}${terminalLine(type,source,message)}`;
+    el.scrollTop = el.scrollHeight;
+  }
 
-load().catch(error => { console.error(error); document.body.innerHTML=`<main style="padding:40px"><h1>PROMETHEUS data load failed</h1><p>${esc(error.message)}</p></main>`; });
+  function terminalLine(type,source,message) {
+    return `${elapsed()}  ${String(type).padEnd(10)} ${String(source).padEnd(20)} ${message}`;
+  }
+
+  function elapsed() {
+    const seconds = Math.floor((Date.now()-startedAt)/1000);
+    return `T+${String(Math.floor(seconds/60)).padStart(2,"0")}:${String(seconds%60).padStart(2,"0")}`;
+  }
+
+  function startClock() {
+    clearInterval(clockTimer);
+    clockTimer = setInterval(()=>{ const value=elapsed(); setText("#ribbon-clock",value); setText("#terminal-clock",value); setText("#theater-clock",value); },250);
+  }
+
+  function finish(theaterMode) {
+    running = false; paused = false; clearTimeout(timer); clearInterval(clockTimer);
+    updateStage(7);
+    appendTerminal("SEALED","PROOFGRID",`receipt ${data.proofgrid.receipt_id} hash verified`);
+    appendTerminal("PROMOTION","BUILD TRUTH","PROMOTION AUTHORIZED");
+    if (theaterMode) showVerdict();
+    setButtonState();
+  }
+
+  function loadVerified(theaterMode) {
+    stopTimers(); running = false; paused = false; stage = -1; startedAt = Date.now();
+    for (let i=0;i<8;i++) applyStage(i,false);
+    finish(theaterMode);
+  }
+
+  function setButtonState() {
+    $("#cockpit-pause").textContent = paused?"RESUME":"PAUSE";
+    $("#cockpit-run").disabled = running && !paused;
+    $("#ribbon-run").textContent = running?(paused?"PAUSED":"ACTIVE"):stage===7?"COMPLETE":"STAGED";
+  }
+
+  function stopTimers() { clearTimeout(timer); clearInterval(clockTimer); runToken += 1; }
+
+  function openTheater(skip) {
+    lastFocus = document.activeElement;
+    $("#proof-theater").hidden = false;
+    document.body.style.overflow = "hidden";
+    resetTheater();
+    if (skip) loadVerified(true); else $("#theater-launch").focus();
+  }
+
+  function closeTheater() {
+    $("#proof-theater").hidden = true;
+    document.body.style.overflow = "";
+    stopTimers(); running = false; paused = false; lastFocus?.focus?.();
+  }
+
+  function resetTheater() {
+    $("#verdict-card").hidden = true;
+    $("#evidence-stream").innerHTML = `<div><b>[PROMETHEUS]</b> Mission graph staged.</div>`;
+    $("#theater-terminal-output").textContent = "PROMETHEUS> mission PROM-COMP-001 staged\nBUILD_TRUTH> unsupported completion claims disabled";
+    setText("#stage-kicker","AWAITING IGNITION"); setText("#stage-title","PROMETHEUS IS READY"); setText("#stage-narrative","The same state engine drives terminal events, packets, telemetry, evidence and verdict."); setText("#core-value","READY"); setText("#core-subtitle","EVIDENCE GOVERNED");
+    setText("#metric-tests","0 / 5"); setText("#metric-artifacts","0 / 8"); setText("#metric-receipt","PENDING"); setText("#metric-genome","UNEXTRACTED");
+    $$("[data-theater-agent]").forEach(node=>node.classList.remove("active","done"));
+  }
+
+  function runTheater() {
+    resetTheater(); resetAll(); running = true; startedAt = Date.now(); runToken += 1; startClock();
+    const token = runToken;
+    const tick = () => {
+      if (token!==runToken) return;
+      if (stage>=7) { finish(true); return; }
+      const next=stage+1; applyStage(next,false); updateTheater(next); timer=setTimeout(tick,1450);
+    };
+    tick();
+  }
+
+  function updateTheater(index) {
+    const item=data.pipeline[index];
+    setText("#stage-kicker",`${String(index+1).padStart(2,"0")} / 08 · ${item.organ}`);
+    setText("#stage-title",item.stage); setText("#stage-narrative",item.detail); setText("#core-value",CORE[index]); setText("#core-subtitle",item.state);
+    appendTerminal(item.packet,item.organ,item.detail,"#theater-terminal-output");
+    $$("[data-theater-agent]").forEach((node,j)=>{node.classList.toggle("active",j===index);node.classList.toggle("done",j<index);});
+    if(index>=5){setText("#metric-tests","5 / 5");setText("#metric-artifacts","8 / 8");setText("#metric-receipt","VERIFIED");}
+    if(index>=6)setText("#metric-genome",index===6?"PRESERVED":"REUSED");
+  }
+
+  function appendEvidence(source,message,kind) {
+    const stream=$("#evidence-stream"); if(!stream)return;
+    const line=document.createElement("div"); line.className=kind||""; line.innerHTML=`<b>[${esc(source)}]</b> ${esc(message)}`; stream.appendChild(line);
+  }
+
+  function showVerdict() {
+    $("#verdict-card").hidden=false; $("#verdict-card").focus();
+    setText("#metric-tests","5 / 5");setText("#metric-artifacts","8 / 8");setText("#metric-receipt","VERIFIED");setText("#metric-genome","REUSED");
+  }
+
+  function selectChallenge(key) {
+    const [command,href]=CHALLENGES[key]||CHALLENGES.receipt;
+    $$('[data-challenge]').forEach(button=>button.classList.toggle("active",button.dataset.challenge===key));
+    $("#challenge-output").textContent=command; $("#challenge-link").href=href;
+  }
+
+  async function copyChallenge() {
+    const value=$("#challenge-output").textContent;
+    try { await navigator.clipboard.writeText(value); }
+    catch { const area=document.createElement("textarea"); area.value=value; document.body.appendChild(area); area.select(); document.execCommand("copy"); area.remove(); }
+    $("#challenge-copy").textContent="COPIED"; setTimeout(()=>$("#challenge-copy").textContent="COPY",1200);
+  }
+
+  function setText(selector,value){const el=$(selector);if(el)el.textContent=value;}
+
+  init().catch(error => {
+    console.error(error);
+    document.body.innerHTML=`<main style="padding:40px"><h1>PROMETHEUS DATA LOAD FAILED</h1><p>Verified snapshot unavailable. No completion claim displayed.</p><pre>${esc(error.message)}</pre></main>`;
+  });
+})();
