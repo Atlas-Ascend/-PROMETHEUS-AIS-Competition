@@ -30,14 +30,25 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Run operator-console proof gates
+      - name: JavaScript syntax
+        run: node --check docs/assets/app.js
+
+      - name: Operator console contract
+        run: node docs/tests/demo_contract.mjs
+
+      - name: Site and receipt integrity
+        run: python docs/tests/site_integrity.py
+
+      - name: Public data validity
+        run: python -m json.tool docs/data/demo.json > /dev/null
+
+      - name: Repository identity
         run: |
-          set -euo pipefail
-          node --check docs/assets/app.js
-          node docs/tests/demo_contract.mjs
-          python docs/tests/site_integrity.py
-          python -m json.tool docs/data/demo.json > /dev/null
           grep -q "PROMETHEUS Operator Console" README.md
           grep -q "EDEN and ServerForge" README.md
-          grep -q "Intellectual-property boundary" docs/documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md
-          grep -q "Withheld" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
+
+      - name: Technical specification boundary
+        run: grep -qi "intellectual-property boundary" docs/documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md
+
+      - name: Case-study disclosure boundary
+        run: grep -q "Withheld" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
