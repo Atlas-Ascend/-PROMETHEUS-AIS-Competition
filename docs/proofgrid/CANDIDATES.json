@@ -1,0 +1,19 @@
+{
+  "candidates": [
+    {
+      "decision": "rejected",
+      "id": "route-a",
+      "strategy": "allow duplicate execution"
+    },
+    {
+      "decision": "rejected",
+      "id": "route-b",
+      "strategy": "warn and continue"
+    },
+    {
+      "decision": "selected",
+      "id": "route-c",
+      "strategy": "enable_idempotent_replay_guard"
+    }
+  ]
+}
