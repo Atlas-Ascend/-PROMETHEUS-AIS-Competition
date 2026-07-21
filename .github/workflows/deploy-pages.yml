@@ -25,7 +25,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout main only
         uses: actions/checkout@v4
@@ -51,6 +51,7 @@ jobs:
           test -f docs/assets/elite-demo.js
           test -f docs/proofgrid/FINAL_RECEIPT.json
           node --check docs/assets/elite-demo.js
+          python -m json.tool docs/proofgrid/FINAL_RECEIPT.json > /dev/null
           grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' index.html
           grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
           grep -q 'IGNITE 2:45 DEMONSTRATION' index.html
@@ -59,6 +60,79 @@ jobs:
           grep -Fq "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
           ! grep -Eqi 'PROMETHEUS · Operator Console|IGNITE 3:00|T\+03:00|180-second|180 seconds' index.html docs/index.html
           echo 'COMMAND TO PROOF PASS: exact 2:45 production artifact locked.'
+
+      - name: Sandbox DOM and asset contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          root = Path('.')
+          html = (root / 'docs/index.html').read_text(encoding='utf-8')
+          js = (root / 'docs/assets/elite-demo.js').read_text(encoding='utf-8')
+
+          class Inspector(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.ids = set()
+                  self.assets = []
+              def handle_starttag(self, tag, attrs):
+                  data = dict(attrs)
+                  if data.get('id'):
+                      self.ids.add(data['id'])
+                  if tag == 'link' and data.get('href'):
+                      self.assets.append(data['href'])
+                  if tag == 'script' and data.get('src'):
+                      self.assets.append(data['src'])
+
+          inspector = Inspector()
+          inspector.feed(html)
+          selectors = set(re.findall(r"\$\('#([^']+)'\)", js))
+          missing_ids = sorted(selectors - inspector.ids)
+          if missing_ids:
+              raise SystemExit(f'Missing DOM IDs required by runtime: {missing_ids}')
+
+          missing_assets = []
+          for asset in inspector.assets:
+              if asset.startswith(('http://', 'https://', '#')):
+                  continue
+              if not (root / 'docs' / asset).is_file():
+                  missing_assets.append(asset)
+          if missing_assets:
+              raise SystemExit(f'Missing referenced assets: {missing_assets}')
+
+          required = {'launch','replay','clock','release','proof','ring','pipeline','edge-grid','terminal','verdict'}
+          absent = sorted(required - inspector.ids)
+          if absent:
+              raise SystemExit(f'Missing required interactive controls: {absent}')
+
+          print(f'SANDBOX DOM PASS: {len(inspector.ids)} IDs, {len(selectors)} runtime selectors, all assets present')
+          PY
+
+      - name: Sandbox HTTP delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory . >/tmp/prometheus-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:4173/ >/tmp/root.html && break
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:4173/docs/ >/tmp/docs.html
+          curl -fsS http://127.0.0.1:4173/docs/assets/elite-demo.css >/tmp/elite-demo.css
+          curl -fsS http://127.0.0.1:4173/docs/assets/elite-demo.js >/tmp/elite-demo.js
+          curl -fsS http://127.0.0.1:4173/docs/proofgrid/FINAL_RECEIPT.json >/tmp/final-receipt.json
+          grep -q 'IGNITE 2:45 DEMONSTRATION' /tmp/root.html
+          grep -q 'IGNITE 2:45 DEMONSTRATION' /tmp/docs.html
+          node --check /tmp/elite-demo.js
+          python -m json.tool /tmp/final-receipt.json > /dev/null
+          test -s /tmp/elite-demo.css
+          echo 'SANDBOX HTTP PASS: root, docs, CSS, JavaScript, and receipt delivered.'
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -71,3 +145,36 @@ jobs:
       - name: Deploy exact 2:45 site
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify live public deployment
+        shell: bash
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          test -n "$PAGE_URL"
+          case "$PAGE_URL" in */) ;; *) PAGE_URL="${PAGE_URL}/" ;; esac
+          RELEASE="${GITHUB_SHA}"
+          for attempt in $(seq 1 30); do
+            echo "Live proof attempt ${attempt}/30: ${PAGE_URL}?release=${RELEASE}"
+            if curl -fsSL --retry 2 --retry-delay 2 "${PAGE_URL}?release=${RELEASE}" -o /tmp/live-index.html; then
+              if grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' /tmp/live-index.html \
+                && grep -q 'IGNITE 2:45 DEMONSTRATION' /tmp/live-index.html; then
+                break
+              fi
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              echo 'Exact 2:45 page did not become publicly verifiable before timeout.' >&2
+              exit 1
+            fi
+            sleep 10
+          done
+          curl -fsSL "${PAGE_URL}docs/assets/elite-demo.css?release=${RELEASE}" -o /tmp/live.css
+          curl -fsSL "${PAGE_URL}docs/assets/elite-demo.js?release=${RELEASE}" -o /tmp/live.js
+          curl -fsSL "${PAGE_URL}docs/proofgrid/FINAL_RECEIPT.json?release=${RELEASE}" -o /tmp/live-receipt.json
+          test -s /tmp/live.css
+          node --check /tmp/live.js
+          grep -Fq 'const duration = 165;' /tmp/live.js
+          grep -Fq "const finalClock = 'T+02:45';" /tmp/live.js
+          python -m json.tool /tmp/live-receipt.json > /dev/null
+          echo "LIVE COMMAND TO PROOF PASS: ${PAGE_URL}"
