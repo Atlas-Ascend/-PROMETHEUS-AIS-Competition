@@ -1,9 +1,9 @@
 {
   "interface": "PROMETHEUS Unified Command-to-Proof Mission Cockpit",
-  "release_id": "PROMETHEUS-UI-UNIFIED-20260721-01",
+  "release_id": "PROMETHEUS-UI-UNIFIED-20260721-02",
   "source_commit": "48a82b307c037c9f3a494869af3206d0dff01513",
   "deployment_workflow_commit": "9f1144e0fafef2c8f8c6dd23712eb25a417cd2b2",
-  "status": "fresh_pages_deployment_requested",
+  "status": "merge_trigger_requested",
   "site": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/",
   "canonical_agents": [
     "PROMETHEUS",
