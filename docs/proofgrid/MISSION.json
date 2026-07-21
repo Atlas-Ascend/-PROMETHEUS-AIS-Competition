@@ -1,0 +1,12 @@
+{
+  "acceptance": [
+    "Reproduce a real bounded replay failure",
+    "Block unsupported promotion",
+    "Apply behavior-changing repair",
+    "Verify artifacts and hashes",
+    "Extract and reuse Capability Genome"
+  ],
+  "mission_id": "PROM-COMP-001",
+  "objective": "Prove that consequential operations fail closed, are repaired behaviorally, and preserve the successful strategy for verified reuse.",
+  "title": "Publish a replay-safe proof receipt"
+}
