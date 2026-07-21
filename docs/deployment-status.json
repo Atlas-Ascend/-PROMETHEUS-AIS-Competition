@@ -1,10 +1,13 @@
 {
-  "interface": "PROMETHEUS Unified Command-to-Proof Mission Cockpit",
-  "release_id": "PROMETHEUS-UI-UNIFIED-20260721-02",
-  "source_commit": "48a82b307c037c9f3a494869af3206d0dff01513",
-  "deployment_workflow_commit": "9f1144e0fafef2c8f8c6dd23712eb25a417cd2b2",
-  "status": "merge_trigger_requested",
+  "interface": "PROMETHEUS Elite Command-to-Proof Demonstration",
+  "release_id": "PROMETHEUS-ELITE-DEMO-2-45-20260721",
+  "source_branch": "main",
+  "deployment_path": "docs/",
+  "status": "DEPLOYMENT_REQUESTED",
   "site": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/",
+  "duration_seconds": 165,
+  "final_clock": "T+02:45",
+  "mission": "PROM-COMP-EDGE-001",
   "canonical_agents": [
     "PROMETHEUS",
     "AIS-Ω",
@@ -15,13 +18,12 @@
     "Capability Genome",
     "Build Truth"
   ],
-  "visible_features": [
-    "side-by-side terminal and theatrical mission",
-    "canonical agent handoffs",
-    "moving packet identifiers",
-    "global proof telemetry",
-    "one living graph per canonical agent",
-    "judge challenge mode",
-    "verified-result fast-forward"
-  ]
+  "public_contract": {
+    "candidate_routes": 3,
+    "edge_conditions": 7,
+    "tests": "5/5",
+    "artifacts": "8/8",
+    "failed_actions": "1 → 0",
+    "blockers": 0
+  }
 }
