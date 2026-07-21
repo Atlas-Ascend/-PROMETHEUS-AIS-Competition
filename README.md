@@ -2,92 +2,96 @@
 
 **Repair. Prove. Remember. Evolve.**
 
-PROMETHEUS is a self-proving, self-repairing AI engineering system that turns a software mission into an evidence-backed result.
+PROMETHEUS is a self-proving AI engineering system that turns a software mission into an evidence-backed result.
 
 > AI can claim completion. PROMETHEUS requires proof.
 
-## OpenAI Build Week
+## Competition entry
 
 - **Track:** Developer Tools
-- **Project:** PROMETHEUS V-1.1.1, The Self-Proving AI Engineering Organism
+- **Product:** PROMETHEUS V-1.1.1, The Self-Proving AI Engineering Organism
 - **Live demo:** https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/
 - **Supported platform:** Python 3.10 or newer plus a modern browser
 - **License:** PROMETHEUS Competition Evaluation License v1.0
 
-PROMETHEUS is designed for software teams, platform engineers, DevOps organizations, and builders of consequential agentic workflows that need auditable evidence rather than unsupported completion claims.
+PROMETHEUS is designed for builders of consequential agentic workflows, platform teams, DevOps organizations and software engineers who need auditable evidence rather than unsupported completion claims.
 
 ## The problem
 
-Coding agents can generate output and report success without proving that consequential operations are replay-safe, failures are repaired behaviorally, artifacts are intact, or release claims are supported.
+Coding agents can generate output and report success without proving that consequential operations are replay-safe, failures are repaired behaviorally, artifacts remain intact, or release claims are supported.
 
-PROMETHEUS converts a mission into a governed chain of candidate evaluation, adversarial failure, fail-closed promotion control, repair, testing, receipt verification, reusable capability, and evidence-backed release authority.
+PROMETHEUS converts a mission into a governed chain of candidate evaluation, adversarial failure, fail-closed promotion control, behavioral repair, testing, receipt verification, reusable capability and evidence-backed release authority.
 
-## Always-available competition website
+## Operator Console
 
-The hosted Olympian Console is built directly from this repository and stays available when the local development machine is offline.
+The public website is a complete operator-console presentation of one deterministic verified mission. It includes:
+
+- run, pause, resume, step, reset and speed controls
+- technical terminal events and handoff acknowledgements
+- a before-and-after behavioral code comparison
+- a canonical eight-agent handoff fabric
+- governed work packets with packet identifiers
+- four global telemetry series
+- eight role-specific system visualizations
+- full-screen proof theater
+- immediate verified-result closeout
+- Judge Challenge Mode
+- an EDEN and ServerForge competition case study
+- an explicit intellectual-property disclosure boundary
+- machine-readable ProofGrid and Capability Genome artifacts
+
+The public interface is a deterministic visualization of a verified public snapshot. The executable package regenerates fresh local evidence.
+
+## Canonical Command-to-Proof sequence
 
 ```text
-GitHub
-  → GitHub Actions
-  → Static Competition Website
-      → Interface
-      → Demo data
-      → Screenshots
-      → ProofGrid receipts
-      → Capability Genome
-      → Documentation
+PROMETHEUS
+→ AIS-Ω
+→ Adversarial Twin
+→ SECA
+→ HYDRA
+→ ProofGrid
+→ Capability Genome
+→ Build Truth
 ```
 
-The public proof theater includes:
+These eight names and this order are used consistently across the interface, terminal, packets, telemetry, evidence, system visualizations and documentation.
 
-- Visible agent-to-agent handoffs.
-- Moving governed work packets.
-- Deterministic telemetry and gauges.
-- Live evidence stream.
-- Failure, SECA denial, HYDRA repair, ProofGrid verification, and promotion states.
-- Immediate **Skip to Verified Results** closeout.
-- Replay and Return to Console controls.
-- Machine-readable receipts and capability artifacts.
-
-The hosted interface is explicitly a deterministic visualization of a verified public snapshot. The executable package regenerates fresh local evidence.
-
-## Unified system surface
-
-The website presents one obsidian-and-molten-gold operating language across:
-
-- PROMETHEUS Command-to-Proof
-- EDEN runtime and orchestration
-- HYDRA Repair Forge
-- ProofGrid evidence and receipts
-- SECA promotion gate
-- THOTH archive
-- ServerForge observatory
-- Packet OS execution
-- Build Truth
-- Capability Genome
-
-## Deterministic proof chain
+## Deterministic proof mission
 
 ```text
-mission
-→ candidate routes
-→ real bounded failure
-→ SECA promotion block
-→ HYDRA behavioral repair
-→ affected and regression tests
-→ ProofGrid receipt and hashes
-→ Capability Genome extraction
-→ related-task reuse
-→ measured improvement
+mission admitted
+→ three candidate routes evaluated
+→ bounded duplicate-operation failure reproduced
+→ unsupported promotion denied
+→ idempotent replay repair applied
+→ five tests and eight artifacts verified
+→ ProofGrid receipt sealed
+→ Capability Genome extracted
+→ related-task reuse verified
+→ Build Truth authorizes promotion
 ```
 
 ## What it proves
 
-- SECA blocks unsupported promotion after a duplicate-operation failure.
+- AIS-Ω evaluates multiple distinct implementation routes.
+- The Adversarial Twin reproduces a real bounded failure.
+- SECA blocks unsupported promotion.
 - HYDRA changes replay behavior through an idempotent execution guard.
-- ProofGrid creates a receipt whose artifact hashes can be independently verified.
-- Capability Genome `PG-CG-REPLAY-GUARD-001` preserves the repair.
-- A related but non-identical release-manifest task reuses the Genome, reducing failed actions from **1 to 0**.
+- ProofGrid verifies tests, artifacts and the receipt hash.
+- Capability Genome `PG-CG-REPLAY-GUARD-001` preserves the successful repair.
+- A related task reuses the Genome, reducing failed actions from **1 to 0**.
+- Build Truth authorizes release only after the complete evidence chain closes.
+
+## EDEN and ServerForge case study
+
+The engineering occurred against the real repository inside **EDEN**, the local execution body. EDEN provided the Windows-based workspace, runtime, tools and repository access used for implementation and verification.
+
+**Codex** accelerated implementation, debugging, integration, interface construction, deployment repair, testing and competition hardening.
+
+**ServerForge** served as the sanitized observability transport. It records the public campaign narrative, including mission events, handoffs, recovery state, evidence publications and the final verified outcome.
+
+The public case study deliberately excludes private prompts, proprietary routing logic, patent-sensitive mechanisms, credentials, webhooks, local machine paths, private state and unrelated estate architecture.
 
 ## Run the executable package
 
@@ -104,66 +108,65 @@ python -m prometheus.cli contest submission-check
 python -m prometheus.cli interface competition
 ```
 
-The local interface redirects into the same `docs/` website used for the hosted competition surface.
-
 ## How Codex and GPT-5.6 were used
 
-Codex accelerated implementation, debugging, integration, and competition hardening across the executable package and public product surface. It was used to:
+Codex accelerated:
 
-- Translate the Command-to-Proof concept into a runnable Python competition package.
-- Implement and refine the CLI, deterministic proof mission, receipt verification, and contest checks.
-- Build and harden the public GitHub Pages interface.
-- Diagnose deployment and path failures.
-- Repair demo controls and navigation.
-- Add agent handoffs, moving packets, telemetry, gauges, evidence choreography, and verdict states.
-- Create CI gates for the package, website, evidence, and replay contract.
-- Produce judge-facing documentation, testing instructions, and submission-readiness controls.
+- the executable Python Command-to-Proof package
+- CLI and contest checks
+- deterministic replay-failure demonstration
+- receipt and artifact verification
+- test and deployment gates
+- the full Operator Console
+- terminal, code delta, packets, telemetry and theater controls
+- competition documentation and submission preparation
 
-The human creator retained the core product and engineering decisions: the PROMETHEUS architecture, Build Truth doctrine, system organs, proof semantics, visual direction, public/private boundary, competition strategy, and release authority.
+The human creator retained the architecture, Build Truth doctrine, proof semantics, product decisions, public/private boundary, visual direction and release authority.
 
-The primary `/feedback` Codex Session ID is supplied through the Devpost submission.
+The primary `/feedback` Codex Session ID is supplied through the competition submission.
 
-## What is new during OpenAI Build Week
+## What was built during the competition period
 
-PROMETHEUS existed as a broader architecture before the submission period. The competition edition was meaningfully extended during Build Week with:
+- executable Python competition package
+- bounded replay-failure demonstration
+- SECA denial and HYDRA behavior-changing repair
+- ProofGrid receipt and artifact hashing
+- Capability Genome extraction and related-task reuse
+- full Operator Console and proof theater
+- deterministic telemetry and role-specific system visualizations
+- EDEN and ServerForge case study
+- GitHub Pages deployment and interface validation
+- judge brief, technical specification, demo script, submission kit and readiness checklist
 
-- The executable Python Command-to-Proof package.
-- The bounded replay-failure demonstration.
-- SECA denial and HYDRA behavior-changing repair evidence.
-- ProofGrid receipts and artifact hashing.
-- Capability Genome extraction and verified related-task reuse.
-- The public Olympian Console and full-screen Ghost Atlas proof theater.
-- Visible handoffs, moving packets, deterministic telemetry, gauges, and evidence feed.
-- GitHub Pages delivery and automated competition hardening gates.
-- Judge brief, quickstart, demo script, submission kit, and readiness checklist.
-
-The dated public commit history documents these additions and extensions.
+The dated public commit history documents these additions.
 
 ## Judge path
 
-1. Open the live demo.
-2. Select **Launch live Command-to-Proof demo**.
-3. Run the full replay or select **Skip to Verified Results**.
-4. Inspect the final ProofGrid verdict.
-5. Open the machine-readable receipt.
-6. Run the local receipt and contest verification commands for independent confirmation.
+1. Open the live Operator Console.
+2. Select **IGNITE FULL MISSION**.
+3. Run the complete proof theater.
+4. Observe the failure, denial, repair, verification, Genome reuse and final verdict.
+5. Review the EDEN and ServerForge case study.
+6. Open the machine-readable receipt.
+7. Use Judge Challenge Mode or the local commands for independent verification.
 
 ## Judge material
 
-- [Hosted interface](https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/)
+- [Hosted Operator Console](https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/)
 - [Quickstart](docs/documentation/QUICKSTART.md)
 - [Judge brief](docs/documentation/JUDGE_BRIEF.md)
-- [Three-minute demo](docs/documentation/DEMO_SCRIPT.md)
+- [Operator Console technical specification](docs/documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md)
+- [EDEN and ServerForge case study](docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md)
+- [Three-minute demo script](docs/documentation/DEMO_SCRIPT.md)
 - [Competition readiness](docs/documentation/COMPETITION_READINESS.md)
-- [Devpost submission kit](docs/documentation/SUBMISSION_KIT.md)
+- [Submission kit](docs/documentation/SUBMISSION_KIT.md)
 - [ProofGrid receipt](docs/proofgrid/FINAL_RECEIPT.json)
 - [Capability Genome](docs/genomes/CAPABILITY_GENOME.json)
-- [Interface screenshot](docs/screenshots/prometheus-command-center.svg)
 
 ## Public boundary
 
-This repository contains the executable judge-facing competition edition. It intentionally excludes credentials, private operating prompts, local machine state, unrelated estate systems, and patent-sensitive internal material.
+This repository contains the executable judge-facing competition edition. It intentionally excludes credentials, private operating prompts, private local state, unrelated systems and patent-sensitive internal material.
 
 ## Release discipline
 
-Competition hardening mode is active. No new architecture is authorized before submission. Changes are limited to blocker repair, truth alignment, testing, documentation, judge accessibility, and release polish.
+Competition hardening mode is active. No new architecture is authorized before submission. Changes are limited to blocker repair, truth alignment, testing, documentation, judge accessibility and release polish.
