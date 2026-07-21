@@ -1,6 +1,7 @@
 name: Deploy Locked PROMETHEUS 2:45 Site
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
