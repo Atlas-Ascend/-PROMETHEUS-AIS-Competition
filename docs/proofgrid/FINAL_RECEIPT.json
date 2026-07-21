@@ -1,23 +1,26 @@
 {
-  "receipt_id": "PROOFGRID-COMP-001",
-  "mission_id": "PROM-COMP-001",
-  "status": "verified",
-  "promotion": "authorized",
-  "hydra_repair": "HYDRA-REPAIR-001",
+  "artifacts": {
+    "CANDIDATES.json": "c2e4b3367c53498fceac418d08a748f3035c9d1f13e1b8daa814a23c5fe2ab84",
+    "CAPABILITY_GENOME.json": "b65627a6eca041547a7097c7502358f3dfa0456987e659b278f46397f4bf1c8e",
+    "CAPABILITY_GENOME_REUSE.json": "a8a81181c13c408b7e8fe28c58a6f6c4ce44d4d3ce81f6326427801eb19259b3",
+    "EVENTS.jsonl": "a195bea2bb4a1f74da42e0fa4b6a6cd5daca624dc7acaad272bccb9c0c551406",
+    "HYDRA_REPAIR_RECEIPT.json": "472b42befac1ae42c0d86dadb800e3b0e403a7853f2f74b6456f213919ada2ac",
+    "MISSION.json": "dd0b8138ee642217cb7ccdd38d50886f6e094f1cbc048cd7162f4246262277a2",
+    "SECA_DECISION.json": "99e0250c46fd412c8b730ed8eb4082cb26422d42885441fecede4c03a1c38488",
+    "TEST_RESULTS.json": "9b21b11e4da0e3928180cf55e69a199022d6782322f9d027fc1f7d8a8c57a073"
+  },
   "capability_genome": "PG-CG-REPLAY-GUARD-001",
   "genome_reuse_verified": true,
-  "measured_improvement": "1 failed action -> 0 failed actions",
-  "tests": {"passed":5,"failed":0},
-  "artifacts": {
-    "MISSION.json": "2f86e519c887302fa35d8bb5ea57b18a7821d814d053cf5d748ee83da728da84",
-    "CANDIDATES.json": "d42281621dd41a3bb68113ee0d734873aa23190fd62c89f78295602a3c6b92b6",
-    "SECA_DECISION.json": "5a7ed1e521e7540cc57df0d0b82c4233fbe6e7704207a3ee20e3903c87c38316",
-    "HYDRA_REPAIR_RECEIPT.json": "f8498513e3265aa82922ec2317f6a45c7c3a11113eeec0d6865c0b6b1916c05f",
-    "TEST_RESULTS.json": "c491cf00fafca58c99a928541c70e41f1694976bd911241603ec0830696fe806",
-    "CAPABILITY_GENOME.json": "d8a52e1c8ccf54b065d161ef60111b476f1d94fe30f6e8e5e512005f48a15651",
-    "CAPABILITY_GENOME_REUSE.json": "f876ca0ae2cd665db5ad1e2a5360811812286b1b18a2797818bde34009f3a197",
-    "EVENTS.jsonl": "48db1f359c8f3e0bb527301efb7ed8350cf9e310a8c40b184399043322c01a7f"
-  },
-  "receipt_hash": "6cefc8e7df4bcd6c86c5a6587cd0bdc18da61af2b5604da2f5a9d4591e81f1f7",
-  "snapshot_notice": "Public deterministic competition snapshot. Run the repository demo to regenerate fresh local evidence."
+  "hydra_repair": "HYDRA-REPAIR-001",
+  "measured_improvement": "1 failed action → 0 failed actions",
+  "mission_id": "PROM-COMP-001",
+  "promotion": "authorized",
+  "receipt_hash": "b25f455743b8fda18b909178dd54586045ef587ae4b452b9399acfc59b153f57",
+  "receipt_id": "PROOFGRID-COMP-001",
+  "snapshot_notice": "Public deterministic competition snapshot. Run the repository demo to regenerate fresh local evidence.",
+  "status": "verified",
+  "tests": {
+    "failed": 0,
+    "passed": 5
+  }
 }
