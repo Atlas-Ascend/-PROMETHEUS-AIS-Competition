@@ -1,240 +1,43 @@
-const $ = (selector, root = document) => root.querySelector(selector);
-const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
-  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-}[char]));
-const row = (label, value) => `<div class="data-row"><small>${esc(label)}</small><code>${esc(value)}</code></div>`;
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const row=(l,v)=>`<div class="data-row"><small>${esc(l)}</small><code>${esc(v)}</code></div>`;
+const colors={amber:"var(--amber)",orange:"var(--orange)",green:"var(--green)",red:"var(--red)",cyan:"var(--cyan)",blue:"var(--blue)",violet:"var(--violet)",gold:"var(--gold)"};
+let data,runId=0,timers=[],clockTimer=null,startedAt=0,telemetryTimer=null;
 
-const colorMap = {
-  amber: "var(--amber)", orange: "var(--orange)", green: "var(--green)",
-  red: "var(--red)", cyan: "var(--cyan)", blue: "var(--blue)",
-  violet: "var(--violet)", gold: "var(--gold)"
-};
-
-let data;
-let replayTimer = null;
-let replayRun = 0;
-
-async function load() {
-  const response = await fetch("./data/demo.json", { cache: "no-store" });
-  if (!response.ok) throw new Error(`demo data ${response.status}`);
-  data = await response.json();
-  render();
-  bind();
-  setReplayState("ready", "Deterministic proof replay is connected and ready.");
-
-  if (new URLSearchParams(location.search).get("screenshot") === "1") {
-    document.body.classList.add("screenshot");
-  }
+async function load(){const r=await fetch("./data/demo.json",{cache:"no-store"});if(!r.ok)throw Error(`demo data ${r.status}`);data=await r.json();renderPage();buildTheater();bind();}
+function renderPage(){
+ document.title=`${data.product.name} ${data.product.version} · Command-to-Proof Console`;
+ $("#release-metrics").innerHTML=[["ENVIRONMENT",data.release.environment],["AVAILABILITY",data.release.availability],["RELEASE",data.release.status],["PROOF MODE",data.release.last_proof],["READINESS",`${data.release.readiness}%`]].map(([k,v])=>`<div class="metric-tile"><small>${esc(k)}</small><b>${esc(v)}</b></div>`).join("");
+ $("#mission-card").innerHTML=row("Mission ID",data.mission.id)+row("Title",data.mission.title)+row("Objective",data.mission.objective)+row("Acceptance gates",data.mission.acceptance.length);
+ $("#pipeline").innerHTML=data.pipeline.map((x,i)=>`<li><div class="pipeline-step"><span>${String(i+1).padStart(2,"0")}</span><i class="dot"></i></div><b>${esc(x.stage)}</b><p>${esc(x.organ)} · ${esc(x.state)}</p></li>`).join("");
+ $("#proof-card").innerHTML=row("Receipt",data.proofgrid.receipt_id)+row("Status",data.proofgrid.status)+row("Promotion",data.proofgrid.promotion)+row("Tests",`${data.proofgrid.tests.passed} passed / ${data.proofgrid.tests.failed} failed`)+row("Artifacts",`${data.proofgrid.artifacts_verified} / ${data.proofgrid.artifacts_total} verified`)+row("Receipt hash",data.proofgrid.receipt_hash);
+ $("#seca-card").innerHTML=row("Decision",data.seca.decision)+row("Reason",data.seca.reason)+row("Failure signature",data.seca.failure_signature)+row("Resolution",data.seca.resolution);
+ $("#hydra-card").innerHTML=row("Repair ID",data.hydra.repair_id)+row("Defect",data.hydra.defect)+row("Strategy",data.hydra.strategy)+row("Before",data.hydra.before)+row("After",data.hydra.after);
+ $("#genome-card").innerHTML=row("Genome ID",data.genome.genome_id)+row("Trigger",data.genome.trigger)+row("Strategy",data.genome.repair_strategy)+row("Reuse outcome",data.genome.reuse.improvement);
+ $("#systems-grid").innerHTML=data.systems.map(s=>`<article class="system-card" id="system-${esc(s.id)}"><div class="system-top"><span class="dot" style="background:${colors[s.accent]};box-shadow:0 0 12px ${colors[s.accent]}"></span><span class="system-badge accent-${esc(s.accent)}">${esc(s.status)}</span></div><h3>${esc(s.name)}</h3><div class="role">${esc(s.role)}</div><p>${esc(s.summary)}</p><div class="mini-metrics">${s.metrics.map(m=>`<div class="mini-metric"><span>${esc(m[0])}</span><b>${esc(m[1])}</b></div>`).join("")}</div></article>`).join("");
+ const nav=[{name:"Overview",role:"Olympian Console",accent:"amber",anchor:"overview"},...data.systems.map(s=>({...s,anchor:`system-${s.id}`}))];
+ $("#system-nav").innerHTML=nav.map((s,i)=>`<a class="nav-link ${i===0?"active":""}" href="#${esc(s.anchor)}"><i class="nav-icon accent-${esc(s.accent||"amber")}"></i><span class="nav-copy"><b>${esc(s.name)}</b><small>${esc(s.role)}</small></span></a>`).join("");
+ $("#docs-list").innerHTML=data.documentation.map(d=>`<a class="doc-link" href="${esc(d.path)}"><div><b>${esc(d.name)}</b><small>${esc(d.description)}</small></div><span>↗</span></a>`).join("");
 }
-
-function render() {
-  document.title = `${data.product.name} ${data.product.version} · Command-to-Proof Console`;
-
-  $("#release-metrics").innerHTML = [
-    ["ENVIRONMENT", data.release.environment],
-    ["AVAILABILITY", data.release.availability],
-    ["RELEASE", data.release.status],
-    ["PROOF MODE", data.release.last_proof],
-    ["READINESS", `${data.release.readiness}%`]
-  ].map(([key, value]) => `<div class="metric-tile"><small>${esc(key)}</small><b>${esc(value)}</b></div>`).join("");
-
-  $("#mission-card").innerHTML =
-    row("Mission ID", data.mission.id) +
-    row("Title", data.mission.title) +
-    row("Objective", data.mission.objective) +
-    row("Acceptance gates", data.mission.acceptance.length);
-
-  $("#pipeline").innerHTML = data.pipeline.map((item, index) => `
-    <li data-step="${index}" aria-label="${esc(item.stage)}: ${esc(item.state)}">
-      <div class="pipeline-step"><span>${String(index + 1).padStart(2, "0")}</span><i class="dot"></i></div>
-      <b>${esc(item.stage)}</b>
-      <p>${esc(item.organ)} · ${esc(item.state)}</p>
-    </li>`).join("");
-
-  $("#proof-card").innerHTML =
-    row("Receipt", data.proofgrid.receipt_id) +
-    row("Status", data.proofgrid.status) +
-    row("Promotion", data.proofgrid.promotion) +
-    row("Tests", `${data.proofgrid.tests.passed} passed / ${data.proofgrid.tests.failed} failed`) +
-    row("Artifacts", `${data.proofgrid.artifacts_verified} / ${data.proofgrid.artifacts_total} verified`) +
-    row("Receipt hash", data.proofgrid.receipt_hash);
-
-  $("#seca-card").innerHTML =
-    row("Decision", data.seca.decision) +
-    row("Reason", data.seca.reason) +
-    row("Failure signature", data.seca.failure_signature) +
-    row("Resolution", data.seca.resolution);
-
-  $("#hydra-card").innerHTML =
-    row("Repair ID", data.hydra.repair_id) +
-    row("Defect", data.hydra.defect) +
-    row("Strategy", data.hydra.strategy) +
-    row("Before", data.hydra.before) +
-    row("After", data.hydra.after);
-
-  $("#genome-card").innerHTML =
-    row("Genome ID", data.genome.genome_id) +
-    row("Trigger", data.genome.trigger) +
-    row("Strategy", data.genome.repair_strategy) +
-    row("Reuse outcome", data.genome.reuse.improvement);
-
-  $("#systems-grid").innerHTML = data.systems.map(system => `
-    <article class="system-card" id="system-${esc(system.id)}">
-      <div class="system-top">
-        <span class="dot" style="background:${colorMap[system.accent]};box-shadow:0 0 12px ${colorMap[system.accent]}"></span>
-        <span class="system-badge accent-${esc(system.accent)}">${esc(system.status)}</span>
-      </div>
-      <h3>${esc(system.name)}</h3>
-      <div class="role">${esc(system.role)}</div>
-      <p>${esc(system.summary)}</p>
-      <div class="mini-metrics">${system.metrics.map(metric => `
-        <div class="mini-metric"><span>${esc(metric[0])}</span><b>${esc(metric[1])}</b></div>`).join("")}
-      </div>
-    </article>`).join("");
-
-  const navSystems = [
-    { id: "overview", name: "Overview", role: "Olympian Console", accent: "amber", anchor: "overview" },
-    ...data.systems.map(system => ({ ...system, anchor: `system-${system.id}` }))
-  ];
-  $("#system-nav").innerHTML = navSystems.map((system, index) => `
-    <a class="nav-link ${index === 0 ? "active" : ""}" href="#${esc(system.anchor)}">
-      <i class="nav-icon accent-${esc(system.accent || "amber")}"></i>
-      <span class="nav-copy"><b>${esc(system.name)}</b><small>${esc(system.role)}</small></span>
-    </a>`).join("");
-
-  $("#docs-list").innerHTML = data.documentation.map(doc => `
-    <a class="doc-link" href="${esc(doc.path)}">
-      <div><b>${esc(doc.name)}</b><small>${esc(doc.description)}</small></div>
-      <span>↗</span>
-    </a>`).join("");
-
-  installReplayConsole();
+function buildTheater(){
+ $("#theater-pipeline").innerHTML=data.pipeline.map((x,i)=>`<div class="theater-step" data-step="${i}"><b>${String(i+1).padStart(2,"0")} · ${esc(x.stage)}</b><span>${esc(x.organ)}</span><i class="packet-track"><i class="packet"></i></i></div>`).join("");
+ $("#organ-stack").innerHTML=data.pipeline.map((x,i)=>`<div class="organ-node" data-organ="${i}"><b>${esc(x.organ)}</b><span>${esc(x.stage)}</span><i class="handoff-port"></i></div>`).join("");
+ const right=$(".theater-right");right.insertAdjacentHTML("afterbegin",`<div class="telemetry-hud"><p class="hud-label">LIVE TELEMETRY</p><div class="gauge-row"><div class="gauge"><svg viewBox="0 0 120 70"><path class="gauge-bg" d="M15 60 A45 45 0 0 1 105 60"/><path id="gauge-proof" class="gauge-fg" d="M15 60 A45 45 0 0 1 105 60"/></svg><b id="gauge-proof-value">0%</b><span>PROOF CONFIDENCE</span></div><div class="gauge"><svg viewBox="0 0 120 70"><path class="gauge-bg" d="M15 60 A45 45 0 0 1 105 60"/><path id="gauge-load" class="gauge-fg cyan" d="M15 60 A45 45 0 0 1 105 60"/></svg><b id="gauge-load-value">12%</b><span>ORCHESTRATION LOAD</span></div></div><div class="spark-wrap"><svg id="telemetry-graph" viewBox="0 0 300 100" preserveAspectRatio="none"><polyline id="telemetry-line" points="0,80"/><line x1="0" y1="25" x2="300" y2="25"/><line x1="0" y1="50" x2="300" y2="50"/><line x1="0" y1="75" x2="300" y2="75"/></svg><div class="telemetry-legend"><span>Latency <b id="latency">18ms</b></span><span>Packets <b id="packet-count">0</b></span><span>Agents <b id="agent-count">1</b></span></div></div></div>`);
+ resetTheater();
 }
-
-function installReplayConsole() {
-  const pipelineCard = $(".pipeline-card");
-  if (!pipelineCard || $("#replay-console")) return;
-
-  const consolePanel = document.createElement("div");
-  consolePanel.id = "replay-console";
-  consolePanel.setAttribute("aria-live", "polite");
-  consolePanel.innerHTML = `
-    <div class="replay-console-head">
-      <span class="signal"></span>
-      <b id="replay-status">DEMO READY</b>
-      <small id="replay-counter">0 / ${data.pipeline.length}</small>
-    </div>
-    <div id="replay-stage">Press “Run deterministic replay” to execute the full proof chain.</div>
-    <div id="replay-detail">The replay runs entirely in this hosted page. No local machine is required.</div>
-  `;
-  pipelineCard.appendChild(consolePanel);
-}
-
-function bind() {
-  const startButton = $("#start-demo");
-  const replayButton = $("#replay");
-
-  if (startButton) startButton.addEventListener("click", replay);
-  if (replayButton) replayButton.addEventListener("click", replay);
-
-  $$(".nav-link").forEach(link => link.addEventListener("click", () => {
-    $$(".nav-link").forEach(item => item.classList.remove("active"));
-    link.classList.add("active");
-  }));
-
-  if ("IntersectionObserver" in window) {
-    const targets = [...new Set($$(".nav-link").map(link => link.getAttribute("href")).filter(Boolean))]
-      .map(hash => $(hash)).filter(Boolean);
-    const observer = new IntersectionObserver(entries => {
-      const visible = entries.filter(entry => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (!visible) return;
-      $$(".nav-link").forEach(link => {
-        link.classList.toggle("active", link.getAttribute("href") === `#${visible.target.id}`);
-      });
-    }, { rootMargin: "-30% 0px -55% 0px", threshold: [0, .25, .6] });
-    targets.forEach(target => observer.observe(target));
-  }
-}
-
-function setReplayState(state, message, step = 0) {
-  const status = $("#replay-status");
-  const stage = $("#replay-stage");
-  const detail = $("#replay-detail");
-  const counter = $("#replay-counter");
-  const startButton = $("#start-demo");
-  const replayButton = $("#replay");
-
-  if (status) status.textContent = state === "running" ? "PROOF REPLAY RUNNING" : state === "complete" ? "PROOF REPLAY VERIFIED" : "DEMO READY";
-  if (stage) stage.textContent = message;
-  if (counter) counter.textContent = `${step} / ${data.pipeline.length}`;
-  if (detail && state === "ready") detail.textContent = "The replay runs entirely in this hosted page. No local machine is required.";
-  if (startButton) startButton.textContent = state === "running" ? "Running proof…" : state === "complete" ? "Replay again" : "Run deterministic replay";
-  if (replayButton) replayButton.textContent = state === "running" ? "Running…" : "Replay proof";
-}
-
-function replay() {
-  replayRun += 1;
-  const thisRun = replayRun;
-  if (replayTimer) window.clearTimeout(replayTimer);
-
-  const steps = $$("#pipeline li");
-  if (!steps.length) {
-    setReplayState("ready", "Replay could not start because the pipeline is unavailable.");
-    return;
-  }
-
-  document.body.classList.add("replay-running");
-  steps.forEach(step => step.classList.remove("active", "done"));
-  $("#progress-bar").style.width = "0%";
-  $("#readiness").textContent = "0%";
-  setReplayState("running", "Initializing governed mission replay…", 0);
-
-  const pipelineCard = $(".pipeline-card");
-  if (pipelineCard) pipelineCard.scrollIntoView({ behavior: "smooth", block: "center" });
-
-  let current = 0;
-
-  const advance = () => {
-    if (thisRun !== replayRun) return;
-    const item = data.pipeline[current];
-
-    steps.forEach((step, index) => {
-      step.classList.toggle("active", index === current);
-      step.classList.toggle("done", index < current);
-    });
-
-    const pct = Math.round(((current + 1) / steps.length) * 100);
-    $("#progress-bar").style.width = `${pct}%`;
-    $("#readiness").textContent = `${pct}%`;
-    setReplayState("running", `${item.stage} · ${item.organ} · ${item.state}`, current + 1);
-    $("#replay-detail").textContent = item.detail;
-
-    current += 1;
-    if (current < steps.length) {
-      replayTimer = window.setTimeout(advance, 1050);
-      return;
-    }
-
-    replayTimer = window.setTimeout(() => {
-      if (thisRun !== replayRun) return;
-      steps.forEach(step => {
-        step.classList.remove("active");
-        step.classList.add("done");
-      });
-      $("#readiness").textContent = "100%";
-      $("#progress-bar").style.width = "100%";
-      document.body.classList.remove("replay-running");
-      setReplayState("complete", "Command-to-Proof replay complete. Promotion authorized by verified evidence.", steps.length);
-      $("#replay-detail").textContent = `${data.proofgrid.tests.passed} tests passed · ${data.proofgrid.artifacts_verified}/${data.proofgrid.artifacts_total} artifacts verified · ${data.genome.reuse.improvement}`;
-    }, 900);
-  };
-
-  replayTimer = window.setTimeout(advance, 450);
-}
-
-load().catch(error => {
-  console.error(error);
-  document.body.innerHTML = `<main style="padding:40px"><h1>PROMETHEUS data load failed</h1><p>${esc(error.message)}</p></main>`;
-});
+function bind(){[$("#start-demo"),$("#replay")].filter(Boolean).forEach(b=>b.addEventListener("click",openTheater));$("#theater-close").addEventListener("click",closeTheater);$("#theater-launch").addEventListener("click",runTheater);$("#theater-replay").addEventListener("click",runTheater);$("#theater-skip").addEventListener("click",finishTheater);document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#proof-theater").hidden)closeTheater()});}
+function openTheater(){$("#proof-theater").hidden=false;document.body.classList.add("theater-open");resetTheater();}
+function closeTheater(){runId++;clearAll();$("#proof-theater").hidden=true;document.body.classList.remove("theater-open");}
+function clearAll(){timers.forEach(clearTimeout);timers=[];if(clockTimer)clearInterval(clockTimer);if(telemetryTimer)clearInterval(telemetryTimer);clockTimer=telemetryTimer=null;}
+function later(fn,ms){const t=setTimeout(fn,ms);timers.push(t);return t;}
+function resetTheater(){clearAll();const t=$("#proof-theater");t.classList.remove("running","failure","success");$("#verdict-card").hidden=true;$("#stage-kicker").textContent="AWAITING IGNITION";$("#stage-title").textContent="PROMETHEUS IS READY";$("#stage-narrative").textContent="Watch governed agents hand work to one another, move packets, surface a real defect, repair it, verify it, and preserve the capability.";$("#core-value").textContent="READY";$("#core-subtitle").textContent="EVIDENCE GOVERNED";$("#proof-core").className="proof-core";$("#evidence-stream").innerHTML=`<div class="evidence-line"><strong>[GHOST ATLAS]</strong> Sovereign mission graph online.</div><div class="evidence-line"><strong>[BUILD TRUTH]</strong> Unsupported completion claims disabled.</div>`;$$('.theater-step,.organ-node').forEach(n=>n.classList.remove("active","done","handoff"));$("#metric-tests").textContent="0 / 5";$("#metric-artifacts").textContent="0 / 8";$("#metric-receipt").textContent="PENDING";$("#metric-genome").textContent="UNEXTRACTED";setGauge("proof",0);setGauge("load",12);$("#latency").textContent="18ms";$("#packet-count").textContent="0";$("#agent-count").textContent="1";$("#telemetry-line").setAttribute("points","0,80");$("#theater-clock").textContent="T+00:00";$("#theater-launch").disabled=false;$("#theater-launch").textContent="IGNITE COMMAND-TO-PROOF";}
+function runTheater(){runId++;const id=runId;resetTheater();$("#proof-theater").classList.add("running");$("#theater-launch").disabled=true;$("#theater-launch").textContent="LIVE MISSION RUNNING";startedAt=Date.now();clockTimer=setInterval(()=>{const e=Math.floor((Date.now()-startedAt)/1000);$("#theater-clock").textContent=`T+${String(Math.floor(e/60)).padStart(2,"0")}:${String(e%60).padStart(2,"0")}`},250);startTelemetry();appendEvidence("GHOST ATLAS","Mission decomposed into governed packets and routed to PROMETHEUS.");later(()=>advance(id,0),650);}
+function advance(id,i){if(id!==runId)return;if(i>=data.pipeline.length){finishTheater();return}const x=data.pipeline[i];$$('.theater-step').forEach((n,j)=>{n.classList.toggle("active",j===i);n.classList.toggle("done",j<i)});$$('.organ-node').forEach((n,j)=>{n.classList.toggle("active",j===i);n.classList.toggle("done",j<i);n.classList.toggle("handoff",j===i||j===i-1)});animatePacket(i);$("#stage-kicker").textContent=`${String(i+1).padStart(2,"0")} / ${String(data.pipeline.length).padStart(2,"0")} · ${x.organ}`;$("#stage-title").textContent=x.stage;$("#stage-narrative").textContent=x.detail;$("#core-value").textContent=["INTENT","3 ROUTES","FAILURE","BLOCKED","REPAIRED","VERIFIED","GENOME","PROMOTED"][i];$("#core-subtitle").textContent=x.state.toUpperCase();const theater=$("#proof-theater"),core=$("#proof-core");theater.classList.remove("failure","success");core.className="proof-core";if(i===2||i===3){theater.classList.add("failure");core.classList.add("fail")}if(i>=4)core.classList.add("success");appendEvidence(x.organ,x.detail,i===2||i===3?"fail":i===4?"repair":"");appendHandoff(i);updateMetrics(i);later(()=>advance(id,i+1),1500);}
+function appendHandoff(i){if(i===0)return;const from=data.pipeline[i-1].organ,to=data.pipeline[i].organ;appendEvidence("HANDOFF",`${from} → ${to} · packet PKT-${String(i).padStart(3,"0")} acknowledged`);}
+function animatePacket(i){const step=$(`.theater-step[data-step="${i}"]`);if(!step)return;step.classList.remove("packet-moving");void step.offsetWidth;step.classList.add("packet-moving");const count=Number($("#packet-count").textContent)+Math.max(1,i+1);$("#packet-count").textContent=String(count);}
+function updateMetrics(i){setGauge("proof",Math.round(((i+1)/data.pipeline.length)*100));setGauge("load",[18,42,77,68,91,73,64,52][i]);$("#agent-count").textContent=String(Math.min(8,i+2));$("#latency").textContent=`${[18,26,41,33,22,17,14,11][i]}ms`;if(i>=4)$("#metric-tests").textContent=`${Math.min(5,i-3)} / 5`;if(i>=5)$("#metric-artifacts").textContent=`${Math.min(8,(i-4)*4)} / 8`;if(i>=5)$("#metric-receipt").textContent="HASHING";if(i>=6)$("#metric-genome").textContent="EXTRACTED";}
+function setGauge(id,value){const p=$(`#gauge-${id}`),v=$(`#gauge-${id}-value`);if(!p)return;const len=141.4;p.style.strokeDasharray=String(len);p.style.strokeDashoffset=String(len-(len*value/100));v.textContent=`${value}%`;}
+function startTelemetry(){let pts=[],x=0;telemetryTimer=setInterval(()=>{x+=10;const y=Math.max(12,Math.min(88,54+Math.sin(x/24)*22+(Math.random()-.5)*18));pts.push(`${x},${y}`);if(x>300){pts=pts.map(p=>{const [px,py]=p.split(',').map(Number);return `${px-10},${py}`}).filter(p=>Number(p.split(',')[0])>=0);x=300}$("#telemetry-line").setAttribute("points",pts.join(" "));},180);}
+function appendEvidence(source,msg,kind=""){const s=$("#evidence-stream"),line=document.createElement("div");line.className=`evidence-line ${kind}`;line.innerHTML=`<strong>[${esc(source)}]</strong> ${esc(msg)}`;s.appendChild(line);s.scrollTop=s.scrollHeight;}
+function finishTheater(){runId++;clearAll();const t=$("#proof-theater");t.classList.remove("running","failure");t.classList.add("success");$$('.theater-step,.organ-node').forEach(n=>{n.classList.remove("active","handoff");n.classList.add("done")});$("#core-value").textContent="PROVEN";$("#core-subtitle").textContent="PROMOTION AUTHORIZED";$("#proof-core").className="proof-core success";setGauge("proof",100);setGauge("load",38);$("#metric-tests").textContent="5 / 5";$("#metric-artifacts").textContent="8 / 8";$("#metric-receipt").textContent="VERIFIED";$("#metric-genome").textContent="REUSED";$("#agent-count").textContent="8";$("#latency").textContent="9ms";appendEvidence("PROOFGRID","Receipt hash verified. Build Truth authorizes promotion.");appendEvidence("CAPABILITY GENOME","PG-CG-REPLAY-GUARD-001 reused on related task. Failure count reduced 1 → 0.");later(()=>{$("#verdict-card").hidden=false},650);}
+load().catch(e=>{console.error(e);document.body.innerHTML=`<main style="padding:40px"><h1>PROMETHEUS data load failed</h1><p>${esc(e.message)}</p></main>`});
