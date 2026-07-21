@@ -1,11 +1,13 @@
-name: Validate PROMETHEUS Operator Console
+name: Validate PROMETHEUS Elite Demo
 
 on:
   pull_request:
     branches: [main]
     paths:
+      - "index.html"
       - "docs/**"
       - "README.md"
+      - "BUILD_TRUTH.md"
       - ".github/workflows/operator-console-validate.yml"
   workflow_dispatch:
 
@@ -17,58 +19,40 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout release candidate
+      - name: Checkout competition build
         uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
 
-      - name: JavaScript syntax
+      - name: Verify elite public artifact
+        shell: bash
         run: |
-          node --check docs/assets/app.js
-          node --check docs/assets/case-study.js
+          set -euo pipefail
 
-      - name: Operator console contract
-        run: node docs/tests/demo_contract.mjs
+          test -f .nojekyll
+          test -f docs/.nojekyll
+          test -f index.html
+          test -f docs/index.html
+          test -f docs/assets/elite-demo.css
+          test -f docs/assets/elite-demo.js
+          test -f docs/proofgrid/FINAL_RECEIPT.json
 
-      - name: Site and receipt integrity
-        run: python docs/tests/site_integrity.py
+          node --check docs/assets/elite-demo.js
 
-      - name: Public data validity
-        run: |
-          python -m json.tool docs/data/demo.json > /dev/null
-          python -m json.tool docs/data/case-study.json > /dev/null
+          grep -q 'IGNITE 2:45 DEMONSTRATION' index.html
+          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
+          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' index.html
+          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
+          grep -Fq 'const stageStarts = [0, 18, 39, 59, 77, 101, 125, 145];' docs/assets/elite-demo.js
+          grep -Fq 'const duration = 165;' docs/assets/elite-demo.js
+          grep -Fq "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
 
-      - name: Ghost Atlas Institute case-study contract
-        run: |
-          grep -q "GHOST ATLAS INSTITUTE · SERVERFORGE FIELD REPORT" docs/index.html
-          grep -q "PROMETHEUS Forge: a screenshot-grounded operational case study" docs/index.html
-          grep -q "case-report-head" docs/index.html
-          grep -q "case-channel-map" docs/index.html
-          grep -q "case-receipt-exhibit" docs/index.html
-          grep -q "case-credibility" docs/index.html
-          grep -q "Ghost Atlas Institute" docs/assets/case-study.js
-          grep -q "HYDRA-SERVERFORGE-20260719T023826Z" docs/data/case-study.json
-          grep -q "26ccd3be5d15b170e24e54855db50f747ebf3c2fbfccac3622fb629b07665ffc" docs/data/case-study.json
+          if grep -Eni 'IGNITE 3:00|T\+03:00|180-second|180 seconds' index.html docs/index.html docs/assets/elite-demo.js; then
+            echo 'Legacy three-minute runtime detected.'
+            exit 1
+          fi
 
-      - name: Repository identity
-        run: |
-          grep -q "Operator Console" README.md
-          grep -q "EDEN and ServerForge" README.md
-
-      - name: Technical specification boundary
-        run: grep -qi "intellectual-property boundary" docs/documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md
-
-      - name: Case-study disclosure boundary
-        run: |
-          grep -q "Ghost Atlas Institute Field Report" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
-          grep -q "Receipt object separation" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
-          grep -q "Withheld" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
-          grep -q "Ghost Atlas credibility model" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
+          echo 'PROMETHEUS elite 2:45 artifact validated.'
