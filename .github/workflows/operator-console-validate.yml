@@ -31,7 +31,9 @@ jobs:
           node-version: "22"
 
       - name: JavaScript syntax
-        run: node --check docs/assets/app.js
+        run: |
+          node --check docs/assets/app.js
+          node --check docs/assets/case-study.js
 
       - name: Operator console contract
         run: node docs/tests/demo_contract.mjs
@@ -40,7 +42,21 @@ jobs:
         run: python docs/tests/site_integrity.py
 
       - name: Public data validity
-        run: python -m json.tool docs/data/demo.json > /dev/null
+        run: |
+          python -m json.tool docs/data/demo.json > /dev/null
+          python -m json.tool docs/data/case-study.json > /dev/null
+
+      - name: Ghost Atlas Institute case-study contract
+        run: |
+          grep -q "GHOST ATLAS INSTITUTE · SERVERFORGE FIELD REPORT" docs/index.html
+          grep -q "PROMETHEUS Forge: a screenshot-grounded operational case study" docs/index.html
+          grep -q "case-report-head" docs/index.html
+          grep -q "case-channel-map" docs/index.html
+          grep -q "case-receipt-exhibit" docs/index.html
+          grep -q "case-credibility" docs/index.html
+          grep -q "Ghost Atlas Institute" docs/assets/case-study.js
+          grep -q "HYDRA-SERVERFORGE-20260719T023826Z" docs/data/case-study.json
+          grep -q "26ccd3be5d15b170e24e54855db50f747ebf3c2fbfccac3622fb629b07665ffc" docs/data/case-study.json
 
       - name: Repository identity
         run: |
@@ -51,4 +67,8 @@ jobs:
         run: grep -qi "intellectual-property boundary" docs/documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md
 
       - name: Case-study disclosure boundary
-        run: grep -q "Withheld" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
+        run: |
+          grep -q "Ghost Atlas Institute Field Report" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
+          grep -q "Receipt object separation" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
+          grep -q "Withheld" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
+          grep -q "Ghost Atlas credibility model" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
