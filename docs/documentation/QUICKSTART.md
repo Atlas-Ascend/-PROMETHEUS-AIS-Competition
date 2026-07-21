@@ -1,23 +1,35 @@
-# PROMETHEUS Competition Quickstart
+# PROMETHEUS Operator Console Quickstart
 
-## Always-available website
-
-The `docs/` directory is the complete static competition website. GitHub Actions publishes it to GitHub Pages after every push to `main` only after the executable package, proof evidence, website, replay controls, and Build Truth alignment gates pass.
-
-Public URL:
+## Public site
 
 `https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/`
 
+The `docs/` directory is the complete static competition website. GitHub Actions validates the JavaScript, interface contract, receipt hashes, canonical agent order, EDEN and ServerForge case study, IP boundary and local references before publishing it to GitHub Pages.
+
 ## Fast judge path
 
-1. Open the public URL.
-2. Select **Launch live Command-to-Proof demo**.
-3. Select **IGNITE COMMAND-TO-PROOF** for the full deterministic replay.
-4. Select **SKIP TO VERIFIED RESULTS** to jump immediately to the verified ProofGrid verdict.
-5. Select **RUN IT AGAIN** to replay or **RETURN TO CONSOLE** to exit.
-6. Open the machine-readable ProofGrid receipt from the main console.
+1. Open the public URL in a modern browser.
+2. Confirm the page title reads **PROMETHEUS Operator Console**.
+3. Select **IGNITE FULL MISSION**.
+4. Select **IGNITE COMMAND-TO-PROOF** in the full-screen theater.
+5. Observe the eight-agent sequence, terminal, handoffs, behavioral code change, telemetry, evidence and final verdict.
+6. Select **SKIP TO VERIFIED RESULTS** to test the immediate proof closeout.
+7. Return to the console and inspect the EDEN and ServerForge case study.
+8. Use Judge Challenge Mode to open or independently verify the receipt, evidence, claims or readiness.
 
-The hosted proof theater is a deterministic visualization of a verified public snapshot. It does not claim to execute the local engineering runtime inside GitHub Pages.
+The hosted theater is a deterministic visualization of a verified public snapshot. It does not claim to execute the local engineering runtime inside GitHub Pages.
+
+## Operator controls
+
+The main cockpit supports:
+
+- Run
+- Pause and resume
+- Step
+- Reset
+- 0.5×, 1×, 1.5× and 2× speed
+- Load verified state
+- Full-screen theater
 
 ## Run the executable proof locally
 
@@ -34,21 +46,26 @@ python -m prometheus.cli contest submission-check
 python -m prometheus.cli interface competition
 ```
 
-The interface command serves the same visual system included in the public website. The executable repository regenerates fresh local receipts and verifies their hashes.
+The executable repository regenerates fresh local receipts and verifies their hashes.
 
 ## Public evidence
 
 - `proofgrid/FINAL_RECEIPT.json`
 - `proofgrid/HYDRA_REPAIR_RECEIPT.json`
+- `proofgrid/TEST_RESULTS.json`
 - `genomes/CAPABILITY_GENOME.json`
 - `genomes/CAPABILITY_GENOME_REUSE.json`
 - `data/demo.json`
 
-## Submission control
+## Presentation and case-study documentation
 
-- `documentation/JUDGE_BRIEF.md`
+- `documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md`
+- `documentation/EDEN_SERVERFORGE_CASE_STUDY.md`
 - `documentation/DEMO_SCRIPT.md`
+- `documentation/JUDGE_BRIEF.md`
 - `documentation/COMPETITION_READINESS.md`
 - `documentation/SUBMISSION_KIT.md`
 
-The public repository remains deliberately narrow. Credentials, private prompts, local machine state, unrelated estate systems, and patent-sensitive material are excluded.
+## Public boundary
+
+The public repository discloses system roles, observable state transitions, test results, receipt lineage and a high-level local-to-public deployment path. Credentials, private prompts, proprietary routing logic, patent-sensitive mechanisms, local machine paths, private state and unrelated estate architecture remain excluded.
