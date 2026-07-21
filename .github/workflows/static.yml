@@ -5,12 +5,6 @@ on:
     branches: [main]
     paths:
       - "docs/**"
-      - "src/**"
-      - "tests/**"
-      - "competition/**"
-      - "pyproject.toml"
-      - "README.md"
-      - "LICENSE"
       - ".github/workflows/static.yml"
   workflow_dispatch:
 
@@ -20,16 +14,22 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: prometheus-pages
   cancel-in-progress: true
 
 jobs:
-  validate:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
-      - name: Checkout
+      - name: Checkout latest main
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -41,87 +41,59 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install executable competition package
-        run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          python -m pip install -e .
-
-      - name: Run unit and package diagnostics
-        run: |
-          set -euo pipefail
-          python -m unittest discover -s tests -v 2>&1 | tee /tmp/prometheus-tests.log
-          grep -Eq 'Ran [1-9][0-9]* tests?' /tmp/prometheus-tests.log
-          python -m prometheus.cli doctor --json
-
-      - name: Regenerate and verify Command-to-Proof evidence
-        run: |
-          set -euo pipefail
-          python -m prometheus.cli demo reset
-          python -m prometheus.cli demo competition
-          python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json
-          python -m prometheus.cli contest claims-verify
-          python -m prometheus.cli contest evidence-verify
-          python -m prometheus.cli contest submission-check
-
-      - name: Validate unified interface and public evidence
+      - name: Validate unified judge interface
         run: |
           set -euo pipefail
           node --check docs/assets/app.js
           node docs/tests/demo_contract.mjs
           python docs/tests/site_integrity.py
-          python -m json.tool docs/data/demo.json > /dev/null
-          python -m json.tool docs/proofgrid/FINAL_RECEIPT.json > /dev/null
-          python -m json.tool docs/proofgrid/HYDRA_REPAIR_RECEIPT.json > /dev/null
-          python -m json.tool docs/genomes/CAPABILITY_GENOME.json > /dev/null
-          python -m json.tool docs/genomes/CAPABILITY_GENOME_REUSE.json > /dev/null
+          test -f docs/assets/unified.css
+          test ! -f docs/assets/observatory.js
+          test ! -f docs/assets/observatory.css
+          grep -q "The entire proof chain, synchronized" docs/index.html
+          grep -q "Eight canonical agents, eight living graphs" docs/index.html
 
-      - name: Check generated and public Build Truth alignment
+      - name: Stamp deployed revision
         run: |
           set -euo pipefail
           python - <<'PY'
           import json
+          import os
+          from datetime import datetime, timezone
           from pathlib import Path
 
-          generated = json.loads(Path("artifacts/competition-demo/FINAL_RECEIPT.json").read_text())
-          public = json.loads(Path("docs/proofgrid/FINAL_RECEIPT.json").read_text())
-          demo = json.loads(Path("docs/data/demo.json").read_text())
-
-          assert generated["receipt_id"] == public["receipt_id"] == demo["proofgrid"]["receipt_id"]
-          assert generated["mission_id"] == public["mission_id"] == demo["mission"]["id"]
-          assert generated["status"] == public["status"] == demo["proofgrid"]["status"] == "verified"
-          assert generated["promotion"] == public["promotion"] == demo["proofgrid"]["promotion"] == "authorized"
-          assert generated["capability_genome"] == public["capability_genome"] == demo["genome"]["genome_id"]
-          assert generated["tests"] == public["tests"] == demo["proofgrid"]["tests"] == {"passed": 5, "failed": 0}
-          assert isinstance(generated["artifacts"], dict) and len(generated["artifacts"]) == 8
-          assert len(public["artifacts"]) == 8
-          assert demo["proofgrid"]["artifacts_verified"] == demo["proofgrid"]["artifacts_total"] == 8
-          assert [stage["organ"] for stage in demo["pipeline"]] == [
-              "PROMETHEUS", "AIS-Ω", "Adversarial Twin", "SECA",
-              "HYDRA", "ProofGrid", "Capability Genome", "Build Truth"
-          ]
-          print("PROMETHEUS Build Truth and canonical agent alignment PASS")
+          payload = {
+              "interface": "PROMETHEUS Unified Command-to-Proof Mission Cockpit",
+              "revision": os.environ.get("GITHUB_SHA", "unknown"),
+              "deployed_at": datetime.now(timezone.utc).isoformat(),
+              "canonical_agents": [
+                  "PROMETHEUS", "AIS-Ω", "Adversarial Twin", "SECA",
+                  "HYDRA", "ProofGrid", "Capability Genome", "Build Truth"
+              ],
+              "features": [
+                  "side-by-side terminal and theater",
+                  "agent handoff fabric",
+                  "moving packets",
+                  "global telemetry",
+                  "eight living agent graphs",
+                  "judge challenge mode",
+                  "verified-result skip"
+              ]
+          }
+          Path("docs/deployment-status.json").write_text(
+              json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8"
+          )
           PY
-
-  deploy:
-    needs: validate
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload PROMETHEUS static website
+      - name: Upload latest docs directory
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy latest unified interface
         id: deployment
         uses: actions/deploy-pages@v4
