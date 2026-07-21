@@ -1,0 +1,4 @@
+PROMETHEUS GitHub Pages convergence trigger
+Authoritative artifact: docs/
+Runtime: 165 seconds
+Release path: GitHub Actions deploy-pages + gh-pages fallback
