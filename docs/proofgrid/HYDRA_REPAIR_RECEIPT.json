@@ -1,0 +1,8 @@
+{
+  "repair_id": "HYDRA-REPAIR-001",
+  "defect": "Duplicate operation without idempotency",
+  "strategy": "enable_idempotent_replay_guard",
+  "before": "duplicate raises ReplayDetected",
+  "after": "replay_safely_ignored",
+  "behavior_changed": true
+}

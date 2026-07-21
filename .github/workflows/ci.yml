@@ -1,16 +1,19 @@
 name: Command-to-Proof CI
+
 on:
   push:
     branches: [main]
   pull_request:
+
 permissions:
   contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: python -m pip install -e .
@@ -22,3 +25,14 @@ jobs:
       - run: python -m prometheus.cli contest claims-verify
       - run: python -m prometheus.cli contest evidence-verify
       - run: python -m prometheus.cli contest submission-check
+      - name: Validate always-available website
+        run: |
+          python -m json.tool docs/data/demo.json > /dev/null
+          python -m json.tool docs/proofgrid/FINAL_RECEIPT.json > /dev/null
+          python -m json.tool docs/proofgrid/HYDRA_REPAIR_RECEIPT.json > /dev/null
+          python -m json.tool docs/genomes/CAPABILITY_GENOME.json > /dev/null
+          python -m json.tool docs/genomes/CAPABILITY_GENOME_REUSE.json > /dev/null
+          test -s docs/index.html
+          test -s docs/assets/styles.css
+          test -s docs/assets/app.js
+          test -s docs/screenshots/prometheus-command-center.svg

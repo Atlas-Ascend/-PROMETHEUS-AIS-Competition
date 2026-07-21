@@ -1,0 +1,215 @@
+{
+  "product": {
+    "name": "PROMETHEUS",
+    "version": "V-1.1.1",
+    "category": "Self-Proving AI Engineering",
+    "line": "Built with Codex. Evolved through PROMETHEUS. Proven on EDEN.",
+    "motto": "Repair. Prove. Remember. Evolve."
+  },
+  "release": {
+    "status": "VERIFIED",
+    "environment": "STATIC COMPETITION WEBSITE",
+    "availability": "24/7",
+    "commit": "PUBLIC-MAIN",
+    "last_proof": "DETERMINISTIC SNAPSHOT",
+    "readiness": 100
+  },
+  "mission": {
+    "id": "PROM-COMP-001",
+    "title": "Publish a replay-safe proof receipt",
+    "state": "PROMOTED",
+    "objective": "Prove that consequential operations fail closed, are repaired behaviorally, and preserve the successful strategy for verified reuse.",
+    "acceptance": [
+      "Reproduce a real bounded replay failure",
+      "Block unsupported promotion",
+      "Apply behavior-changing repair",
+      "Verify artifacts and hashes",
+      "Extract and reuse Capability Genome"
+    ]
+  },
+  "pipeline": [
+    {
+      "stage": "IGNITION",
+      "organ": "PROMETHEUS",
+      "state": "verified",
+      "detail": "Mission admitted to the governed build loop."
+    },
+    {
+      "stage": "ROUTE FORGE",
+      "organ": "AIS-Ω",
+      "state": "verified",
+      "detail": "Three distinct candidate routes evaluated."
+    },
+    {
+      "stage": "TRIAL BY FIRE",
+      "organ": "Adversarial Twin",
+      "state": "failed",
+      "detail": "Duplicate consequential operation reproduced."
+    },
+    {
+      "stage": "PROMOTION GATE",
+      "organ": "SECA",
+      "state": "blocked",
+      "detail": "Unsupported promotion denied."
+    },
+    {
+      "stage": "REPAIR FORGE",
+      "organ": "HYDRA",
+      "state": "repaired",
+      "detail": "Idempotent replay guard changed runtime behavior."
+    },
+    {
+      "stage": "PROOF GRID",
+      "organ": "ProofGrid",
+      "state": "verified",
+      "detail": "Tests, artifacts, receipt and hashes verified."
+    },
+    {
+      "stage": "FLAME PRESERVED",
+      "organ": "Capability Genome",
+      "state": "created",
+      "detail": "Repair compiled into PG-CG-REPLAY-GUARD-001."
+    },
+    {
+      "stage": "INHERITANCE",
+      "organ": "Build Truth",
+      "state": "promoted",
+      "detail": "Related task reused the Genome with measured improvement."
+    }
+  ],
+  "systems": [
+    {
+      "id": "prometheus",
+      "name": "PROMETHEUS",
+      "role": "Command-to-Proof Pipeline",
+      "status": "ACTIVE",
+      "accent": "amber",
+      "summary": "Turns missions into governed, evidence-backed engineering outcomes.",
+      "metrics": [["Candidates","3"],["Promotion","AUTHORIZED"],["Readiness","100%"]]
+    },
+    {
+      "id": "eden",
+      "name": "EDEN",
+      "role": "Runtime & Orchestration",
+      "status": "ONLINE",
+      "accent": "cyan",
+      "summary": "Executes approved work through the competition runtime body.",
+      "metrics": [["Runtime","STATIC REPLAY"],["Node","PUBLIC WEB"],["Health","NOMINAL"]]
+    },
+    {
+      "id": "hydra",
+      "name": "HYDRA",
+      "role": "Repair Forge",
+      "status": "VERIFIED",
+      "accent": "orange",
+      "summary": "Repairs demonstrated defects and proves that behavior changed.",
+      "metrics": [["Repair","HYDRA-REPAIR-001"],["Before","FAIL"],["After","SAFE REPLAY"]]
+    },
+    {
+      "id": "proofgrid",
+      "name": "ProofGrid",
+      "role": "Evidence & Receipts",
+      "status": "VERIFIED",
+      "accent": "green",
+      "summary": "Hashes artifacts, verifies receipts and authorizes evidence-backed claims.",
+      "metrics": [["Receipt","PROOFGRID-COMP-001"],["Artifacts","8/8"],["Tests","5/5"]]
+    },
+    {
+      "id": "seca",
+      "name": "SECA",
+      "role": "Promotion Gate",
+      "status": "ENFORCED",
+      "accent": "red",
+      "summary": "Blocks unsupported success and holds promotion until proof exists.",
+      "metrics": [["Decision","DENIED → APPROVED"],["Policy","FAIL CLOSED"],["Exceptions","0"]]
+    },
+    {
+      "id": "thoth",
+      "name": "THOTH",
+      "role": "Knowledge Archive",
+      "status": "PRESERVED",
+      "accent": "violet",
+      "summary": "Preserves lineage, receipts, decisions and reusable engineering memory.",
+      "metrics": [["Lineage","INTACT"],["Receipts","INDEXED"],["Disclosure","PUBLIC SAFE"]]
+    },
+    {
+      "id": "serverforge",
+      "name": "ServerForge",
+      "role": "Build Observatory",
+      "status": "OBSERVING",
+      "accent": "blue",
+      "summary": "Converts build events into a reviewable competition narrative.",
+      "metrics": [["Events","17"],["Channels","14"],["Case Study","READY"]]
+    },
+    {
+      "id": "packetos",
+      "name": "Packet OS",
+      "role": "Work Queue & Execution",
+      "status": "STAGED",
+      "accent": "cyan",
+      "summary": "Translates governed intent into bounded work packets and execution state.",
+      "metrics": [["Queue","0 BLOCKED"],["Packets","DETERMINISTIC"],["Delivery","COMPLETE"]]
+    },
+    {
+      "id": "buildtruth",
+      "name": "Build Truth",
+      "role": "Canonical Project State",
+      "status": "AUTHORITATIVE",
+      "accent": "gold",
+      "summary": "The operational authority for claims, completion, evidence and release state.",
+      "metrics": [["Claims","SUPPORTED"],["Contradictions","0"],["Release","AUTHORIZED"]]
+    },
+    {
+      "id": "genome",
+      "name": "Capability Genome",
+      "role": "Memory & Reuse Graph",
+      "status": "REUSED",
+      "accent": "violet",
+      "summary": "Encodes verified repair knowledge with applicability and exclusions.",
+      "metrics": [["Genome","PG-CG-REPLAY-GUARD-001"],["Reuse","1"],["Improvement","1 → 0 FAILURES"]]
+    }
+  ],
+  "seca": {
+    "decision": "PROMOTION DENIED",
+    "reason": "Duplicate consequential operation was not replay-safe.",
+    "failure_signature": "ReplayDetected: duplicate operation rejected",
+    "resolution": "Promotion reopened only after HYDRA repair and ProofGrid verification."
+  },
+  "hydra": {
+    "repair_id": "HYDRA-REPAIR-001",
+    "defect": "Duplicate operation without idempotency",
+    "strategy": "enable_idempotent_replay_guard",
+    "before": "duplicate raises ReplayDetected",
+    "after": "replay_safely_ignored",
+    "behavior_changed": true
+  },
+  "proofgrid": {
+    "receipt_id": "PROOFGRID-COMP-001",
+    "status": "verified",
+    "promotion": "authorized",
+    "tests": {"passed":5,"failed":0},
+    "artifacts_verified": 8,
+    "artifacts_total": 8,
+    "receipt_hash": "6cefc8e7df4bcd6c86c5a6587cd0bdc18da61af2b5604da2f5a9d4591e81f1f7"
+  },
+  "genome": {
+    "genome_id": "PG-CG-REPLAY-GUARD-001",
+    "title": "Replay-safe consequential operation",
+    "trigger": "Stable operation ID is invoked more than once.",
+    "applicability": ["stable operation ID","deterministic payload hash","consequential side effect"],
+    "exclusions": ["conflicting payload under the same operation ID"],
+    "repair_strategy": "enable_idempotent_replay_guard",
+    "reuse": {
+      "task": "PROM-COMP-002 · Publish replay-safe release manifest",
+      "outcome": "replay_safely_ignored",
+      "improvement": "1 failed action → 0 failed actions"
+    }
+  },
+  "documentation": [
+    {"name":"Quickstart","path":"documentation/QUICKSTART.md","description":"Run, verify and inspect the competition package."},
+    {"name":"Judge brief","path":"documentation/JUDGE_BRIEF.md","description":"The competition thesis, proof chain and scoring surface."},
+    {"name":"Three-minute demo","path":"documentation/DEMO_SCRIPT.md","description":"A precise judge-facing demonstration sequence."},
+    {"name":"ProofGrid receipt","path":"proofgrid/FINAL_RECEIPT.json","description":"Machine-readable promotion receipt and artifact hashes."},
+    {"name":"Capability Genome","path":"genomes/CAPABILITY_GENOME.json","description":"Reusable repair knowledge with scope and exclusions."}
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "task": "PROM-COMP-002 · Publish replay-safe release manifest",
+  "outcome": "replay_safely_ignored",
+  "improvement": "1 failed action → 0 failed actions"
+}

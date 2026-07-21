@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07090d">
+  <meta name="description" content="PROMETHEUS AIS Competition Edition, an always-available Command-to-Proof demonstration.">
+  <title>PROMETHEUS · Command-to-Proof Console</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <aside class="rail" aria-label="System navigation">
+    <a class="brand" href="#overview" aria-label="PROMETHEUS home">
+      <span class="brand-mark">P</span>
+      <span class="brand-copy"><b>PROMETHEUS</b><small>V-1.1.1</small></span>
+    </a>
+    <nav id="system-nav"></nav>
+    <div class="rail-foot">
+      <span class="signal"></span>
+      <div><b>PUBLIC NODE</b><small>24/7 STATIC HOST</small></div>
+    </div>
+  </aside>
+
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <p class="overline">OLYMPIAN CONSOLE · PUBLIC COMPETITION NODE</p>
+        <h1>Command-to-Proof Control Room</h1>
+      </div>
+      <div class="top-actions">
+        <button class="ghost" id="replay">Replay proof</button>
+        <a class="button" href="proofgrid/FINAL_RECEIPT.json">Open receipt</a>
+        <div class="status-chip"><span></span> RELEASE EVIDENCE VERIFIED</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="overview">
+        <div class="hero-copy panel">
+          <p class="overline amber">SELF-PROVING AI ENGINEERING</p>
+          <h2>PROMETHEUS turns software missions into verified engineering outcomes.</h2>
+          <p class="lede">It does not merely generate code. It challenges unsupported success, repairs demonstrated failures, proves the repair, and preserves successful engineering knowledge for reuse.</p>
+          <div class="hero-actions">
+            <button class="button" id="start-demo">Run deterministic replay</button>
+            <a class="ghost buttonlike" href="documentation/JUDGE_BRIEF.md">Read judge brief</a>
+          </div>
+          <p class="release-line">Built with Codex. Evolved through PROMETHEUS. Proven on EDEN.</p>
+        </div>
+
+        <div class="forge panel" aria-label="PROMETHEUS system core">
+          <div class="forge-orbit orbit-one"></div>
+          <div class="forge-orbit orbit-two"></div>
+          <div class="forge-core">
+            <span class="core-label">PROMETHEUS</span>
+            <strong id="readiness">100%</strong>
+            <small>RELEASE READINESS</small>
+          </div>
+          <div class="forge-stat left"><small>TESTS</small><b>5 / 5</b></div>
+          <div class="forge-stat right"><small>ARTIFACTS</small><b>8 / 8</b></div>
+          <div class="forge-stat bottom"><small>GENOME REUSE</small><b>VERIFIED</b></div>
+        </div>
+      </section>
+
+      <section class="metric-strip" id="release-metrics"></section>
+
+      <section class="workspace">
+        <article class="panel mission-card">
+          <div class="section-head">
+            <div><p class="overline amber">IGNITION CHAMBER</p><h2>Mission Control</h2></div>
+            <span class="state promoted">PROMOTED</span>
+          </div>
+          <div id="mission-card"></div>
+        </article>
+
+        <article class="panel pipeline-card">
+          <div class="section-head">
+            <div><p class="overline amber">COMMAND-TO-PROOF</p><h2>Evidence Pipeline</h2></div>
+            <div class="progress"><span id="progress-bar"></span></div>
+          </div>
+          <ol id="pipeline" class="pipeline"></ol>
+        </article>
+
+        <article class="panel receipt-card">
+          <div class="section-head">
+            <div><p class="overline green">LIVE PROOF</p><h2>ProofGrid</h2></div>
+            <span class="hex">◆</span>
+          </div>
+          <div id="proof-card"></div>
+          <a class="inline-link" href="proofgrid/FINAL_RECEIPT.json">Inspect machine-readable receipt →</a>
+        </article>
+      </section>
+
+      <section class="organ-grid">
+        <article class="panel organ-card danger" id="seca">
+          <p class="overline red">THE CHAIN HOLDS</p>
+          <h2>SECA Promotion Gate</h2>
+          <div id="seca-card"></div>
+        </article>
+        <article class="panel organ-card repair" id="hydra">
+          <p class="overline orange">REPAIR FORGE</p>
+          <h2>HYDRA</h2>
+          <div id="hydra-card"></div>
+        </article>
+        <article class="panel organ-card genome" id="genome">
+          <p class="overline violet">FLAME PRESERVED</p>
+          <h2>Capability Genome</h2>
+          <div id="genome-card"></div>
+        </article>
+      </section>
+
+      <section class="panel inheritance">
+        <div>
+          <p class="overline green">FLAME CARRIED FORWARD</p>
+          <h2>Verified inheritance across a related task</h2>
+          <p>The repair strategy is reused on a different artifact and operation, converting one failed action into zero failed actions.</p>
+        </div>
+        <div class="improvement">
+          <span class="before">1 FAILURE</span>
+          <span class="arrow">→</span>
+          <span class="after">0 FAILURES</span>
+        </div>
+      </section>
+
+      <section class="systems-section">
+        <div class="section-title">
+          <div><p class="overline amber">UNIFIED PRODUCT SURFACE</p><h2>Every organ, one visual operating system</h2></div>
+          <p>Each module inherits the same obsidian, molten-gold, evidence-first interface language while exposing its actual operational role.</p>
+        </div>
+        <div id="systems-grid" class="systems-grid"></div>
+      </section>
+
+      <section class="resources">
+        <article class="panel">
+          <p class="overline blue">SCREENSHOTS</p>
+          <h2>Competition visual evidence</h2>
+          <a class="shot" href="screenshots/prometheus-command-center.svg">
+            <img src="screenshots/prometheus-command-center.svg" alt="PROMETHEUS Command Center overview">
+            <span>Open full-resolution interface capture →</span>
+          </a>
+        </article>
+        <article class="panel">
+          <p class="overline violet">DOCUMENTATION</p>
+          <h2>Judge and operator material</h2>
+          <div id="docs-list" class="docs-list"></div>
+        </article>
+      </section>
+
+      <section class="panel architecture">
+        <p class="overline amber">ALWAYS-AVAILABLE DELIVERY CHAIN</p>
+        <div class="arch-flow">
+          <span>GitHub</span><b>→</b><span>GitHub Actions</span><b>→</b><span>Static Competition Website</span>
+          <b>→</b><span>Interface · Demo Data · Screenshots · ProofGrid · Genome · Docs</span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>PROMETHEUS AIS Competition Edition</span>
+      <span>Repair. Prove. Remember. Evolve.</span>
+    </footer>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

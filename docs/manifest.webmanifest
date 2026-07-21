@@ -1,0 +1,9 @@
+{
+  "name": "PROMETHEUS AIS Competition Edition",
+  "short_name": "PROMETHEUS",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07090d",
+  "theme_color": "#07090d",
+  "description": "The always-available PROMETHEUS Command-to-Proof competition console."
+}
