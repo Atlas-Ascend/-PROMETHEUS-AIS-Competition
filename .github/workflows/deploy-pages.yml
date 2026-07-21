@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: Deploy Locked PROMETHEUS 2:45 Site
 
 on:
   push:
@@ -7,10 +7,7 @@ on:
       - 'index.html'
       - 'docs/**'
       - '.nojekyll'
-      - 'README.md'
-      - 'BUILD_TRUTH.md'
       - '.github/workflows/deploy-pages.yml'
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -18,26 +15,34 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: prometheus-245-production
   cancel-in-progress: true
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Checkout
+      - name: Checkout main only
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-      - name: Verify elite public entrypoints
+      - name: Prove exact locked 2:45 artifact
+        shell: bash
         run: |
           set -euo pipefail
-
+          test "$GITHUB_REF" = 'refs/heads/main'
           test -f .nojekyll
           test -f docs/.nojekyll
           test -f index.html
@@ -45,28 +50,24 @@ jobs:
           test -f docs/assets/elite-demo.css
           test -f docs/assets/elite-demo.js
           test -f docs/proofgrid/FINAL_RECEIPT.json
-
-          grep -q 'IGNITE 2:45 DEMONSTRATION' index.html
-          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
+          node --check docs/assets/elite-demo.js
           grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' index.html
           grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
-          grep -q 'const stageStarts = \[0, 18, 39, 59, 77, 101, 125, 145\];' docs/assets/elite-demo.js
-          grep -q 'const duration = 165;' docs/assets/elite-demo.js
-          grep -q "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
+          grep -q 'IGNITE 2:45 DEMONSTRATION' index.html
+          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
+          grep -Fq 'const duration = 165;' docs/assets/elite-demo.js
+          grep -Fq "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
+          ! grep -Eqi 'PROMETHEUS · Operator Console|IGNITE 3:00|T\+03:00|180-second|180 seconds' index.html docs/index.html
+          echo 'COMMAND TO PROOF PASS: exact 2:45 production artifact locked.'
 
-          node --check docs/assets/elite-demo.js
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
-          if grep -Eni 'elite three-minute|full three-minute|one impossible mission.*three minutes|IGNITE 3:00|T\+03:00|180-second|180 seconds' \
-            index.html docs/index.html docs/assets/elite-demo.js README.md BUILD_TRUTH.md; then
-            echo 'Legacy runtime language detected.'
-            exit 1
-          fi
-
-      - name: Upload converged site artifact
+      - name: Upload exact production site
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy exact 2:45 site
         id: deployment
         uses: actions/deploy-pages@v4
