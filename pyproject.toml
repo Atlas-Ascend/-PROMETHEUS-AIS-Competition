@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prometheus-ais-competition"
+version = "1.1.1"
+description = "Public competition edition of the PROMETHEUS Command-to-Proof loop"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Atlas Ascend" }]
+
+[project.scripts]
+prometheus = "prometheus.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
