@@ -29,7 +29,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Validate website and public evidence
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate website, replay engine and public evidence
         run: |
           set -euo pipefail
           test -s docs/index.html
@@ -38,6 +43,11 @@ jobs:
           test -s docs/data/demo.json
           test -s docs/screenshots/prometheus-command-center.svg
           test -f docs/.nojekyll
+          node --check docs/assets/app.js
+          grep -q 'id="start-demo"' docs/index.html
+          grep -q 'id="replay"' docs/index.html
+          grep -q 'function replay()' docs/assets/app.js
+          grep -q 'addEventListener("click", replay)' docs/assets/app.js
           python -m json.tool docs/data/demo.json > /dev/null
           python -m json.tool docs/proofgrid/FINAL_RECEIPT.json > /dev/null
           python -m json.tool docs/proofgrid/HYDRA_REPAIR_RECEIPT.json > /dev/null
