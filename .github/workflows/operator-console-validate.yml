@@ -1,0 +1,43 @@
+name: Validate PROMETHEUS Operator Console
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - ".github/workflows/operator-console-validate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout release candidate
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run operator-console proof gates
+        run: |
+          set -euo pipefail
+          node --check docs/assets/app.js
+          node docs/tests/demo_contract.mjs
+          python docs/tests/site_integrity.py
+          python -m json.tool docs/data/demo.json > /dev/null
+          grep -q "PROMETHEUS Operator Console" README.md
+          grep -q "EDEN and ServerForge" README.md
+          grep -q "Intellectual-property boundary" docs/documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md
+          grep -q "Withheld" docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
