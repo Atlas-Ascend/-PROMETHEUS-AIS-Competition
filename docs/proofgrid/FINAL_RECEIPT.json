@@ -15,7 +15,7 @@
   "measured_improvement": "1 failed action → 0 failed actions",
   "mission_id": "PROM-COMP-001",
   "promotion": "authorized",
-  "receipt_hash": "b25f455743b8fda18b909178dd54586045ef587ae4b452b9399acfc59b153f57",
+  "receipt_hash": "0d6a874a47ba49d36a37601d1864accb614dcff2df8eeeb71faf1f01e5f3344c",
   "receipt_id": "PROOFGRID-COMP-001",
   "snapshot_notice": "Public deterministic competition snapshot. Run the repository demo to regenerate fresh local evidence.",
   "status": "verified",
