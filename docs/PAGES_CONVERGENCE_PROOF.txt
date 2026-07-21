@@ -1,0 +1,5 @@
+PROMETHEUS PAGES CONVERGENCE PROOF
+Artifact root: docs/
+Runtime: 165 seconds
+Entrypoint: docs/index.html
+Validation contract: elite 2:45
