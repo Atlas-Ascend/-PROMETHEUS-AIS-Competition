@@ -68,6 +68,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check docs/assets/app.js
+          node --check docs/assets/observatory.js
           node docs/tests/demo_contract.mjs
           python docs/tests/site_integrity.py
           python -m json.tool docs/data/demo.json > /dev/null
