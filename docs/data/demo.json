@@ -190,7 +190,7 @@
     "tests": {"passed":5,"failed":0},
     "artifacts_verified": 8,
     "artifacts_total": 8,
-    "receipt_hash": "6cefc8e7df4bcd6c86c5a6587cd0bdc18da61af2b5604da2f5a9d4591e81f1f7"
+    "receipt_hash": "0d6a874a47ba49d36a37601d1864accb614dcff2df8eeeb71faf1f01e5f3344c"
   },
   "genome": {
     "genome_id": "PG-CG-REPLAY-GUARD-001",
