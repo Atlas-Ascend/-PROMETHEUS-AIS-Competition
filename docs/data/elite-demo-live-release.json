@@ -1,7 +1,8 @@
 {
-  "release": "PROMETHEUS-ELITE-DEMO-LIVE",
+  "release": "PROMETHEUS-ELITE-DEMO-2-45-LIVE",
   "mission": "PROM-COMP-EDGE-001",
-  "duration_seconds": 180,
+  "duration_seconds": 165,
+  "final_clock": "T+02:45",
   "systems": [
     "PROMETHEUS",
     "AIS-Ω",
@@ -13,5 +14,6 @@
     "Build Truth"
   ],
   "deployment_trigger": "PR_MERGE",
+  "canonical_public_path": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/",
   "status": "READY_FOR_GITHUB_PAGES"
 }
