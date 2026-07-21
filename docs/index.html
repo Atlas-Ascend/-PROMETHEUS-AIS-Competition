@@ -4,31 +4,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#07090d">
-  <meta name="description" content="PROMETHEUS AIS Competition Edition, an always-available Command-to-Proof demonstration.">
-  <title>PROMETHEUS · Command-to-Proof Console</title>
+  <meta name="description" content="PROMETHEUS AIS Competition Edition, a unified Command-to-Proof demonstration.">
+  <title>PROMETHEUS · Unified Command-to-Proof Console</title>
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/demo.css">
   <link rel="stylesheet" href="assets/hardening.css">
-  <link rel="stylesheet" href="assets/observatory.css">
+  <link rel="stylesheet" href="assets/unified.css">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
-  <aside class="rail" aria-label="System navigation">
-    <a class="brand" href="#overview" aria-label="PROMETHEUS home">
-      <span class="brand-mark">P</span>
-      <span class="brand-copy"><b>PROMETHEUS</b><small>V-1.1.1</small></span>
-    </a>
+  <aside class="rail" aria-label="PROMETHEUS navigation">
+    <a class="brand" href="#overview"><span class="brand-mark">P</span><span class="brand-copy"><b>PROMETHEUS</b><small>V-1.1.1</small></span></a>
     <nav id="system-nav"></nav>
-    <div class="rail-foot"><span class="signal"></span><div><b>PUBLIC NODE</b><small>24/7 STATIC HOST</small></div></div>
+    <div class="rail-foot"><span class="signal"></span><div><b>PROOF NODE</b><small>VERIFIED SNAPSHOT</small></div></div>
   </aside>
 
   <div class="shell">
     <header class="topbar">
-      <div><p class="overline">OLYMPIAN CONSOLE · PUBLIC COMPETITION NODE</p><h1>Command-to-Proof Control Room</h1></div>
+      <div><p class="overline">PROMETHEUS · COMPETITION EDITION</p><h1>Unified Command-to-Proof Mission Cockpit</h1></div>
       <div class="top-actions">
-        <button class="ghost" id="replay" type="button">Launch proof theater</button>
+        <button class="ghost" id="replay" type="button">Run mission</button>
         <a class="button" href="proofgrid/FINAL_RECEIPT.json">Open receipt</a>
-        <div class="status-chip"><span></span> RELEASE EVIDENCE VERIFIED</div>
+        <div class="status-chip"><span></span> BUILD TRUTH VERIFIED</div>
       </div>
     </header>
 
@@ -36,180 +33,112 @@
       <section class="hero" id="overview">
         <div class="hero-copy panel">
           <p class="overline amber">SELF-PROVING AI ENGINEERING</p>
-          <div class="judge-mode-banner"><span></span> JUDGE COMMAND MESH ONLINE · AGENTS · PACKETS · TELEMETRY · PROOF</div>
-          <h2>PROMETHEUS turns software missions into verified engineering outcomes.</h2>
-          <p class="lede">It does not merely generate code. It challenges unsupported success, repairs demonstrated failures, proves the repair, and preserves successful engineering knowledge for reuse.</p>
+          <div class="judge-mode-banner"><span></span> TERMINAL + HANDOFFS + LIVING GRAPHS + PROOF</div>
+          <h2>Watch every PROMETHEUS agent move one mission from command to verified capability.</h2>
+          <p class="lede">One canonical sequence. One vocabulary. One synchronized view of code-like terminal events, agent handoffs, packets, telemetry, failure, repair, verification, memory, and promotion.</p>
           <div class="hero-actions">
-            <button class="button demo-launch" id="start-demo" type="button">Enter live Command-to-Proof mission</button>
-            <a class="ghost buttonlike" href="documentation/JUDGE_BRIEF.md">Read judge brief</a>
+            <button class="button demo-launch" id="start-demo" type="button">Ignite full mission</button>
+            <button class="ghost buttonlike" id="hero-verified" type="button">Jump to verified result</button>
           </div>
-          <p class="release-line">Built with Codex. Governed by PROMETHEUS. Proven by evidence.</p>
+          <p class="release-line">AI can claim completion. PROMETHEUS requires proof.</p>
         </div>
-        <div class="forge panel" aria-label="PROMETHEUS system core">
+        <div class="forge panel" aria-label="PROMETHEUS proof core">
           <div class="forge-orbit orbit-one"></div><div class="forge-orbit orbit-two"></div>
-          <div class="forge-core"><span class="core-label">PROMETHEUS</span><strong id="readiness">100%</strong><small>RELEASE READINESS</small></div>
+          <div class="forge-core"><span class="core-label">BUILD TRUTH</span><strong id="readiness">100%</strong><small>PROMOTION AUTHORIZED</small></div>
           <div class="forge-stat left"><small>TESTS</small><b>5 / 5</b></div>
           <div class="forge-stat right"><small>ARTIFACTS</small><b>8 / 8</b></div>
-          <div class="forge-stat bottom"><small>GENOME REUSE</small><b>VERIFIED</b></div>
+          <div class="forge-stat bottom"><small>REUSE</small><b>1 → 0 FAILURES</b></div>
         </div>
       </section>
 
-      <section class="mission-observatory panel" id="mission-observatory" aria-labelledby="observatory-title">
-        <div class="observatory-scan" aria-hidden="true"></div>
-        <header class="observatory-head">
-          <div>
-            <p class="overline cyan">PROMETHEUS · LIVING MISSION OBSERVATORY</p>
-            <h2 id="observatory-title">The handoffs are visible. The packets move. The proof accumulates.</h2>
-            <p>This always-on judge view exposes the verified Command-to-Proof sequence before the full-screen replay even begins.</p>
-          </div>
-          <div class="observatory-actions">
-            <button type="button" class="button" id="observatory-launch">EXPAND LIVE MISSION</button>
-            <button type="button" class="ghost" id="observatory-verified">LOAD VERIFIED VERDICT</button>
-          </div>
+      <section class="panel unified-cockpit" id="mission-cockpit" aria-labelledby="cockpit-title">
+        <header class="cockpit-head">
+          <div><p class="overline cyan">LIVE DETERMINISTIC MISSION</p><h2 id="cockpit-title">The entire proof chain, synchronized</h2></div>
+          <div class="cockpit-actions"><button class="button" id="cockpit-run" type="button">RUN COMMAND-TO-PROOF</button><button class="ghost" id="cockpit-skip" type="button">LOAD VERIFIED STATE</button></div>
         </header>
 
-        <div class="observatory-kpis" aria-label="Live mission state">
-          <div><small>ACTIVE ORGAN</small><b id="ambient-active-organ">PROMETHEUS</b></div>
-          <div><small>MISSION PHASE</small><b id="ambient-phase">IGNITION</b></div>
-          <div><small>GATE STATE</small><b id="ambient-state">VERIFIED</b></div>
-          <div><small>BUILD TRUTH</small><b class="green">PROMOTION AUTHORIZED</b></div>
+        <div class="cockpit-status">
+          <div><small>ACTIVE AGENT</small><b id="live-agent">PROMETHEUS</b></div>
+          <div><small>PHASE</small><b id="live-phase">IGNITION</b></div>
+          <div><small>PACKET</small><b id="live-packet">MISSION</b></div>
+          <div><small>GATE</small><b id="live-gate">ADMITTED</b></div>
+          <div><small>PROOF</small><b id="live-proof">12%</b></div>
         </div>
 
-        <div class="observatory-grid">
-          <article class="agent-fabric">
-            <div class="fabric-title">
-              <div><small>PROMETHEUS AGENT HANDOFF FABRIC</small><b>COMMAND-TO-PROOF MESH</b></div>
-              <span class="live-chip"><i></i> LIVE REPLAY BUS</span>
-            </div>
-            <div id="ambient-agent-grid" class="ambient-agent-grid" aria-label="PROMETHEUS governed handoff sequence"></div>
-            <div class="stream-title"><span>PACKET AND EVIDENCE STREAM</span><span>DETERMINISTIC PUBLIC SNAPSHOT</span></div>
-            <div id="ambient-command-stream" class="ambient-command-stream" aria-live="polite"></div>
+        <div class="cockpit-split">
+          <article class="terminal-panel" aria-label="PROMETHEUS terminal handoff stream">
+            <div class="terminal-bar"><span></span><span></span><span></span><b>PROMETHEUS · COMMAND-TO-PROOF TERMINAL</b><small id="terminal-clock">T+00:00</small></div>
+            <pre id="mission-terminal" aria-live="polite"></pre>
           </article>
 
-          <aside class="ambient-telemetry" aria-label="Living telemetry wall">
-            <div class="telemetry-title"><span>MISSION TELEMETRY</span><b>LIVE VISUALIZATION</b></div>
-            <div class="ambient-dials">
-              <div class="ambient-dial" id="ambient-confidence-ring" style="--value:100"><div><b id="ambient-confidence">100%</b><small>PROOF CONFIDENCE</small></div></div>
-              <div class="ambient-dial cyan" id="ambient-load-ring" style="--value:52"><div><b id="ambient-load">52%</b><small>ORCHESTRATION LOAD</small></div></div>
-            </div>
-            <svg class="ambient-chart" viewBox="0 0 320 110" preserveAspectRatio="none" aria-label="Deterministic mission telemetry graph">
-              <line x1="0" y1="27" x2="320" y2="27"></line>
-              <line x1="0" y1="55" x2="320" y2="55"></line>
-              <line x1="0" y1="83" x2="320" y2="83"></line>
-              <polyline id="ambient-telemetry-line" points="0,72"></polyline>
-            </svg>
-            <div class="ambient-metrics">
-              <div><small>LATENCY</small><b id="ambient-latency">18ms</b></div>
-              <div><small>PACKETS</small><b id="ambient-packets">0</b></div>
-              <div><small>QUEUE</small><b id="ambient-queue">0</b></div>
-              <div><small>RECEIPT</small><b id="ambient-receipt">PENDING</b></div>
-            </div>
-          </aside>
+          <article class="theater-panel" aria-label="PROMETHEUS visual handoff theater">
+            <div class="theater-mini-head"><span>AGENT HANDOFF FABRIC</span><b id="fabric-state">MISSION ADMITTED</b></div>
+            <div id="agent-fabric" class="agent-fabric"></div>
+            <div class="fabric-packet" id="fabric-packet"><b>MISSION</b><span>PKT-000</span></div>
+          </article>
         </div>
 
-        <div class="challenge-deck">
-          <div class="challenge-intro">
-            <p class="overline violet">JUDGE CHALLENGE MODE</p>
-            <h3>Choose what you want PROMETHEUS to defend.</h3>
-            <p>The command deck exposes the exact local verification path for independent inspection.</p>
-          </div>
-          <div class="challenge-buttons" role="group" aria-label="Judge verification challenges">
-            <button type="button" class="active" data-challenge="receipt">VERIFY RECEIPT</button>
-            <button type="button" data-challenge="evidence">VERIFY EVIDENCE</button>
-            <button type="button" data-challenge="claims">VERIFY CLAIMS</button>
-            <button type="button" data-challenge="submission">VERIFY SUBMISSION</button>
-          </div>
-          <div class="challenge-console">
-            <div class="console-bar"><span></span><span></span><span></span><b>JUDGE TERMINAL · READ-ONLY COMMAND DECK</b></div>
-            <code id="challenge-output">python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json</code>
-            <div class="challenge-console-actions">
-              <button type="button" id="challenge-copy">COPY COMMAND</button>
-              <a id="challenge-link" href="proofgrid/FINAL_RECEIPT.json">OPEN VERIFIED RECEIPT →</a>
-            </div>
-          </div>
+        <div class="telemetry-wall">
+          <article class="master-graph">
+            <div class="graph-head"><span>GLOBAL PROOF ACCUMULATION</span><b id="global-graph-value">12%</b></div>
+            <svg viewBox="0 0 800 150" preserveAspectRatio="none" aria-label="Global proof accumulation graph"><line x1="0" y1="37" x2="800" y2="37"></line><line x1="0" y1="75" x2="800" y2="75"></line><line x1="0" y1="113" x2="800" y2="113"></line><polyline id="global-graph-line" points="0,132"></polyline></svg>
+          </article>
+          <div class="dial"><div id="proof-dial" style="--value:12"><b id="proof-dial-value">12%</b><small>PROOF CONFIDENCE</small></div></div>
+          <div class="dial"><div id="load-dial" class="cyan" style="--value:18"><b id="load-dial-value">18%</b><small>ORCHESTRATION LOAD</small></div></div>
+          <div class="telemetry-numbers"><div><small>LATENCY</small><b id="live-latency">18ms</b></div><div><small>PACKETS</small><b id="live-packets">1</b></div><div><small>QUEUE</small><b id="live-queue">0</b></div><div><small>RECEIPT</small><b id="live-receipt">PENDING</b></div></div>
         </div>
+      </section>
+
+      <section class="agent-observatory" id="agents">
+        <div class="section-title"><div><p class="overline amber">EVERY AGENT · EVERY HANDOFF</p><h2>Eight canonical agents, eight living graphs</h2></div><p>Each graph reflects that agent’s deterministic activity during the same mission. Names, order, state, packet, terminal output, and proof narrative stay identical everywhere.</p></div>
+        <div id="agent-graph-grid" class="agent-graph-grid"></div>
       </section>
 
       <section class="metric-strip" id="release-metrics"></section>
       <section class="workspace">
-        <article class="panel mission-card"><div class="section-head"><div><p class="overline amber">IGNITION CHAMBER</p><h2>Mission Control</h2></div><span class="state promoted">PROMOTED</span></div><div id="mission-card"></div></article>
-        <article class="panel pipeline-card"><div class="section-head"><div><p class="overline amber">COMMAND-TO-PROOF</p><h2>Evidence Pipeline</h2></div><div class="progress"><span id="progress-bar"></span></div></div><ol id="pipeline" class="pipeline"></ol></article>
-        <article class="panel receipt-card"><div class="section-head"><div><p class="overline green">LIVE PROOF</p><h2>ProofGrid</h2></div><span class="hex">◆</span></div><div id="proof-card"></div><a class="inline-link" href="proofgrid/FINAL_RECEIPT.json">Inspect machine-readable receipt →</a></article>
+        <article class="panel mission-card"><div class="section-head"><div><p class="overline amber">MISSION</p><h2>Mission Control</h2></div><span class="state promoted">PROMOTED</span></div><div id="mission-card"></div></article>
+        <article class="panel pipeline-card"><div class="section-head"><div><p class="overline amber">CANONICAL SEQUENCE</p><h2>Evidence Pipeline</h2></div><div class="progress"><span id="progress-bar"></span></div></div><ol id="pipeline" class="pipeline"></ol></article>
+        <article class="panel receipt-card"><div class="section-head"><div><p class="overline green">FINAL PROOF</p><h2>ProofGrid</h2></div><span class="hex">◆</span></div><div id="proof-card"></div><a class="inline-link" href="proofgrid/FINAL_RECEIPT.json">Inspect machine-readable receipt →</a></article>
       </section>
 
       <section class="organ-grid">
-        <article class="panel organ-card danger" id="seca"><p class="overline red">THE CHAIN HOLDS</p><h2>SECA Promotion Gate</h2><div id="seca-card"></div></article>
-        <article class="panel organ-card repair" id="hydra"><p class="overline orange">REPAIR FORGE</p><h2>HYDRA</h2><div id="hydra-card"></div></article>
-        <article class="panel organ-card genome" id="genome"><p class="overline violet">FLAME PRESERVED</p><h2>Capability Genome</h2><div id="genome-card"></div></article>
+        <article class="panel organ-card danger" id="seca"><p class="overline red">FAIL CLOSED</p><h2>SECA</h2><div id="seca-card"></div></article>
+        <article class="panel organ-card repair" id="hydra"><p class="overline orange">BEHAVIOR CHANGED</p><h2>HYDRA</h2><div id="hydra-card"></div></article>
+        <article class="panel organ-card genome" id="genome"><p class="overline violet">CAPABILITY PRESERVED</p><h2>Capability Genome</h2><div id="genome-card"></div></article>
       </section>
 
-      <section class="panel inheritance"><div><p class="overline green">FLAME CARRIED FORWARD</p><h2>Verified inheritance across a related task</h2><p>The repair strategy is reused on a different artifact and operation, converting one failed action into zero failed actions.</p></div><div class="improvement"><span class="before">1 FAILURE</span><span class="arrow">→</span><span class="after">0 FAILURES</span></div></section>
+      <section class="systems-section"><div class="section-title"><div><p class="overline amber">CANONICAL PROMETHEUS AGENTS</p><h2>One system map, no extra estate vocabulary</h2></div><p>These are the same eight agents used by the terminal, handoff fabric, living graphs, pipeline, and proof theater.</p></div><div id="systems-grid" class="systems-grid"></div></section>
 
-      <section class="systems-section"><div class="section-title"><div><p class="overline amber">PROMETHEUS PROOF ORGANS</p><h2>Only the systems that close this proof chain</h2></div><p>The competition surface stays focused on PROMETHEUS, its verification organs, its memory layer, and Build Truth.</p></div><div id="systems-grid" class="systems-grid"></div></section>
-
-      <section class="resources">
-        <article class="panel"><p class="overline blue">SCREENSHOTS</p><h2>Competition visual evidence</h2><a class="shot" href="screenshots/prometheus-command-center.svg"><img src="screenshots/prometheus-command-center.svg" alt="PROMETHEUS Command Center overview"><span>Open full-resolution interface capture →</span></a></article>
-        <article class="panel"><p class="overline violet">DOCUMENTATION</p><h2>Judge and operator material</h2><div id="docs-list" class="docs-list"></div></article>
+      <section class="judge-challenge panel">
+        <div><p class="overline violet">JUDGE CHALLENGE MODE</p><h2>Choose what PROMETHEUS must defend</h2></div>
+        <div class="challenge-buttons"><button class="active" data-challenge="receipt" type="button">RECEIPT</button><button data-challenge="evidence" type="button">EVIDENCE</button><button data-challenge="claims" type="button">CLAIMS</button><button data-challenge="submission" type="button">READINESS</button></div>
+        <div class="challenge-console"><code id="challenge-output">python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json</code><button id="challenge-copy" type="button">COPY</button><a id="challenge-link" href="proofgrid/FINAL_RECEIPT.json">OPEN ARTIFACT →</a></div>
       </section>
 
-      <section class="panel architecture"><p class="overline amber">ALWAYS-AVAILABLE DELIVERY CHAIN</p><div class="arch-flow"><span>GitHub</span><b>→</b><span>GitHub Actions</span><b>→</b><span>Static Competition Website</span><b>→</b><span>Interface · Demo Data · Screenshots · ProofGrid · Genome · Docs</span></div></section>
+      <section class="resources"><article class="panel"><p class="overline blue">SCREENSHOT</p><h2>Competition visual evidence</h2><a class="shot" href="screenshots/prometheus-command-center.svg"><img src="screenshots/prometheus-command-center.svg" alt="PROMETHEUS Command Center"><span>Open full-resolution capture →</span></a></article><article class="panel"><p class="overline violet">DOCUMENTATION</p><h2>Judge material</h2><div id="docs-list" class="docs-list"></div></article></section>
     </main>
     <footer><span>PROMETHEUS AIS Competition Edition</span><span>Repair. Prove. Remember. Evolve.</span></footer>
   </div>
 
   <section id="proof-theater" class="proof-theater" hidden aria-modal="true" aria-busy="false" role="dialog" aria-labelledby="theater-title">
-    <div class="theater-grid" aria-hidden="true"></div>
-    <div class="theater-flare" aria-hidden="true"></div>
-    <header class="theater-header">
-      <div class="theater-brand"><span class="theater-sigil">P</span><div><small>PROMETHEUS · COMPETITION EDITION</small><b id="theater-title">COMMAND-TO-PROOF LIVE RUN</b></div></div>
-      <div class="theater-controls"><span class="replay-mode">DETERMINISTIC REPLAY · VERIFIED SNAPSHOT</span><span id="theater-clock">T+00:00</span><button id="theater-close" type="button" aria-label="Close demo">×</button></div>
-    </header>
-
-    <div class="theater-layout">
-      <aside class="theater-left">
-        <p class="hud-label">ACTIVE PROMETHEUS ORGANS</p>
-        <div id="organ-stack" class="organ-stack"></div>
-        <p class="hud-label">MISSION</p>
-        <div class="mission-hud"><b>PROM-COMP-001</b><span>Publish a replay-safe proof receipt</span></div>
-      </aside>
-
+    <div class="theater-grid" aria-hidden="true"></div><div class="theater-flare" aria-hidden="true"></div>
+    <header class="theater-header"><div class="theater-brand"><span class="theater-sigil">P</span><div><small>PROMETHEUS · UNIFIED LIVE RUN</small><b id="theater-title">COMMAND-TO-PROOF THEATER</b></div></div><div class="theater-controls"><span class="replay-mode">DETERMINISTIC VERIFIED SNAPSHOT</span><span id="theater-clock">T+00:00</span><button id="theater-close" type="button" aria-label="Close demo">×</button></div></header>
+    <div class="theater-layout theater-unified-layout">
+      <aside class="theater-left"><p class="hud-label">CANONICAL AGENTS</p><div id="organ-stack" class="organ-stack"></div><p class="hud-label">MISSION</p><div class="mission-hud"><b>PROM-COMP-001</b><span>Publish a replay-safe proof receipt</span></div></aside>
       <main class="theater-main">
-        <div class="stage-kicker" id="stage-kicker">AWAITING IGNITION</div>
-        <h2 id="stage-title">PROMETHEUS IS READY</h2>
-        <p id="stage-narrative">Press launch to watch the system discover a real failure, deny its own promotion, repair the defect, prove the repair, and reuse the capability.</p>
-
-        <div class="proof-core-wrap">
-          <div class="proof-core-rings"><i></i><i></i><i></i></div>
-          <div id="proof-core" class="proof-core"><small>BUILD TRUTH</small><strong id="core-value">READY</strong><span id="core-subtitle">EVIDENCE GOVERNED</span></div>
+        <div class="stage-kicker" id="stage-kicker">AWAITING IGNITION</div><h2 id="stage-title">PROMETHEUS IS READY</h2><p id="stage-narrative">Run the synchronized terminal and visual mission.</p>
+        <div class="theater-side-by-side">
+          <div class="theater-terminal"><div class="terminal-bar"><span></span><span></span><span></span><b>LIVE AGENT TERMINAL</b></div><pre id="theater-terminal-output"></pre></div>
+          <div class="proof-core-wrap"><div class="proof-core-rings"><i></i><i></i><i></i></div><div id="proof-core" class="proof-core"><small>BUILD TRUTH</small><strong id="core-value">READY</strong><span id="core-subtitle">EVIDENCE GOVERNED</span></div></div>
         </div>
-
         <div id="theater-pipeline" class="theater-pipeline"></div>
         <div class="theater-actions"><button type="button" id="theater-launch">IGNITE COMMAND-TO-PROOF</button><button type="button" id="theater-skip">SKIP TO VERIFIED RESULTS</button></div>
       </main>
-
-      <aside class="theater-right">
-        <p class="hud-label">LIVE EVIDENCE STREAM</p>
-        <div id="evidence-stream" class="evidence-stream" aria-live="polite"></div>
-        <div class="verification-stack">
-          <div><span>TESTS</span><b id="metric-tests">0 / 5</b></div>
-          <div><span>ARTIFACTS</span><b id="metric-artifacts">0 / 8</b></div>
-          <div><span>RECEIPT</span><b id="metric-receipt">PENDING</b></div>
-          <div><span>GENOME</span><b id="metric-genome">UNEXTRACTED</b></div>
-        </div>
-      </aside>
+      <aside class="theater-right"><div class="telemetry-hud" id="theater-telemetry"></div><p class="hud-label">EVIDENCE STREAM</p><div id="evidence-stream" class="evidence-stream" aria-live="polite"></div><div class="verification-stack"><div><span>TESTS</span><b id="metric-tests">0 / 5</b></div><div><span>ARTIFACTS</span><b id="metric-artifacts">0 / 8</b></div><div><span>RECEIPT</span><b id="metric-receipt">PENDING</b></div><div><span>GENOME</span><b id="metric-genome">UNEXTRACTED</b></div></div></aside>
     </div>
-
-    <div id="verdict-card" class="verdict-card" hidden tabindex="-1" role="status" aria-live="assertive">
-      <span class="verdict-mark">◆</span>
-      <p>PROOFGRID VERDICT</p>
-      <h2>PROMOTION AUTHORIZED</h2>
-      <div class="verdict-metrics"><span>5/5 TESTS</span><span>8/8 ARTIFACTS</span><span>HASH VERIFIED</span><span>GENOME REUSED</span></div>
-      <strong>1 FAILED ACTION → 0 FAILED ACTIONS</strong>
-      <div class="verdict-actions"><button type="button" id="theater-replay">RUN IT AGAIN</button><button type="button" id="verdict-close" class="secondary">RETURN TO CONSOLE</button></div>
-    </div>
+    <div id="verdict-card" class="verdict-card" hidden tabindex="-1" role="status" aria-live="assertive"><span class="verdict-mark">◆</span><p>PROOFGRID VERDICT</p><h2>PROMOTION AUTHORIZED</h2><div class="verdict-metrics"><span>5/5 TESTS</span><span>8/8 ARTIFACTS</span><span>HASH VERIFIED</span><span>GENOME REUSED</span></div><strong>1 FAILED ACTION → 0 FAILED ACTIONS</strong><div class="verdict-actions"><button type="button" id="theater-replay">RUN IT AGAIN</button><button type="button" id="verdict-close" class="secondary">RETURN TO CONSOLE</button></div></div>
   </section>
 
   <script src="assets/app.js"></script>
-  <script src="assets/observatory.js"></script>
 </body>
 </html>
