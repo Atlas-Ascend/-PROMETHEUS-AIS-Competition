@@ -1,78 +1,13 @@
-name: Verify Live PROMETHEUS Operator Console
+name: RETIRED - Legacy live-site verifier
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - ".github/workflows/live-site-verify.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  verify-live:
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
     steps:
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Wait for and verify deployed Ghost Atlas Institute case study
-        run: |
-          set -euo pipefail
-          URL="https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/"
-          RELEASE="464d594"
-          for attempt in $(seq 1 24); do
-            echo "Live verification attempt ${attempt}/24"
-            if curl -fsSL --retry 2 --retry-delay 2 "${URL}?release=${RELEASE}" -o /tmp/index.html; then
-              if grep -q "PROMETHEUS · Operator Console" /tmp/index.html \
-                && grep -q "GHOST ATLAS INSTITUTE · SERVERFORGE FIELD REPORT" /tmp/index.html \
-                && grep -q "PROMETHEUS Forge: a screenshot-grounded operational case study" /tmp/index.html \
-                && grep -q "case-report-head" /tmp/index.html \
-                && grep -q "case-channel-map" /tmp/index.html \
-                && grep -q "case-receipt-exhibit" /tmp/index.html \
-                && grep -q "assets/case-study.css" /tmp/index.html \
-                && grep -q "assets/case-study.js" /tmp/index.html; then
-                break
-              fi
-            fi
-            if [ "$attempt" -eq 24 ]; then
-              echo "Ghost Atlas Institute case-study markers were not live before timeout" >&2
-              exit 1
-            fi
-            sleep 10
-          done
-
-          curl -fsSL "${URL}assets/app.js?release=${RELEASE}" -o /tmp/app.js
-          curl -fsSL "${URL}assets/case-study.js?release=${RELEASE}" -o /tmp/case-study.js
-          node --check /tmp/app.js
-          node --check /tmp/case-study.js
-
-          curl -fsSL "${URL}data/demo.json?release=${RELEASE}" -o /tmp/demo.json
-          curl -fsSL "${URL}data/case-study.json?release=${RELEASE}" -o /tmp/case-study.json
-          node - <<'NODE'
-          const fs = require('fs');
-          const demo = JSON.parse(fs.readFileSync('/tmp/demo.json','utf8'));
-          const report = JSON.parse(fs.readFileSync('/tmp/case-study.json','utf8'));
-          const expected = ['PROMETHEUS','AIS-Ω','Adversarial Twin','SECA','HYDRA','ProofGrid','Capability Genome','Build Truth'];
-          if (JSON.stringify(demo.pipeline.map(x=>x.organ)) !== JSON.stringify(expected)) throw new Error('canonical pipeline drift');
-          if (demo.systems.length !== 8) throw new Error('expected eight system visualizations');
-          if (demo.telemetry.proof.length !== 8 || demo.telemetry.readiness.length !== 8) throw new Error('telemetry incomplete');
-          if (demo.proofgrid.tests.passed !== 5 || demo.proofgrid.artifacts_verified !== 8) throw new Error('proof snapshot incomplete');
-          if (report.identity.issuer !== 'Ghost Atlas Institute') throw new Error('issuer drift');
-          if (report.identity.report_id !== 'GAI-FR-20260721-PROM-SF-001') throw new Error('report ID drift');
-          if (report.observed_server.name !== 'PROMETHEUS Forge — Live Case Study') throw new Error('observed server drift');
-          if (report.observed_receipt.campaign_id !== 'HYDRA-SERVERFORGE-20260719T023826Z') throw new Error('campaign ID drift');
-          if (report.observed_receipt.serverforge_receipt !== '26ccd3be5d15b170e24e54855db50f747ebf3c2fbfccac3622fb629b07665ffc') throw new Error('ServerForge receipt drift');
-          if (!report.observed_receipt.separation_note.includes('distinct from the current ProofGrid mission receipt')) throw new Error('receipt separation missing');
-          if (report.evidence_objects.length !== 4 || report.channel_architecture.length !== 5) throw new Error('evidence architecture incomplete');
-          if (report.credibility_model.length !== 6) throw new Error('credibility model incomplete');
-          if (!report.ip_boundary.withheld.includes('Private prompts and orchestration instructions')) throw new Error('IP boundary missing');
-          console.log('LIVE GHOST ATLAS INSTITUTE SERVERFORGE CASE STUDY PASS');
-          NODE
-
-          curl -fsSL "${URL}proofgrid/FINAL_RECEIPT.json?release=${RELEASE}" -o /tmp/receipt.json
-          python -m json.tool /tmp/receipt.json > /dev/null
+      - run: echo "Retired legacy Operator Console verifier. Locked release target is the 2:45 PROMETHEUS demo."
