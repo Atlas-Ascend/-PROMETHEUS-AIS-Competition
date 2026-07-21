@@ -1,0 +1,8 @@
+{"detail":"Mission admitted to the governed build loop.","organ":"PROMETHEUS","sequence":1,"stage":"IGNITION","state":"verified"}
+{"detail":"Three distinct candidate routes evaluated.","organ":"AIS-Ω","sequence":2,"stage":"ROUTE FORGE","state":"verified"}
+{"detail":"Duplicate consequential operation reproduced.","organ":"Adversarial Twin","sequence":3,"stage":"TRIAL BY FIRE","state":"failed"}
+{"detail":"Unsupported promotion denied.","organ":"SECA","sequence":4,"stage":"PROMOTION GATE","state":"blocked"}
+{"detail":"Idempotent replay guard changed runtime behavior.","organ":"HYDRA","sequence":5,"stage":"REPAIR FORGE","state":"repaired"}
+{"detail":"Tests, artifacts, receipt and hashes verified.","organ":"ProofGrid","sequence":6,"stage":"PROOF GRID","state":"verified"}
+{"detail":"Repair compiled into PG-CG-REPLAY-GUARD-001.","organ":"Capability Genome","sequence":7,"stage":"FLAME PRESERVED","state":"created"}
+{"detail":"Related task reused the Genome with measured improvement.","organ":"Build Truth","sequence":8,"stage":"INHERITANCE","state":"promoted"}
