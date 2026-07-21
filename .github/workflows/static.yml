@@ -1,4 +1,4 @@
-name: Deploy PROMETHEUS Competition Website
+name: Deploy PROMETHEUS Operator Console
 
 on:
   push:
@@ -41,59 +41,59 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Validate unified judge interface
+      - name: Validate operator console release
         run: |
           set -euo pipefail
           node --check docs/assets/app.js
           node docs/tests/demo_contract.mjs
           python docs/tests/site_integrity.py
-          test -f docs/assets/unified.css
+          python -m json.tool docs/data/demo.json > /dev/null
+          test -f docs/assets/operator-console.css
+          test -f docs/documentation/OPERATOR_CONSOLE_TECHNICAL_SPEC.md
+          test -f docs/documentation/EDEN_SERVERFORGE_CASE_STUDY.md
+          grep -q "The entire proof chain, synchronized" docs/index.html
+          grep -q "Eight systems, eight distinct visual languages" docs/index.html
+          grep -q "From EDEN local execution to public verified evidence" docs/index.html
+          grep -q "INTELLECTUAL PROPERTY BOUNDARY" docs/index.html
           test ! -f docs/assets/observatory.js
           test ! -f docs/assets/observatory.css
-          grep -q "The entire proof chain, synchronized" docs/index.html
-          grep -q "Eight canonical agents, eight living graphs" docs/index.html
 
       - name: Stamp deployed revision
         run: |
-          set -euo pipefail
           python - <<'PY'
-          import json
-          import os
+          import json, os
           from datetime import datetime, timezone
           from pathlib import Path
-
           payload = {
-              "interface": "PROMETHEUS Unified Command-to-Proof Mission Cockpit",
-              "revision": os.environ.get("GITHUB_SHA", "unknown"),
-              "deployed_at": datetime.now(timezone.utc).isoformat(),
-              "canonical_agents": [
-                  "PROMETHEUS", "AIS-Ω", "Adversarial Twin", "SECA",
-                  "HYDRA", "ProofGrid", "Capability Genome", "Build Truth"
-              ],
-              "features": [
-                  "side-by-side terminal and theater",
-                  "agent handoff fabric",
-                  "moving packets",
-                  "global telemetry",
-                  "eight living agent graphs",
-                  "judge challenge mode",
-                  "verified-result skip"
-              ]
+            "interface": "PROMETHEUS Operator Console",
+            "release": "PROMETHEUS-OPERATOR-CONSOLE-20260721",
+            "revision": os.environ.get("GITHUB_SHA", "unknown"),
+            "deployed_at": datetime.now(timezone.utc).isoformat(),
+            "canonical_agents": ["PROMETHEUS","AIS-Ω","Adversarial Twin","SECA","HYDRA","ProofGrid","Capability Genome","Build Truth"],
+            "features": [
+              "run pause resume step reset and speed controls",
+              "technical terminal and behavioral code comparison",
+              "canonical handoff fabric and governed packets",
+              "four-series global telemetry",
+              "eight role-specific system visualizations",
+              "EDEN and ServerForge case study",
+              "explicit intellectual-property boundary",
+              "full-screen proof theater",
+              "verified-result fast-forward",
+              "judge challenge mode"
+            ]
           }
-          Path("docs/deployment-status.json").write_text(
-              json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
-              encoding="utf-8"
-          )
+          Path("docs/deployment-status.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
           PY
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload latest docs directory
+      - name: Upload operator console
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
 
-      - name: Deploy latest unified interface
+      - name: Deploy operator console
         id: deployment
         uses: actions/deploy-pages@v4
