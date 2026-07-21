@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from collections import Counter
@@ -50,6 +51,51 @@ def local_path(reference: str) -> Path | None:
         return None
 
     return DOCS / clean
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def canonical_hash(payload: dict) -> str:
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(raw).hexdigest()
+
+
+def verify_public_receipt() -> dict:
+    proof_dir = DOCS / "proofgrid"
+    receipt_path = proof_dir / "FINAL_RECEIPT.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+
+    expected_receipt_hash = receipt.get("receipt_hash")
+    if not expected_receipt_hash:
+        fail("public ProofGrid receipt has no receipt_hash")
+
+    body = dict(receipt)
+    body.pop("receipt_hash")
+    actual_receipt_hash = canonical_hash(body)
+    if actual_receipt_hash != expected_receipt_hash:
+        fail(
+            "public ProofGrid receipt hash mismatch: "
+            f"expected {expected_receipt_hash}, calculated {actual_receipt_hash}"
+        )
+
+    artifacts = receipt.get("artifacts")
+    if not isinstance(artifacts, dict) or len(artifacts) != 8:
+        fail("public ProofGrid receipt must contain exactly 8 artifact hashes")
+
+    for name, expected_hash in artifacts.items():
+        artifact = proof_dir / name
+        if not artifact.exists():
+            fail(f"receipt artifact missing: proofgrid/{name}")
+        actual_hash = sha256(artifact)
+        if actual_hash != expected_hash:
+            fail(
+                f"receipt artifact hash mismatch for {name}: "
+                f"expected {expected_hash}, calculated {actual_hash}"
+            )
+
+    return receipt
 
 
 def main() -> int:
@@ -138,6 +184,12 @@ def main() -> int:
     if demo.get("release", {}).get("readiness") != 100:
         fail("public release readiness is not 100")
 
+    receipt = verify_public_receipt()
+    if proof.get("receipt_hash") != receipt.get("receipt_hash"):
+        fail("Olympian Console receipt hash does not match public ProofGrid receipt")
+    if proof.get("receipt_id") != receipt.get("receipt_id"):
+        fail("Olympian Console receipt ID does not match public ProofGrid receipt")
+
     for document in demo.get("documentation", []):
         path = DOCS / document["path"]
         if not path.exists():
@@ -153,7 +205,8 @@ def main() -> int:
     print(
         "PROMETHEUS site integrity PASS: "
         f"{len(parser.ids)} unique ids, {len(parser.references)} references, "
-        f"{len(pipeline)} replay stages, deterministic telemetry, verified-result skip wired"
+        f"{len(pipeline)} replay stages, deterministic telemetry, verified-result skip wired, "
+        "8/8 public artifacts hash-verified"
     )
     return 0
 
