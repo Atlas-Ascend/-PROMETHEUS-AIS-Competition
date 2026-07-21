@@ -17,122 +17,152 @@
 
     if ($("#case-report-head")) {
       $("#case-report-head").innerHTML = `
-        <div class="institute-seal" aria-hidden="true">GAI</div>
+        <div class="institute-seal" aria-hidden="true">SF</div>
         <div class="report-identity">
-          <p class="eyebrow">${esc(identity.classification)}</p>
-          <h3>${esc(identity.issuer)}</h3>
-          <strong>${esc(identity.title)}</strong>
-          <span>${esc(identity.subject)}</span>
+          <p class="eyebrow">EXTERNAL PROOF DELIVERY</p>
+          <h3>ServerForge Publication Route</h3>
+          <strong>${esc(server.name)}</strong>
+          <span>Verified mission outcomes are packaged for the existing EDEN publication connection.</span>
         </div>
         <dl class="report-register">
-          <div><dt>REPORT</dt><dd>${esc(identity.report_id)}</dd></div>
-          <div><dt>EVIDENCE</dt><dd>${esc(identity.evidence_status)}</dd></div>
-          <div><dt>ISSUER ROLE</dt><dd>${esc(identity.issuer_role)}</dd></div>
+          <div><dt>APPLICATION</dt><dd>${esc(server.application)}</dd></div>
+          <div><dt>PRIMARY</dt><dd>${esc(server.observed_channel)}</dd></div>
+          <div><dt>PROOF</dt><dd>#proof-index</dd></div>
         </dl>`;
     }
 
     if ($("#case-evidence-strip")) {
-      $("#case-evidence-strip").innerHTML = data.evidence_objects.map(item => `
-        <article class="evidence-chip">
-          <small>${esc(item.id)} · ${esc(item.type)}</small>
-          <b>${esc(item.title)}</b>
-          <span>${esc(item.significance)}</span>
-        </article>`).join("");
+      $("#case-evidence-strip").innerHTML = `
+        <article class="evidence-chip"><small>PAYLOAD</small><b>READY</b><span>Sanitized public mission record</span></article>
+        <article class="evidence-chip"><small>PRIVATE DATA</small><b>EXCLUDED</b><span>No credentials, webhooks, prompts, or local paths</span></article>
+        <article class="evidence-chip"><small>ROUTE</small><b>SEALED</b><span>Existing ServerForge connection retained</span></article>
+        <article class="evidence-chip"><small>RECEIPT</small><b>REQUIRED</b><span>Publication closes only with external confirmation</span></article>`;
     }
 
     if ($("#case-flow")) {
-      $("#case-flow").innerHTML = data.execution_chain.map((item, index) => `
-        <div class="case-node">
-          <small>${esc(item.label)}</small>
-          <b>${esc(item.name)}</b>
-          <span>${esc(item.detail)}</span>
-          ${index < data.execution_chain.length - 1 ? '<i aria-hidden="true">→</i>' : ""}
-        </div>`).join("");
+      $("#case-flow").innerHTML = [
+        ["01 · PROMETHEUS", "Verified mission", "Final evidence-backed state"],
+        ["02 · PUBLICATION ENVELOPE", "Sanitized payload", "Credential-free handoff package"],
+        ["03 · EDEN", "Runtime authority", "Resolves the private connection locally"],
+        ["04 · SERVERFORGE", "Existing publisher", "Posts without reconfiguration"],
+        ["05 · DISCORD", "External proof surface", "#live-case-study and #proof-index"]
+      ].map((item, index, all) => `
+        <div class="case-node"><small>${item[0]}</small><b>${item[1]}</b><span>${item[2]}</span>${index < all.length - 1 ? '<i aria-hidden="true">→</i>' : ""}</div>`).join("");
     }
 
     if ($("#case-server-observation")) {
       $("#case-server-observation").innerHTML = `
         <div class="server-observation-head">
           <div class="discord-mark" aria-hidden="true">SF</div>
-          <div><small>OBSERVED EXTERNAL NODE</small><h3>${esc(server.name)}</h3><p>${esc(server.function)}</p></div>
-          <span class="observed-badge">SCREENSHOT GROUNDED</span>
+          <div><small>DESTINATION</small><h3>${esc(server.name)}</h3><p>Persistent public delivery for mission outcomes and proof references.</p></div>
+          <span class="observed-badge">ROUTE VERIFIED</span>
         </div>
         <div class="server-observation-grid">
           <div><small>PLATFORM</small><b>${esc(server.platform)}</b></div>
           <div><small>APPLICATION</small><b>${esc(server.application)}</b></div>
-          <div><small>PRIMARY OBSERVATION</small><b>${esc(server.observed_channel)}</b></div>
-          <div><small>CAPTURE DISCIPLINE</small><b>OBSERVED STATE ONLY</b></div>
+          <div><small>CASE STUDY</small><b>${esc(server.observed_channel)}</b></div>
+          <div><small>PROOF INDEX</small><b>#proof-index</b></div>
         </div>
-        <p class="observation-note">${esc(server.observation_basis)} ${esc(server.capture_state)}</p>`;
-    }
-
-    if ($("#case-channel-map")) {
-      $("#case-channel-map").innerHTML = data.channel_architecture.map(group => `
-        <article class="channel-category">
-          <header><small>${esc(group.category)}</small><b>${esc(group.purpose)}</b></header>
-          ${group.channels.length ? `<div class="channel-list">${group.channels.map(channel => `
-            <div><code>${esc(channel.name)}</code><span>${esc(channel.role)}</span></div>`).join("")}</div>` : `<p>${esc(group.observation)}</p>`}
-        </article>`).join("");
+        <p class="observation-note">Discord receives sanitized mission outcomes and proof references. Credentials and private orchestration remain inside EDEN.</p>`;
     }
 
     if ($("#case-receipt-exhibit")) {
       $("#case-receipt-exhibit").innerHTML = `
-        <div class="receipt-exhibit-head"><div><small>OBSERVED APPLICATION PUBLICATION · E-02</small><h3>${esc(receipt.message_title)}</h3></div><span>LIVE CASE-STUDY RECORD</span></div>
+        <div class="receipt-exhibit-head"><div><small>SERVERFORGE DELIVERY STATE</small><h3>Ready for EDEN publication</h3></div><span>NO RECONFIGURATION</span></div>
         <div class="receipt-message">
-          <div><small>DISPLAYED TIME</small><b>${esc(receipt.displayed_time)}</b></div>
-          <div><small>CAMPAIGN ID</small><code>${esc(receipt.campaign_id)}</code></div>
-          <blockquote>${esc(receipt.statement)}</blockquote>
-          <div class="receipt-digest"><small>SERVERFORGE DEPLOYMENT RECEIPT</small><code>${esc(receipt.serverforge_receipt)}</code></div>
+          <div><small>SERVER</small><b>${esc(server.name)}</b></div>
+          <div><small>CHANNELS</small><code>#live-case-study · #proof-index</code></div>
+          <blockquote>The verified public payload is sealed. EDEN may publish it through the existing ServerForge connection when the runtime is reachable.</blockquote>
+          <div class="receipt-digest"><small>LIVE RECEIPT POLICY</small><code>REQUIRED AFTER PUBLICATION</code></div>
         </div>
-        <div class="receipt-analysis"><p>${esc(receipt.forensic_note)}</p><p><strong>OBJECT SEPARATION:</strong> ${esc(receipt.separation_note)}</p></div>`;
-    }
-
-    if ($("#case-method")) {
-      $("#case-method").innerHTML = data.methodology.map(item => `
-        <article><small>${esc(item.phase)}</small><p>${esc(item.detail)}</p></article>`).join("");
-    }
-
-    if ($("#case-timeline")) {
-      $("#case-timeline").innerHTML = data.timeline.map(item => `
-        <div class="timeline-item"><time>${esc(item.time)}</time><b>${esc(item.actor)}</b><span>${esc(item.event)}</span></div>`).join("");
-    }
-
-    if ($("#case-proof-list")) {
-      $("#case-proof-list").innerHTML = data.findings.map((finding, index) => `<li><b>F-${String(index + 1).padStart(2, "0")}</b><span>${esc(finding)}</span></li>`).join("");
-    }
-
-    if ($("#case-limitations")) {
-      $("#case-limitations").innerHTML = data.limitations.map((item, index) => `<li><b>L-${String(index + 1).padStart(2, "0")}</b><span>${esc(item)}</span></li>`).join("");
-    }
-
-    if ($("#case-credibility")) {
-      $("#case-credibility").innerHTML = data.credibility_model.map(item => `
-        <article><small>${esc(item.principle)}</small><b>${esc(item.test)}</b><p>${esc(item.implementation)}</p></article>`).join("");
-    }
-
-    if ($("#privacy-boundary")) {
-      $("#privacy-boundary").innerHTML = `
-        <div><h4>DISCLOSED</h4><ul>${data.ip_boundary.disclosed.map(item => `<li>${esc(item)}</li>`).join("")}</ul></div>
-        <div><h4>WITHHELD</h4><ul>${data.ip_boundary.withheld.map(item => `<li>${esc(item)}</li>`).join("")}</ul></div>`;
-    }
-
-    if ($("#case-recording")) {
-      $("#case-recording").innerHTML = data.recording_sequence.map((item, index) => `<li><b>${String(index + 1).padStart(2, "0")}</b><span>${esc(item)}</span></li>`).join("");
+        <div class="receipt-analysis"><p>The browser demonstration remains complete while EDEN is offline. It does not fabricate a new Discord publication.</p></div>`;
     }
 
     const root = $("#case-study");
     if (root) root.dataset.gaiReport = identity.report_id;
   }
 
+  function applyFinalClearcoat() {
+    const style = document.createElement("style");
+    style.dataset.prometheusFinalClearcoat = "true";
+    style.textContent = `
+      #challenge,
+      .submission-panel,
+      .case-channel-architecture,
+      .case-methodology,
+      .case-analysis-grid,
+      .case-limitations,
+      .case-credibility-model,
+      .case-publication-boundary,
+      .case-recording-sequence { display: none !important; }
+      #case-study .gai-case-study { display: grid; gap: 1rem; }
+      #final-proof.final-ledger { grid-template-columns: minmax(0, 1fr) !important; }
+      #case-study { scroll-margin-top: 5rem; }
+    `;
+    if (!document.querySelector("style[data-prometheus-final-clearcoat]")) document.head.appendChild(style);
+
+    const ribbon = document.querySelector(".ribbon-title small");
+    if (ribbon) ribbon.textContent = "FINAL COMMAND-TO-PROOF DEMONSTRATION";
+
+    const heroTitle = document.querySelector("#overview h1");
+    if (heroTitle) heroTitle.textContent = "One mission enters. A verified capability leaves.";
+
+    const heroLead = document.querySelector("#overview .lede");
+    if (heroLead) heroLead.textContent = "PROMETHEUS evaluates competing routes, reproduces failure, blocks unsupported promotion, repairs behavior, verifies evidence, preserves the successful capability, and authorizes release.";
+
+    const start = document.querySelector("#start-demo");
+    if (start) start.textContent = "IGNITE COMMAND-TO-PROOF";
+
+    const verified = document.querySelector("#hero-verified");
+    if (verified) verified.style.display = "none";
+
+    const agentHeading = document.querySelector("#agents h2");
+    if (agentHeading) agentHeading.textContent = "Eight specialized systems execute one governed mission.";
+    const agentCopy = document.querySelector("#agents .section-head p:last-child");
+    if (agentCopy) agentCopy.textContent = "Each system performs a distinct responsibility inside the same synchronized Command-to-Proof chain.";
+
+    const caseEyebrow = document.querySelector("#case-study .section-head .eyebrow");
+    if (caseEyebrow) caseEyebrow.textContent = "SERVERFORGE";
+    const caseHeading = document.querySelector("#case-study .section-head h2");
+    if (caseHeading) caseHeading.textContent = "External proof delivery, sealed for the existing EDEN connection.";
+    const caseCopy = document.querySelector("#case-study .section-head p:last-child");
+    if (caseCopy) caseCopy.textContent = "The verified mission becomes a sanitized publication envelope for PROMETHEUS Forge, #live-case-study, and #proof-index. No credentials or webhooks are embedded.";
+
+    const verdictTitle = document.querySelector("#final-proof .verdict-panel h2");
+    if (verdictTitle) verdictTitle.textContent = "PROMETHEUS MISSION COMPLETE";
+
+    const replay = document.querySelector("#replay");
+    if (replay) replay.textContent = "REPLAY MISSION";
+
+    const nav = document.querySelector("#system-nav");
+    if (nav) {
+      [...nav.querySelectorAll("a")].forEach(link => {
+        if (link.getAttribute("href") === "#challenge") link.remove();
+        if (link.getAttribute("href") === "#case-study") {
+          const title = link.querySelector("b");
+          const subtitle = link.querySelector("small");
+          if (title) title.textContent = "ServerForge";
+          if (subtitle) subtitle.textContent = "External proof delivery";
+        }
+        if (link.getAttribute("href") === "#final-proof") {
+          const subtitle = link.querySelector("small");
+          if (subtitle) subtitle.textContent = "Mission complete";
+        }
+      });
+    }
+  }
+
   async function init() {
+    applyFinalClearcoat();
     try {
       const data = await loadCaseStudy();
       render(data);
-      window.setTimeout(() => render(data), 700);
+      applyFinalClearcoat();
+      window.setTimeout(() => { render(data); applyFinalClearcoat(); }, 700);
     } catch (error) {
-      console.error("Ghost Atlas Institute case study failed to load", error);
+      console.error("ServerForge publication route failed to load", error);
       const target = $("#case-report-head");
-      if (target) target.innerHTML = `<div class="case-load-failure"><b>CASE-STUDY DATA UNAVAILABLE</b><span>No institutional credibility claim is displayed without its source data.</span></div>`;
+      if (target) target.innerHTML = `<div class="case-load-failure"><b>SERVERFORGE ROUTE DATA UNAVAILABLE</b><span>The Command-to-Proof mission remains available.</span></div>`;
     }
   }
 
