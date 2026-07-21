@@ -11,6 +11,7 @@ from urllib.parse import urlsplit
 DOCS = Path(__file__).resolve().parents[1]
 INDEX = DOCS / "index.html"
 APP = DOCS / "assets" / "app.js"
+OBSERVATORY = DOCS / "assets" / "observatory.js"
 
 
 class SiteParser(HTMLParser):
@@ -102,9 +103,11 @@ def main() -> int:
     required_files = [
         INDEX,
         APP,
+        OBSERVATORY,
         DOCS / "assets" / "styles.css",
         DOCS / "assets" / "demo.css",
         DOCS / "assets" / "hardening.css",
+        DOCS / "assets" / "observatory.css",
         DOCS / "data" / "demo.json",
         DOCS / "proofgrid" / "FINAL_RECEIPT.json",
         DOCS / "proofgrid" / "HYDRA_REPAIR_RECEIPT.json",
@@ -129,6 +132,14 @@ def main() -> int:
     required_ids = {
         "start-demo",
         "replay",
+        "mission-observatory",
+        "observatory-launch",
+        "observatory-verified",
+        "ambient-agent-grid",
+        "ambient-command-stream",
+        "ambient-telemetry-line",
+        "challenge-output",
+        "challenge-copy",
         "proof-theater",
         "theater-launch",
         "theater-skip",
@@ -150,7 +161,7 @@ def main() -> int:
             fail(f"broken {attribute} reference: {reference}")
 
     app = APP.read_text(encoding="utf-8")
-    contracts = {
+    app_contracts = {
         "skip control binding": 'finishTheater({ immediate: true, source: "SKIP CONTROL" });',
         "immediate verdict branch": "if (immediate)",
         "verdict visibility": "verdict.hidden = false;",
@@ -159,12 +170,26 @@ def main() -> int:
         "deterministic telemetry": "const telemetryPattern =",
         "gauge engine": "function setGauge(id, value)",
     }
-    for label, marker in contracts.items():
+    for label, marker in app_contracts.items():
         if marker not in app:
             fail(f"demo contract missing: {label}")
 
-    if "Math.random" in app:
-        fail("deterministic replay must not use Math.random")
+    observatory = OBSERVATORY.read_text(encoding="utf-8")
+    observatory_contracts = {
+        "always-on agent fabric": "function renderAgentFabric()",
+        "ambient mission loop": "function advanceAmbient()",
+        "living graph": "function advanceChart()",
+        "judge challenge deck": "function selectChallenge(key)",
+        "PROMETHEUS-only system scope": 'const allowedSystems = new Set(["prometheus", "seca", "hydra", "proofgrid", "genome", "buildtruth"]);',
+        "full replay launcher": '$("#observatory-launch")?.addEventListener',
+        "verified result launcher": '$("#observatory-verified")?.addEventListener',
+    }
+    for label, marker in observatory_contracts.items():
+        if marker not in observatory:
+            fail(f"observatory contract missing: {label}")
+
+    if "Math.random" in app or "Math.random" in observatory:
+        fail("deterministic visualization must not use Math.random")
 
     demo = json.loads((DOCS / "data" / "demo.json").read_text(encoding="utf-8"))
     pipeline = demo.get("pipeline")
@@ -205,8 +230,8 @@ def main() -> int:
     print(
         "PROMETHEUS site integrity PASS: "
         f"{len(parser.ids)} unique ids, {len(parser.references)} references, "
-        f"{len(pipeline)} replay stages, deterministic telemetry, verified-result skip wired, "
-        "8/8 public artifacts hash-verified"
+        f"{len(pipeline)} replay stages, living observatory, PROMETHEUS-only scope, "
+        "deterministic telemetry, verified-result skip and 8/8 artifact hashes"
     )
     return 0
 
