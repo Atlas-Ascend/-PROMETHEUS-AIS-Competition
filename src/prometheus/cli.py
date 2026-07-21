@@ -131,7 +131,7 @@ def run_demo(root: Path = ROOT) -> dict:
     write_json(root / "HYDRA_REPAIR_RECEIPT.json", hydra)
     event("REPAIR_FORGE", "repaired", "HYDRA enabled idempotent replay protection.")
 
-    tests = {"passed": 4, "failed": 0}
+    tests = {"passed": 5, "failed": 0}
     write_json(root / "TEST_RESULTS.json", tests)
     event("FIRE_PROVEN", "verified", "Affected and regression tests passed.")
 
