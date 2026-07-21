@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/demo.css">
   <link rel="stylesheet" href="assets/hardening.css">
+  <link rel="stylesheet" href="assets/observatory.css">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -35,13 +36,14 @@
       <section class="hero" id="overview">
         <div class="hero-copy panel">
           <p class="overline amber">SELF-PROVING AI ENGINEERING</p>
+          <div class="judge-mode-banner"><span></span> JUDGE COMMAND MESH ONLINE · AGENTS · PACKETS · TELEMETRY · PROOF</div>
           <h2>PROMETHEUS turns software missions into verified engineering outcomes.</h2>
           <p class="lede">It does not merely generate code. It challenges unsupported success, repairs demonstrated failures, proves the repair, and preserves successful engineering knowledge for reuse.</p>
           <div class="hero-actions">
-            <button class="button demo-launch" id="start-demo" type="button">Launch live Command-to-Proof demo</button>
+            <button class="button demo-launch" id="start-demo" type="button">Enter live Command-to-Proof mission</button>
             <a class="ghost buttonlike" href="documentation/JUDGE_BRIEF.md">Read judge brief</a>
           </div>
-          <p class="release-line">Built with Codex. Evolved through PROMETHEUS. Proven on EDEN.</p>
+          <p class="release-line">Built with Codex. Governed by PROMETHEUS. Proven by evidence.</p>
         </div>
         <div class="forge panel" aria-label="PROMETHEUS system core">
           <div class="forge-orbit orbit-one"></div><div class="forge-orbit orbit-two"></div>
@@ -49,6 +51,82 @@
           <div class="forge-stat left"><small>TESTS</small><b>5 / 5</b></div>
           <div class="forge-stat right"><small>ARTIFACTS</small><b>8 / 8</b></div>
           <div class="forge-stat bottom"><small>GENOME REUSE</small><b>VERIFIED</b></div>
+        </div>
+      </section>
+
+      <section class="mission-observatory panel" id="mission-observatory" aria-labelledby="observatory-title">
+        <div class="observatory-scan" aria-hidden="true"></div>
+        <header class="observatory-head">
+          <div>
+            <p class="overline cyan">PROMETHEUS · LIVING MISSION OBSERVATORY</p>
+            <h2 id="observatory-title">The handoffs are visible. The packets move. The proof accumulates.</h2>
+            <p>This always-on judge view exposes the verified Command-to-Proof sequence before the full-screen replay even begins.</p>
+          </div>
+          <div class="observatory-actions">
+            <button type="button" class="button" id="observatory-launch">EXPAND LIVE MISSION</button>
+            <button type="button" class="ghost" id="observatory-verified">LOAD VERIFIED VERDICT</button>
+          </div>
+        </header>
+
+        <div class="observatory-kpis" aria-label="Live mission state">
+          <div><small>ACTIVE ORGAN</small><b id="ambient-active-organ">PROMETHEUS</b></div>
+          <div><small>MISSION PHASE</small><b id="ambient-phase">IGNITION</b></div>
+          <div><small>GATE STATE</small><b id="ambient-state">VERIFIED</b></div>
+          <div><small>BUILD TRUTH</small><b class="green">PROMOTION AUTHORIZED</b></div>
+        </div>
+
+        <div class="observatory-grid">
+          <article class="agent-fabric">
+            <div class="fabric-title">
+              <div><small>PROMETHEUS AGENT HANDOFF FABRIC</small><b>COMMAND-TO-PROOF MESH</b></div>
+              <span class="live-chip"><i></i> LIVE REPLAY BUS</span>
+            </div>
+            <div id="ambient-agent-grid" class="ambient-agent-grid" aria-label="PROMETHEUS governed handoff sequence"></div>
+            <div class="stream-title"><span>PACKET AND EVIDENCE STREAM</span><span>DETERMINISTIC PUBLIC SNAPSHOT</span></div>
+            <div id="ambient-command-stream" class="ambient-command-stream" aria-live="polite"></div>
+          </article>
+
+          <aside class="ambient-telemetry" aria-label="Living telemetry wall">
+            <div class="telemetry-title"><span>MISSION TELEMETRY</span><b>LIVE VISUALIZATION</b></div>
+            <div class="ambient-dials">
+              <div class="ambient-dial" id="ambient-confidence-ring" style="--value:100"><div><b id="ambient-confidence">100%</b><small>PROOF CONFIDENCE</small></div></div>
+              <div class="ambient-dial cyan" id="ambient-load-ring" style="--value:52"><div><b id="ambient-load">52%</b><small>ORCHESTRATION LOAD</small></div></div>
+            </div>
+            <svg class="ambient-chart" viewBox="0 0 320 110" preserveAspectRatio="none" aria-label="Deterministic mission telemetry graph">
+              <line x1="0" y1="27" x2="320" y2="27"></line>
+              <line x1="0" y1="55" x2="320" y2="55"></line>
+              <line x1="0" y1="83" x2="320" y2="83"></line>
+              <polyline id="ambient-telemetry-line" points="0,72"></polyline>
+            </svg>
+            <div class="ambient-metrics">
+              <div><small>LATENCY</small><b id="ambient-latency">18ms</b></div>
+              <div><small>PACKETS</small><b id="ambient-packets">0</b></div>
+              <div><small>QUEUE</small><b id="ambient-queue">0</b></div>
+              <div><small>RECEIPT</small><b id="ambient-receipt">PENDING</b></div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="challenge-deck">
+          <div class="challenge-intro">
+            <p class="overline violet">JUDGE CHALLENGE MODE</p>
+            <h3>Choose what you want PROMETHEUS to defend.</h3>
+            <p>The command deck exposes the exact local verification path for independent inspection.</p>
+          </div>
+          <div class="challenge-buttons" role="group" aria-label="Judge verification challenges">
+            <button type="button" class="active" data-challenge="receipt">VERIFY RECEIPT</button>
+            <button type="button" data-challenge="evidence">VERIFY EVIDENCE</button>
+            <button type="button" data-challenge="claims">VERIFY CLAIMS</button>
+            <button type="button" data-challenge="submission">VERIFY SUBMISSION</button>
+          </div>
+          <div class="challenge-console">
+            <div class="console-bar"><span></span><span></span><span></span><b>JUDGE TERMINAL · READ-ONLY COMMAND DECK</b></div>
+            <code id="challenge-output">python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json</code>
+            <div class="challenge-console-actions">
+              <button type="button" id="challenge-copy">COPY COMMAND</button>
+              <a id="challenge-link" href="proofgrid/FINAL_RECEIPT.json">OPEN VERIFIED RECEIPT →</a>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -67,7 +145,7 @@
 
       <section class="panel inheritance"><div><p class="overline green">FLAME CARRIED FORWARD</p><h2>Verified inheritance across a related task</h2><p>The repair strategy is reused on a different artifact and operation, converting one failed action into zero failed actions.</p></div><div class="improvement"><span class="before">1 FAILURE</span><span class="arrow">→</span><span class="after">0 FAILURES</span></div></section>
 
-      <section class="systems-section"><div class="section-title"><div><p class="overline amber">UNIFIED PRODUCT SURFACE</p><h2>Every organ, one visual operating system</h2></div><p>Each module inherits the same obsidian, molten-gold, evidence-first interface language while exposing its actual operational role.</p></div><div id="systems-grid" class="systems-grid"></div></section>
+      <section class="systems-section"><div class="section-title"><div><p class="overline amber">PROMETHEUS PROOF ORGANS</p><h2>Only the systems that close this proof chain</h2></div><p>The competition surface stays focused on PROMETHEUS, its verification organs, its memory layer, and Build Truth.</p></div><div id="systems-grid" class="systems-grid"></div></section>
 
       <section class="resources">
         <article class="panel"><p class="overline blue">SCREENSHOTS</p><h2>Competition visual evidence</h2><a class="shot" href="screenshots/prometheus-command-center.svg"><img src="screenshots/prometheus-command-center.svg" alt="PROMETHEUS Command Center overview"><span>Open full-resolution interface capture →</span></a></article>
@@ -83,13 +161,13 @@
     <div class="theater-grid" aria-hidden="true"></div>
     <div class="theater-flare" aria-hidden="true"></div>
     <header class="theater-header">
-      <div class="theater-brand"><span class="theater-sigil">GA</span><div><small>GHOST ATLAS · PROMETHEUS</small><b id="theater-title">COMMAND-TO-PROOF LIVE RUN</b></div></div>
+      <div class="theater-brand"><span class="theater-sigil">P</span><div><small>PROMETHEUS · COMPETITION EDITION</small><b id="theater-title">COMMAND-TO-PROOF LIVE RUN</b></div></div>
       <div class="theater-controls"><span class="replay-mode">DETERMINISTIC REPLAY · VERIFIED SNAPSHOT</span><span id="theater-clock">T+00:00</span><button id="theater-close" type="button" aria-label="Close demo">×</button></div>
     </header>
 
     <div class="theater-layout">
       <aside class="theater-left">
-        <p class="hud-label">ACTIVE ORGANS</p>
+        <p class="hud-label">ACTIVE PROMETHEUS ORGANS</p>
         <div id="organ-stack" class="organ-stack"></div>
         <p class="hud-label">MISSION</p>
         <div class="mission-hud"><b>PROM-COMP-001</b><span>Publish a replay-safe proof receipt</span></div>
