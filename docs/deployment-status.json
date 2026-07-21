@@ -1,0 +1,7 @@
+{
+  "deployment": "github-pages",
+  "source": "docs",
+  "workflow": ".github/workflows/static.yml",
+  "status": "deployment-triggered",
+  "site": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/"
+}
