@@ -1,0 +1,48 @@
+{
+  "schema": "serverforge.publication-envelope.v1",
+  "envelope_id": "SF-PUB-PROM-COMP-EDGE-001-20260721",
+  "campaign_id": "HYDRA-SERVERFORGE-20260719T023826Z",
+  "mission_id": "PROM-COMP-EDGE-001",
+  "release": "PROMETHEUS V-1.1.1",
+  "status": "READY_FOR_EDEN_PUBLICATION",
+  "transport_authority": "EDEN_LOCAL",
+  "destination": {
+    "server": "PROMETHEUS Forge — Live Case Study",
+    "primary_channel": "#live-case-study",
+    "proof_channel": "#proof-index"
+  },
+  "public_evidence": {
+    "operator_console": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/",
+    "proofgrid_receipt": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/proofgrid/FINAL_RECEIPT.json",
+    "case_study_data": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/data/case-study.json",
+    "repository": "https://github.com/Atlas-Ascend/-PROMETHEUS-AIS-Competition"
+  },
+  "verified_summary": {
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "artifacts_verified": 8,
+    "artifacts_total": 8,
+    "capability_genome": "PG-CG-REPLAY-GUARD-001",
+    "reuse_verified": true,
+    "failed_actions_before": 1,
+    "failed_actions_after": 0,
+    "promotion": "AUTHORIZED"
+  },
+  "discord_message": {
+    "title": "PROMETHEUS V-1.1.1 — COMPETITION BUILD VERIFIED",
+    "body": "The 2:45 Command-to-Proof demonstration is live. PROMETHEUS reproduced the compound failure storm, SECA denied unsupported promotion, HYDRA changed behavior, ProofGrid verified 5/5 tests and 8/8 artifacts, Capability Genome reuse reduced failed actions from 1 to 0, and Build Truth authorized release.",
+    "case_study_line": "Ghost Atlas Institute field report GAI-FR-20260721-PROM-SF-001 documents the EDEN → Codex → PROMETHEUS → ServerForge → public-node evidence lineage.",
+    "public_url": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/"
+  },
+  "security_boundary": {
+    "credentials_embedded": false,
+    "webhook_embedded": false,
+    "bot_token_embedded": false,
+    "private_prompts_included": false,
+    "local_machine_paths_included": false,
+    "patent_sensitive_mechanisms_included": false,
+    "note": "EDEN resolves the existing private Discord connection locally. The public repository carries only the sanitized publication payload and verification references."
+  },
+  "hash_scope": "Canonical JSON of this object excluding envelope_sha256.",
+  "envelope_sha256": "8a825e38f622fe1e69d9dc42351b38929bbc046eccdd3e0d2a5af5447cf3bd4d"
+}
