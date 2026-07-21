@@ -8,6 +8,7 @@
   <title>PROMETHEUS · Command-to-Proof Console</title>
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/demo.css">
+  <link rel="stylesheet" href="assets/hardening.css">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -24,7 +25,7 @@
     <header class="topbar">
       <div><p class="overline">OLYMPIAN CONSOLE · PUBLIC COMPETITION NODE</p><h1>Command-to-Proof Control Room</h1></div>
       <div class="top-actions">
-        <button class="ghost" id="replay">Launch proof theater</button>
+        <button class="ghost" id="replay" type="button">Launch proof theater</button>
         <a class="button" href="proofgrid/FINAL_RECEIPT.json">Open receipt</a>
         <div class="status-chip"><span></span> RELEASE EVIDENCE VERIFIED</div>
       </div>
@@ -37,7 +38,7 @@
           <h2>PROMETHEUS turns software missions into verified engineering outcomes.</h2>
           <p class="lede">It does not merely generate code. It challenges unsupported success, repairs demonstrated failures, proves the repair, and preserves successful engineering knowledge for reuse.</p>
           <div class="hero-actions">
-            <button class="button demo-launch" id="start-demo">Launch live Command-to-Proof demo</button>
+            <button class="button demo-launch" id="start-demo" type="button">Launch live Command-to-Proof demo</button>
             <a class="ghost buttonlike" href="documentation/JUDGE_BRIEF.md">Read judge brief</a>
           </div>
           <p class="release-line">Built with Codex. Evolved through PROMETHEUS. Proven on EDEN.</p>
@@ -78,12 +79,12 @@
     <footer><span>PROMETHEUS AIS Competition Edition</span><span>Repair. Prove. Remember. Evolve.</span></footer>
   </div>
 
-  <section id="proof-theater" class="proof-theater" hidden aria-modal="true" role="dialog" aria-labelledby="theater-title">
+  <section id="proof-theater" class="proof-theater" hidden aria-modal="true" aria-busy="false" role="dialog" aria-labelledby="theater-title">
     <div class="theater-grid" aria-hidden="true"></div>
     <div class="theater-flare" aria-hidden="true"></div>
     <header class="theater-header">
       <div class="theater-brand"><span class="theater-sigil">GA</span><div><small>GHOST ATLAS · PROMETHEUS</small><b id="theater-title">COMMAND-TO-PROOF LIVE RUN</b></div></div>
-      <div class="theater-controls"><span id="theater-clock">T+00:00</span><button id="theater-close" type="button" aria-label="Close demo">×</button></div>
+      <div class="theater-controls"><span class="replay-mode">DETERMINISTIC REPLAY · VERIFIED SNAPSHOT</span><span id="theater-clock">T+00:00</span><button id="theater-close" type="button" aria-label="Close demo">×</button></div>
     </header>
 
     <div class="theater-layout">
@@ -105,7 +106,7 @@
         </div>
 
         <div id="theater-pipeline" class="theater-pipeline"></div>
-        <div class="theater-actions"><button type="button" id="theater-launch">IGNITE COMMAND-TO-PROOF</button><button type="button" id="theater-skip">SKIP TO VERIFIED RESULT</button></div>
+        <div class="theater-actions"><button type="button" id="theater-launch">IGNITE COMMAND-TO-PROOF</button><button type="button" id="theater-skip">SKIP TO VERIFIED RESULTS</button></div>
       </main>
 
       <aside class="theater-right">
@@ -120,13 +121,13 @@
       </aside>
     </div>
 
-    <div id="verdict-card" class="verdict-card" hidden>
+    <div id="verdict-card" class="verdict-card" hidden tabindex="-1" role="status" aria-live="assertive">
       <span class="verdict-mark">◆</span>
       <p>PROOFGRID VERDICT</p>
       <h2>PROMOTION AUTHORIZED</h2>
       <div class="verdict-metrics"><span>5/5 TESTS</span><span>8/8 ARTIFACTS</span><span>HASH VERIFIED</span><span>GENOME REUSED</span></div>
       <strong>1 FAILED ACTION → 0 FAILED ACTIONS</strong>
-      <button type="button" id="theater-replay">RUN IT AGAIN</button>
+      <div class="verdict-actions"><button type="button" id="theater-replay">RUN IT AGAIN</button><button type="button" id="verdict-close" class="secondary">RETURN TO CONSOLE</button></div>
     </div>
   </section>
 
