@@ -13,8 +13,8 @@
     {name:'Build Truth',role:'Release Authority',stage:'FINAL ADJUDICATION',packet:'PROMOTION',title:'Build Truth closes the entire mission.',copy:'All contradictions are resolved, blockers are zero, the capability is reused successfully, and release is authorized with a sealed ServerForge handoff envelope.',logs:['supported claims 4/4','contradictions 0','open blockers 0','PROMOTION AUTHORIZED','ServerForge envelope sealed']}
   ];
   const edges=['Malformed input','Poisoned data','Duplicate race','Secret exposure','Dependency loss','Receipt corruption','Rollback pressure'];
-  const stageStarts=[0,20,42,64,84,110,136,158];
-  const duration=180;
+  const stageStarts=[0,18,39,59,77,101,125,145];
+  const duration=165;
   let running=false,startTime=0,timer=null,current=-1;
   const terminalLines=['[READY] PROM-COMP-EDGE-001 staged','[READY] eight-system fabric online','[READY] seven-edge-condition mission armed'];
   function renderSystems(){
@@ -57,7 +57,7 @@
     tick();
   }
   function finish(){
-    running=false;cancelAnimationFrame(timer);setStage(7);$('#clock').textContent='T+03:00';$('#proof').textContent='100%';$('#ring').style.setProperty('--progress','100%');['proof','evidence','claims','readiness'].forEach(n=>setBar(n,100));setBar('load',52);$('#release').textContent='AUTHORIZED';$('#core-state').textContent='MISSION COMPLETE';$('#verdict').classList.add('show');$('#launch').disabled=false;$('#replay').disabled=false;$('#verdict').scrollIntoView({behavior:'smooth',block:'center'});
+    running=false;cancelAnimationFrame(timer);setStage(7);$('#clock').textContent='T+02:45';$('#proof').textContent='100%';$('#ring').style.setProperty('--progress','100%');['proof','evidence','claims','readiness'].forEach(n=>setBar(n,100));setBar('load',52);$('#release').textContent='AUTHORIZED';$('#core-state').textContent='MISSION COMPLETE';$('#verdict').classList.add('show');$('#launch').disabled=false;$('#replay').disabled=false;$('#verdict').scrollIntoView({behavior:'smooth',block:'center'});
   }
   renderSystems();$('#launch').addEventListener('click',launch);$('#replay').addEventListener('click',launch);
 })();
