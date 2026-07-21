@@ -92,9 +92,10 @@ jobs:
           assert generated["status"] == public["status"] == demo["proofgrid"]["status"] == "verified"
           assert generated["promotion"] == public["promotion"] == demo["proofgrid"]["promotion"] == "authorized"
           assert generated["capability_genome"] == public["capability_genome"] == demo["genome"]["genome_id"]
-          assert generated["tests"]["failed"] == public["tests"]["failed"] == demo["proofgrid"]["tests"]["failed"] == 0
-          assert all(generated["artifacts"].values()) is False or isinstance(generated["artifacts"], dict)
-          assert demo["proofgrid"]["artifacts_verified"] == demo["proofgrid"]["artifacts_total"]
+          assert generated["tests"] == public["tests"] == demo["proofgrid"]["tests"] == {"passed": 5, "failed": 0}
+          assert isinstance(generated["artifacts"], dict) and len(generated["artifacts"]) == 8
+          assert len(public["artifacts"]) == 8
+          assert demo["proofgrid"]["artifacts_verified"] == demo["proofgrid"]["artifacts_total"] == 8
           print("PROMETHEUS Build Truth alignment PASS")
           PY
 
