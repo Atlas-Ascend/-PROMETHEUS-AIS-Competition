@@ -2,7 +2,10 @@
 #theater-skip,
 #theater-replay,
 #verdict-close,
-#theater-close {
+#theater-close,
+#observatory-launch,
+#observatory-verified,
+#challenge-copy {
   position: relative;
   z-index: 30;
   pointer-events: auto;
@@ -22,7 +25,10 @@
 
 .theater-actions button:focus-visible,
 .verdict-actions button:focus-visible,
-#theater-close:focus-visible {
+#theater-close:focus-visible,
+.observatory-actions button:focus-visible,
+.challenge-buttons button:focus-visible,
+#challenge-copy:focus-visible {
   outline: 3px solid #ffd27c;
   outline-offset: 3px;
 }
@@ -51,6 +57,25 @@
 
 .proof-theater[aria-busy="true"] #theater-skip {
   box-shadow: 0 0 22px #4ed8ef24;
+}
+
+.ambient-dial {
+  background: conic-gradient(#f7b44d var(--gauge, 0%), #ffffff0d 0) !important;
+}
+
+.ambient-dial.cyan {
+  background: conic-gradient(#4ed8ef var(--gauge, 0%), #ffffff0d 0) !important;
+}
+
+#system-eden,
+#system-thoth,
+#system-serverforge,
+#system-packetos,
+#system-nav a[href="#system-eden"],
+#system-nav a[href="#system-thoth"],
+#system-nav a[href="#system-serverforge"],
+#system-nav a[href="#system-packetos"] {
+  display: none !important;
 }
 
 @media (max-width: 900px) {
