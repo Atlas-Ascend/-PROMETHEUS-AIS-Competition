@@ -64,11 +64,10 @@ jobs:
           python -m prometheus.cli contest evidence-verify
           python -m prometheus.cli contest submission-check
 
-      - name: Validate website, proof theater and public evidence
+      - name: Validate unified interface and public evidence
         run: |
           set -euo pipefail
           node --check docs/assets/app.js
-          node --check docs/assets/observatory.js
           node docs/tests/demo_contract.mjs
           python docs/tests/site_integrity.py
           python -m json.tool docs/data/demo.json > /dev/null
@@ -97,7 +96,11 @@ jobs:
           assert isinstance(generated["artifacts"], dict) and len(generated["artifacts"]) == 8
           assert len(public["artifacts"]) == 8
           assert demo["proofgrid"]["artifacts_verified"] == demo["proofgrid"]["artifacts_total"] == 8
-          print("PROMETHEUS Build Truth alignment PASS")
+          assert [stage["organ"] for stage in demo["pipeline"]] == [
+              "PROMETHEUS", "AIS-Ω", "Adversarial Twin", "SECA",
+              "HYDRA", "ProofGrid", "Capability Genome", "Build Truth"
+          ]
+          print("PROMETHEUS Build Truth and canonical agent alignment PASS")
           PY
 
   deploy:
