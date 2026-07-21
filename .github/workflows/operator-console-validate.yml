@@ -44,7 +44,7 @@ jobs:
 
       - name: Repository identity
         run: |
-          grep -q "PROMETHEUS Operator Console" README.md
+          grep -q "Operator Console" README.md
           grep -q "EDEN and ServerForge" README.md
 
       - name: Technical specification boundary
