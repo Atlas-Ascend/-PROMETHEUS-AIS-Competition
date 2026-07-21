@@ -4,10 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'
-      - 'index.html'
-      - '.nojekyll'
-      - '.github/workflows/deploy-pages.yml'
+      - "docs/**"
+      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -16,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: prometheus-pages
+  group: prometheus-pages-authoritative
   cancel-in-progress: true
 
 jobs:
@@ -25,16 +23,24 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    timeout-minutes: 12
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout competition build
+      - name: Checkout authoritative build
         uses: actions/checkout@v4
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Validate exact 2:45 public artifact
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate 2:45 demo and ServerForge case study
         shell: bash
         run: |
           set -euo pipefail
@@ -43,17 +49,49 @@ jobs:
           test -f docs/index.html
           test -f docs/assets/elite-demo.css
           test -f docs/assets/elite-demo.js
+          test -f docs/assets/serverforge-case-study.css
+          test -f docs/assets/serverforge-case-study.js
+          test -f docs/serverforge/PUBLICATION_ENVELOPE.json
+          test -f docs/data/case-study.json
           test -f docs/proofgrid/FINAL_RECEIPT.json
 
           node --check docs/assets/elite-demo.js
-          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
-          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
-          grep -Fq 'const duration = 165;' docs/assets/elite-demo.js
+          node --check docs/assets/serverforge-case-study.js
+          python -m json.tool docs/serverforge/PUBLICATION_ENVELOPE.json > /dev/null
+          python -m json.tool docs/data/case-study.json > /dev/null
+          python -m json.tool docs/proofgrid/FINAL_RECEIPT.json > /dev/null
+
+          grep -q "IGNITE 2:45 DEMONSTRATION" docs/index.html
+          grep -q "ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION" docs/index.html
+          grep -q "GHOST ATLAS INSTITUTE · SERVERFORGE FIELD REPORT" docs/index.html
+          grep -q "The proof leaves the browser through EDEN" docs/index.html
+          grep -q "HYDRA-SERVERFORGE-20260719T023826Z" docs/serverforge/PUBLICATION_ENVELOPE.json
+          grep -Fq "const duration = 165;" docs/assets/elite-demo.js
           grep -Fq "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
 
-          echo 'Exact competition artifact is ready for publication.'
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
 
-      - name: Upload single authoritative Pages artifact
+          path = Path("docs/serverforge/PUBLICATION_ENVELOPE.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          expected = payload.pop("envelope_sha256")
+          payload.pop("hash_scope")
+          raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+          actual = hashlib.sha256(raw).hexdigest()
+          assert actual == expected, (actual, expected)
+          assert payload["transport_authority"] == "EDEN_LOCAL"
+          assert payload["security_boundary"]["credentials_embedded"] is False
+          assert payload["security_boundary"]["webhook_embedded"] is False
+          print("ServerForge publication envelope PASS")
+          PY
+
+          echo "Authoritative PROMETHEUS Pages artifact validated."
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload authoritative Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
@@ -61,3 +99,52 @@ jobs:
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-live:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify the actual deployed page
+        shell: bash
+        env:
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          URL="${PAGE_URL%/}/"
+
+          for attempt in $(seq 1 24); do
+            echo "Live verification attempt ${attempt}/24"
+            if curl -fsSL --retry 2 --retry-delay 2 "${URL}?revision=${GITHUB_SHA}" -o /tmp/index.html; then
+              if grep -q "IGNITE 2:45 DEMONSTRATION" /tmp/index.html \
+                && grep -q "GHOST ATLAS INSTITUTE · SERVERFORGE FIELD REPORT" /tmp/index.html \
+                && grep -q "The proof leaves the browser through EDEN" /tmp/index.html; then
+                break
+              fi
+            fi
+            if [ "$attempt" -eq 24 ]; then
+              echo "Authoritative PROMETHEUS page did not become live before timeout" >&2
+              exit 1
+            fi
+            sleep 10
+          done
+
+          curl -fsSL "${URL}assets/elite-demo.js?revision=${GITHUB_SHA}" -o /tmp/elite-demo.js
+          curl -fsSL "${URL}assets/serverforge-case-study.js?revision=${GITHUB_SHA}" -o /tmp/serverforge-case-study.js
+          curl -fsSL "${URL}serverforge/PUBLICATION_ENVELOPE.json?revision=${GITHUB_SHA}" -o /tmp/envelope.json
+          curl -fsSL "${URL}proofgrid/FINAL_RECEIPT.json?revision=${GITHUB_SHA}" -o /tmp/receipt.json
+
+          node --check /tmp/elite-demo.js
+          node --check /tmp/serverforge-case-study.js
+          python -m json.tool /tmp/envelope.json > /dev/null
+          python -m json.tool /tmp/receipt.json > /dev/null
+
+          grep -q "READY_FOR_EDEN_PUBLICATION" /tmp/envelope.json
+          grep -q "EDEN_LOCAL" /tmp/envelope.json
+          grep -q "HYDRA-SERVERFORGE-20260719T023826Z" /tmp/envelope.json
+          echo "LIVE PROMETHEUS 2:45 + SERVERFORGE CASE STUDY PASS"
