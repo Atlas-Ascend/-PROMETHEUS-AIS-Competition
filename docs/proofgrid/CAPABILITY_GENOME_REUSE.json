@@ -1,0 +1,10 @@
+{
+  "failed_actions_after": 0,
+  "failed_actions_before": 1,
+  "improvement": "1 failed action → 0 failed actions",
+  "outcome": "replay_safely_ignored",
+  "relationship": "same failure class, different operation and artifact",
+  "source_genome_id": "PG-CG-REPLAY-GUARD-001",
+  "task": "PROM-COMP-002 · Publish replay-safe release manifest",
+  "verified": true
+}
