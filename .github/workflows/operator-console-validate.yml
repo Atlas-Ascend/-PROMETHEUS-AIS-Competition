@@ -54,7 +54,7 @@ jobs:
           grep -q "case-channel-map" docs/index.html
           grep -q "case-receipt-exhibit" docs/index.html
           grep -q "case-credibility" docs/index.html
-          grep -q "GHOST ATLAS INSTITUTE" docs/assets/case-study.js
+          grep -q "Ghost Atlas Institute" docs/assets/case-study.js
           grep -q "HYDRA-SERVERFORGE-20260719T023826Z" docs/data/case-study.json
           grep -q "26ccd3be5d15b170e24e54855db50f747ebf3c2fbfccac3622fb629b07665ffc" docs/data/case-study.json
 
