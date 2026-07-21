@@ -1,7 +1,27 @@
 {
-  "deployment": "github-pages",
-  "source": "docs",
-  "workflow": ".github/workflows/static.yml",
-  "status": "deployment-triggered",
-  "site": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/"
+  "interface": "PROMETHEUS Unified Command-to-Proof Mission Cockpit",
+  "release_id": "PROMETHEUS-UI-UNIFIED-20260721-01",
+  "source_commit": "48a82b307c037c9f3a494869af3206d0dff01513",
+  "deployment_workflow_commit": "9f1144e0fafef2c8f8c6dd23712eb25a417cd2b2",
+  "status": "fresh_pages_deployment_requested",
+  "site": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/",
+  "canonical_agents": [
+    "PROMETHEUS",
+    "AIS-Ω",
+    "Adversarial Twin",
+    "SECA",
+    "HYDRA",
+    "ProofGrid",
+    "Capability Genome",
+    "Build Truth"
+  ],
+  "visible_features": [
+    "side-by-side terminal and theatrical mission",
+    "canonical agent handoffs",
+    "moving packet identifiers",
+    "global proof telemetry",
+    "one living graph per canonical agent",
+    "judge challenge mode",
+    "verified-result fast-forward"
+  ]
 }
