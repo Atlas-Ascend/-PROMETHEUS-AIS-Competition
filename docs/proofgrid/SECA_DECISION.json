@@ -1,0 +1,9 @@
+{
+  "decision": "promotion_denied",
+  "failure_signature": "ReplayDetected: duplicate operation rejected",
+  "promotion_reopened_after": [
+    "HYDRA repair",
+    "ProofGrid verification"
+  ],
+  "reason": "Duplicate consequential operation was not replay-safe."
+}
