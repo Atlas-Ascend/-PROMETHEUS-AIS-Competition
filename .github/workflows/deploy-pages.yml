@@ -6,6 +6,8 @@ on:
     paths:
       - 'index.html'
       - 'docs/**'
+      - 'README.md'
+      - 'BUILD_TRUTH.md'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -33,12 +35,29 @@ jobs:
 
       - name: Verify elite public entrypoints
         run: |
+          set -euo pipefail
+
           test -f index.html
           test -f docs/index.html
           test -f docs/assets/elite-demo.css
           test -f docs/assets/elite-demo.js
-          grep -q 'One impossible mission. Eight systems. Three minutes.' index.html
-          grep -q 'One impossible mission. Eight systems. Three minutes.' docs/index.html
+          test -f docs/proofgrid/FINAL_RECEIPT.json
+
+          grep -q 'IGNITE 2:45 DEMONSTRATION' index.html
+          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
+          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' index.html
+          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
+          grep -q 'const stageStarts = \[0, 18, 39, 59, 77, 101, 125, 145\];' docs/assets/elite-demo.js
+          grep -q 'const duration = 165;' docs/assets/elite-demo.js
+          grep -q "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
+
+          node --check docs/assets/elite-demo.js
+
+          if grep -Eni 'elite three-minute|full three-minute|one impossible mission.*three minutes|IGNITE 3:00|T\+03:00|180-second|180 seconds' \
+            index.html docs/index.html docs/assets/elite-demo.js README.md BUILD_TRUTH.md; then
+            echo 'Legacy runtime language detected.'
+            exit 1
+          fi
 
       - name: Upload converged site artifact
         uses: actions/upload-pages-artifact@v3
