@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'docs/**'
+      - '.nojekyll'
       - 'README.md'
       - 'BUILD_TRUTH.md'
       - '.github/workflows/deploy-pages.yml'
@@ -37,6 +38,8 @@ jobs:
         run: |
           set -euo pipefail
 
+          test -f .nojekyll
+          test -f docs/.nojekyll
           test -f index.html
           test -f docs/index.html
           test -f docs/assets/elite-demo.css
