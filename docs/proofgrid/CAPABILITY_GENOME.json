@@ -1,0 +1,19 @@
+{
+  "applicability": [
+    "stable operation ID",
+    "deterministic payload hash",
+    "consequential side effect"
+  ],
+  "exclusions": [
+    "conflicting payload under the same operation ID"
+  ],
+  "genome_id": "PG-CG-REPLAY-GUARD-001",
+  "repair_strategy": "enable_idempotent_replay_guard",
+  "reuse": {
+    "improvement": "1 failed action → 0 failed actions",
+    "outcome": "replay_safely_ignored",
+    "task": "PROM-COMP-002 · Publish replay-safe release manifest"
+  },
+  "title": "Replay-safe consequential operation",
+  "trigger": "Stable operation ID is invoked more than once."
+}
