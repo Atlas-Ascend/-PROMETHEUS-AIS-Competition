@@ -1,0 +1,63 @@
+name: Verify Live PROMETHEUS Operator Console
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/live-site-verify.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Wait for and verify deployed operator console
+        run: |
+          set -euo pipefail
+          URL="https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/"
+          for attempt in $(seq 1 24); do
+            echo "Live verification attempt ${attempt}/24"
+            if curl -fsSL --retry 2 --retry-delay 2 "${URL}?release=d946c70" -o /tmp/index.html; then
+              if grep -q "PROMETHEUS · Operator Console" /tmp/index.html \
+                && grep -q "The entire proof chain, synchronized" /tmp/index.html \
+                && grep -q "Eight systems, eight distinct visual languages" /tmp/index.html \
+                && grep -q "From EDEN local execution to public verified evidence" /tmp/index.html \
+                && grep -q "assets/operator-console.css" /tmp/index.html; then
+                break
+              fi
+            fi
+            if [ "$attempt" -eq 24 ]; then
+              echo "Operator Console markers were not live before timeout" >&2
+              exit 1
+            fi
+            sleep 10
+          done
+
+          curl -fsSL "${URL}assets/app.js?release=d946c70" -o /tmp/app.js
+          node --check /tmp/app.js
+
+          curl -fsSL "${URL}data/demo.json?release=d946c70" -o /tmp/demo.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('/tmp/demo.json','utf8'));
+          const expected = ['PROMETHEUS','AIS-Ω','Adversarial Twin','SECA','HYDRA','ProofGrid','Capability Genome','Build Truth'];
+          if (JSON.stringify(data.pipeline.map(x=>x.organ)) !== JSON.stringify(expected)) throw new Error('canonical pipeline drift');
+          if (data.systems.length !== 8) throw new Error('expected eight system visualizations');
+          if (data.telemetry.proof.length !== 8 || data.telemetry.readiness.length !== 8) throw new Error('telemetry incomplete');
+          if (!data.serverforge_case_study || data.serverforge_case_study.flow.length !== 5) throw new Error('ServerForge case study missing');
+          if (!data.serverforge_case_study.privacy_boundary.includes('Private prompts')) throw new Error('IP boundary missing');
+          if (data.proofgrid.tests.passed !== 5 || data.proofgrid.artifacts_verified !== 8) throw new Error('proof snapshot incomplete');
+          console.log('LIVE PROMETHEUS OPERATOR CONSOLE PASS');
+          NODE
+
+          curl -fsSL "${URL}proofgrid/FINAL_RECEIPT.json?release=d946c70" -o /tmp/receipt.json
+          python -m json.tool /tmp/receipt.json > /dev/null
