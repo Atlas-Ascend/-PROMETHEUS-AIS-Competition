@@ -1,34 +1,58 @@
 # PROMETHEUS AIS Competition Edition
 
-PROMETHEUS AIS Competition Edition is the public, judge-ready release of a self-proving, self-repairing AI engineering organism.
+**Repair. Prove. Remember. Evolve.**
 
-It turns a software mission into a command-to-proof chain:
+PROMETHEUS is a self-proving, self-repairing AI engineering system that turns a software mission into an evidence-backed result.
 
-mission → candidate routes → execution → adversarial challenge → SECA block → HYDRA repair → tests → ProofGrid verification → Capability Genome extraction → verified reuse → final promotion.
+This public competition edition executes a complete deterministic Command-to-Proof loop:
 
-## Publication status
+```text
+mission
+→ candidate routes
+→ real bounded failure
+→ SECA promotion block
+→ HYDRA behavioral repair
+→ affected and regression tests
+→ ProofGrid receipt and hashes
+→ Capability Genome extraction
+→ related-task reuse
+→ measured improvement
+```
 
-The public repository has been initialized. The verified competition package is being exported from the private canonical repository through the governed public-release contract.
+## What it proves
 
-Source export directive:
+- SECA blocks unsupported promotion after a duplicate-operation failure.
+- HYDRA changes replay behavior through an idempotent execution guard.
+- ProofGrid creates a receipt whose artifact hashes can be independently verified.
+- Capability Genome `PG-CG-REPLAY-GUARD-001` preserves the repair.
+- A related but non-identical release-manifest task reuses the Genome, reducing failed actions from **1 to 0**.
 
-`build_truth/canonical/PROMETHEUS_WINNING_COMPETITION_PACKAGE_EXPORT.md`
+## Run it
 
-## Expected final package
+```bash
+python -m pip install -e .
+python -m prometheus.cli doctor --json
+python -m prometheus.cli demo reset
+python -m prometheus.cli demo competition
+python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json
+python -m unittest discover -s tests -v
+```
 
-- working command-center interface
-- deterministic competition demo
-- real HYDRA repair proof
-- ProofGrid receipts
-- Capability Genome creation and reuse proof
-- full test suite
-- clean installable package
-- quickstart and judge brief
-- screenshots and video plan
-- public-safe evidence bundle
+## Launch the interface
 
-## Core thesis
+```bash
+python -m prometheus.cli interface competition
+```
 
-PROMETHEUS does not merely generate code. It challenges unsupported success, repairs verified failures, proves the repair, and preserves successful engineering knowledge for reuse.
+Open `http://127.0.0.1:8787/competition/interface/`.
 
-> Repair. Prove. Remember. Evolve.
+## Judge material
+
+- [Quickstart](competition/QUICKSTART.md)
+- [Judge brief](competition/JUDGE_BRIEF.md)
+- [Three-minute demo](competition/DEMO_SCRIPT.md)
+- [Public interface](competition/interface/index.html)
+
+## Public boundary
+
+This repository contains the executable judge-facing competition edition. It intentionally excludes credentials, private operating prompts, local machine state, unrelated estate systems, and patent-sensitive internal material.
