@@ -1,0 +1,12 @@
+{
+  "release": "PROMETHEUS-OPERATOR-CONSOLE-20260721",
+  "status": "release-candidate",
+  "scope": "full page replacement",
+  "canonical_agents": 8,
+  "global_telemetry_series": 4,
+  "role_specific_visualizations": 8,
+  "serverforge_case_study": true,
+  "eden_local_execution_documented": true,
+  "ip_boundary_documented": true,
+  "next_gate": "pull-request validation"
+}
