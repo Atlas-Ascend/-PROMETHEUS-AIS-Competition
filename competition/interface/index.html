@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROMETHEUS V-1.1.1</title>
+<style>
+:root{color-scheme:dark;--o:#08090b;--g:#15191f;--s:#28313c;--t:#f4efe6;--m:#9aa5b2;--e:#ff7618;--gold:#ffc15a;--ok:#55e6a5;--bad:#ff5d68;font-family:Inter,system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--t);background:radial-gradient(circle at 50% -20%,#49200b 0,transparent 38%),linear-gradient(145deg,#07080a,#0d1014)}header{display:flex;justify-content:space-between;gap:24px;align-items:center;padding:24px 4vw;border-bottom:1px solid #ffc15a33;background:#08090be8;position:sticky;top:0;backdrop-filter:blur(16px)}h1,h2,p{margin-top:0}.eyebrow{color:var(--gold);font:800 11px/1 monospace;letter-spacing:.18em}.tag{color:var(--m)}.pill{border:1px solid #55e6a566;border-radius:999px;padding:8px 12px;color:var(--ok);font:700 11px monospace}main{padding:28px 4vw 60px}.grid{display:grid;grid-template-columns:1fr 2fr 1fr;gap:18px}.lower{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}.panel{padding:22px;border:1px solid #ffffff14;border-radius:18px;background:linear-gradient(145deg,#191e25ee,#0c0e12f8);box-shadow:0 20px 60px #0006}.k{color:var(--gold);font:800 11px monospace;letter-spacing:.14em}.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0;list-style:none}.pipeline li{padding:10px;border:1px solid #ffffff14;border-radius:10px;min-height:72px}.pipeline b{display:block;color:var(--gold);font-size:10px}.pipeline span{display:block;margin-top:8px;font-size:11px;color:var(--m)}.metric{padding:9px 0;border-bottom:1px solid #ffffff10}.metric strong{display:block;color:var(--m);font-size:10px;text-transform:uppercase}.metric code,.metric span{display:block;margin-top:4px;font-size:12px;overflow-wrap:anywhere}.bad{color:var(--bad)}.ok{color:var(--ok)}.wide{grid-column:1/-1}.controls{margin-top:18px;display:flex;gap:10px}button{background:#ff76181a;color:var(--t);border:1px solid #ffc15a55;border-radius:10px;padding:10px 14px}.screenshot .controls{display:none}.screenshot *{animation:none!important}@media(max-width:950px){.grid,.lower{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.wide{grid-column:auto}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">◆ PROMETHEUS V-1.1.1</div><h1>The Self-Proving AI Engineering Organism</h1><p class="tag">Repair. Prove. Remember. Evolve.</p></div><div id="ready" class="pill">LOADING EVIDENCE</div></header>
+<main>
+<section class="grid">
+<article class="panel"><p class="k">IGNITION CHAMBER</p><h2>Mission Control</h2><div id="mission"></div></article>
+<article class="panel"><p class="k">COMMAND-TO-PROOF</p><h2>Evidence Pipeline</h2><ol id="pipeline" class="pipeline"></ol></article>
+<article class="panel"><p class="k">LIVE PROOF</p><h2>ProofGrid</h2><div id="proof"></div></article>
+</section>
+<section class="lower">
+<article class="panel"><p class="k bad">THE CHAIN HOLDS</p><h2>SECA</h2><div id="seca"></div></article>
+<article class="panel"><p class="k">REPAIR FORGE</p><h2>HYDRA</h2><div id="hydra"></div></article>
+<article class="panel"><p class="k ok">FLAME PRESERVED</p><h2>Capability Genome</h2><div id="genome"></div></article>
+<article class="panel wide"><p class="k ok">FLAME CARRIED FORWARD</p><h2>Verified Inheritance</h2><div id="reuse"></div></article>
+</section>
+<div class="controls"><button onclick="document.body.classList.toggle('screenshot')">Screenshot mode</button><button onclick="location.reload()">Refresh evidence</button></div>
+</main>
+<script>
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const m=(k,v)=>`<div class="metric"><strong>${esc(k)}</strong><code>${esc(v)}</code></div>`;
+if(new URLSearchParams(location.search).get('screenshot')==='1')document.body.classList.add('screenshot');
+fetch('/artifacts/competition-demo/interface-data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(d=>{
+ready.textContent=d.readiness;mission.innerHTML=m('Mission ID',d.mission.mission_id)+m('Title',d.mission.title)+m('Acceptance gates',d.mission.acceptance.length);
+pipeline.innerHTML=d.pipeline.map(e=>`<li><b>${esc(e.stage.replaceAll('_',' '))}</b><span>${esc(e.state)}</span></li>`).join('');
+proof.innerHTML=m('Receipt',d.proofgrid.receipt_id)+m('Status',d.proofgrid.status)+m('Tests',`${d.proofgrid.tests.passed} passed / ${d.proofgrid.tests.failed} failed`)+m('Improvement',d.proofgrid.measured_improvement)+m('Hash',d.proofgrid.receipt_hash);
+seca.innerHTML=m('Decision',d.seca.decision)+m('Reason',d.seca.reason)+m('Failure',d.seca.failure_signature);
+hydra.innerHTML=m('Repair ID',d.hydra.repair_id)+m('Strategy',d.hydra.strategy)+m('Before',d.hydra.before)+m('After',d.hydra.after);
+genome.innerHTML=m('Genome ID',d.genome.genome_id)+m('Trigger',d.genome.trigger)+m('Strategy',d.genome.repair_strategy)+m('Successful reuse',d.genome.successful_reuse_count);
+reuse.innerHTML=m('Related task',`${d.reuse.task_id}: ${d.reuse.task_title}`)+m('Relationship',d.reuse.relationship)+m('Outcome',d.reuse.outcome)+m('Measured improvement',d.reuse.improvement);
+}).catch(()=>{ready.textContent='RUN DEMO TO GENERATE EVIDENCE';mission.innerHTML=m('Command','python -m prometheus.cli demo competition')});
+</script>
+</body>
+</html>
