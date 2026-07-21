@@ -1,0 +1,11 @@
+{
+  "failed": 0,
+  "passed": 5,
+  "suites": [
+    "first consequential operation executes",
+    "unsafe duplicate fails closed",
+    "idempotent duplicate is safely ignored",
+    "conflicting payload is rejected",
+    "Command-to-Proof receipt verifies"
+  ]
+}
