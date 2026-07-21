@@ -167,7 +167,7 @@
   function setAmbientDial(id, value) {
     const ring = $(`#ambient-${id}-ring`);
     const label = $(`#ambient-${id}`);
-    if (ring) ring.style.setProperty("--value", String(value));
+    if (ring) ring.style.setProperty("--gauge", `${value}%`);
     if (label) label.textContent = `${value}%`;
   }
 
