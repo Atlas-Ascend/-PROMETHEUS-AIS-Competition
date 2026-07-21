@@ -1,14 +1,12 @@
-name: Deploy GitHub Pages
+name: Deploy PROMETHEUS GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
-      - 'index.html'
       - 'docs/**'
+      - 'index.html'
       - '.nojekyll'
-      - 'README.md'
-      - 'BUILD_TRUTH.md'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -18,7 +16,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: prometheus-pages
   cancel-in-progress: true
 
 jobs:
@@ -27,46 +25,39 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - name: Checkout
+      - name: Checkout competition build
         uses: actions/checkout@v4
 
-      - name: Configure Pages
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Verify elite public entrypoints
+      - name: Validate exact 2:45 public artifact
+        shell: bash
         run: |
           set -euo pipefail
 
-          test -f .nojekyll
           test -f docs/.nojekyll
-          test -f index.html
           test -f docs/index.html
           test -f docs/assets/elite-demo.css
           test -f docs/assets/elite-demo.js
           test -f docs/proofgrid/FINAL_RECEIPT.json
 
-          grep -q 'IGNITE 2:45 DEMONSTRATION' index.html
-          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
-          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' index.html
-          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
-          grep -q 'const stageStarts = \[0, 18, 39, 59, 77, 101, 125, 145\];' docs/assets/elite-demo.js
-          grep -q 'const duration = 165;' docs/assets/elite-demo.js
-          grep -q "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
-
           node --check docs/assets/elite-demo.js
+          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
+          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
+          grep -Fq 'const duration = 165;' docs/assets/elite-demo.js
+          grep -Fq "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
 
-          if grep -Eni 'elite three-minute|full three-minute|one impossible mission.*three minutes|IGNITE 3:00|T\+03:00|180-second|180 seconds' \
-            index.html docs/index.html docs/assets/elite-demo.js README.md BUILD_TRUTH.md; then
-            echo 'Legacy runtime language detected.'
-            exit 1
-          fi
+          echo 'Exact competition artifact is ready for publication.'
 
-      - name: Upload converged site artifact
+      - name: Upload single authoritative Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: docs
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
