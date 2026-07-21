@@ -1,0 +1,177 @@
+{
+  "identity": {
+    "issuer": "Ghost Atlas Institute",
+    "issuer_role": "Project systems-research and technical publication body",
+    "report_id": "GAI-FR-20260721-PROM-SF-001",
+    "classification": "PUBLIC COMPETITION FIELD REPORT",
+    "title": "PROMETHEUS Forge: Live ServerForge Case Study",
+    "subject": "EDEN local execution, PROMETHEUS governance, ServerForge observability, and public proof delivery",
+    "evidence_status": "SCREENSHOT-GROUNDED · REPOSITORY-VERIFIED · LIVE-NODE-VERIFIED",
+    "scope_note": "The report establishes observable behavior and evidence lineage without claiming academic accreditation, exposing private orchestration, or disclosing patent-sensitive implementation details."
+  },
+  "observed_server": {
+    "name": "PROMETHEUS Forge — Live Case Study",
+    "platform": "Discord",
+    "function": "Persistent observability, proof indexing, incident lineage, and judge-facing case-study publication for the PROMETHEUS competition campaign.",
+    "application": "Prometheus Server Forge",
+    "observed_channel": "#live-case-study",
+    "observation_basis": "Two creator-supplied mobile screenshots showing the server channel architecture and an application-authored campaign receipt publication.",
+    "capture_state": "The live-case-study channel displayed one application publication and one online member at the moment of capture. This is an observed state, not a claim of continuous uptime."
+  },
+  "evidence_objects": [
+    {
+      "id": "E-01",
+      "type": "SERVER TOPOLOGY CAPTURE",
+      "title": "PROMETHEUS Forge channel architecture",
+      "observation": "The server separates orientation, live case-study publication, proof indexing, mission control, adversarial work, ProofGrid, bridge control, telemetry, and incident/rollback operations.",
+      "significance": "Functional channel separation supports traceability and reduces ambiguity between narrative, proof, operations, and recovery records."
+    },
+    {
+      "id": "E-02",
+      "type": "APPLICATION PUBLICATION CAPTURE",
+      "title": "Prometheus Server Forge deployment receipt",
+      "observation": "The Prometheus Server Forge application published a PROMETHEUS V-1.1.1 LIVE campaign message stating that HYDRA gates completed and the ServerForge deployment was promoted.",
+      "significance": "The message binds a named campaign, promotion statement, application identity, timestamp, and receipt digest into a persistent external observability surface."
+    },
+    {
+      "id": "E-03",
+      "type": "PUBLIC REPOSITORY EVIDENCE",
+      "title": "Executable Command-to-Proof implementation",
+      "observation": "The public repository contains the executable mission, replay guard, tests, ProofGrid receipts, Capability Genome, interface, and CI validation paths.",
+      "significance": "The Discord evidence is corroborative rather than standing alone; executable artifacts and repository history provide the primary inspection surface."
+    },
+    {
+      "id": "E-04",
+      "type": "LIVE NODE VERIFICATION",
+      "title": "GitHub Pages operator console",
+      "observation": "A clean GitHub runner fetched the deployed HTML, JavaScript, case-study data, and public ProofGrid receipt and returned a live verification pass.",
+      "significance": "The judge-facing evidence surface is independently reachable when the EDEN local machine is offline."
+    }
+  ],
+  "observed_receipt": {
+    "message_title": "PROMETHEUS V-1.1.1 — LIVE",
+    "displayed_time": "07/18/2026 7:38 PM",
+    "campaign_id": "HYDRA-SERVERFORGE-20260719T023826Z",
+    "statement": "completed the HYDRA gates and promoted the ServerForge deployment",
+    "serverforge_receipt": "26ccd3be5d15b170e24e54855db50f747ebf3c2fbfccac3622fb629b07665ffc",
+    "forensic_note": "The Discord-displayed local minute and the UTC-form campaign identifier are consistent with a possible UTC-7 relationship. This is a timestamp-consistency observation, not a claim about the device timezone.",
+    "separation_note": "This is the ServerForge deployment receipt observed in Discord. It is distinct from the current ProofGrid mission receipt published by the competition repository."
+  },
+  "channel_architecture": [
+    {
+      "category": "00 — START HERE",
+      "purpose": "Orientation, public narrative, and proof discovery",
+      "channels": [
+        {"name":"#welcome-to-the-forge","role":"Entry point and operating context"},
+        {"name":"#live-case-study","role":"Chronological application-authored case-study publications"},
+        {"name":"#proof-index","role":"Evidence discovery and receipt navigation"}
+      ]
+    },
+    {
+      "category": "01 — MISSION CONTROL",
+      "purpose": "Mission coordination and campaign-state communication",
+      "channels": [],
+      "observation": "Category observed in the supplied capture; its internal channels were not expanded and are not inferred."
+    },
+    {
+      "category": "02 — ADVERSARIAL TWIN",
+      "purpose": "Failure reproduction and adversarial campaign records",
+      "channels": [],
+      "observation": "Category observed in the supplied capture; its internal channels were not expanded and are not inferred."
+    },
+    {
+      "category": "03 — PROOFGRID",
+      "purpose": "Verification, receipts, evidence integrity, and proof publication",
+      "channels": [],
+      "observation": "Category observed in the supplied capture; its internal channels were not expanded and are not inferred."
+    },
+    {
+      "category": "04 — SERVERFORGE OPS",
+      "purpose": "Transport, telemetry, incident response, and rollback lineage",
+      "channels": [
+        {"name":"#bridge-control","role":"Observability transport and publication bridge operations"},
+        {"name":"#telemetry","role":"Operational measurements and runtime state reporting"},
+        {"name":"#incidents-and-rollback","role":"Failure handling, recovery, and rollback documentation"}
+      ]
+    }
+  ],
+  "execution_chain": [
+    {"label":"01 · EDEN","name":"Local execution body","detail":"Windows-based project workspace, command environment, tools, repository access, and executable runtime used to perform the engineering work."},
+    {"label":"02 · CODEX","name":"Implementation accelerator","detail":"Worked against the real competition repository to implement, debug, integrate, test, and harden the executable package and public interface."},
+    {"label":"03 · PROMETHEUS","name":"Command-to-Proof authority","detail":"Admitted the mission, evaluated routes, reproduced failure, denied unsupported promotion, changed behavior, verified evidence, and authorized the proven state."},
+    {"label":"04 · SERVERFORGE","name":"Observability and case-study transport","detail":"Published sanitized campaign events, deployment receipts, operational state, recovery context, and evidence lineage to the Discord case-study server."},
+    {"label":"05 · PUBLIC NODE","name":"Independent proof surface","detail":"GitHub Pages publishes the deterministic operator console, ProofGrid receipts, Capability Genome, case study, and judge documentation independently of EDEN uptime."}
+  ],
+  "methodology": [
+    {"phase":"M1 · SOURCE OBSERVATION","detail":"Record only visible server structure, message content, identifiers, timestamps, and application identity from the supplied captures."},
+    {"phase":"M2 · OBJECT SEPARATION","detail":"Keep the ServerForge deployment receipt distinct from the ProofGrid mission receipt and distinguish Discord observation from repository verification."},
+    {"phase":"M3 · CORROBORATION","detail":"Cross-reference the observed deployment narrative against executable repository artifacts, CI results, public receipts, and live-node verification."},
+    {"phase":"M4 · CLAIM CONTROL","detail":"State only what each evidence object supports; do not infer hidden channel contents, continuous uptime, undisclosed integrations, or proprietary mechanisms."},
+    {"phase":"M5 · PUBLICATION BOUNDARY","detail":"Publish roles, observable transitions, verification outcomes, and sanitized lineage while withholding private prompts, credentials, paths, routing logic, and patent-sensitive mechanisms."}
+  ],
+  "timeline": [
+    {"time":"T-FOUNDATION","actor":"GHOST ATLAS INSTITUTE","event":"Defined the public field-report method, claim boundary, and evidence classification for the competition case study."},
+    {"time":"T+00:00","actor":"EDEN","event":"Real local competition repository and executable development environment staged."},
+    {"time":"T+00:18","actor":"CODEX","event":"CLI, deterministic mission, tests, proof artifacts, operator console, and deployment controls implemented against the repository."},
+    {"time":"T+01:04","actor":"PROMETHEUS","event":"Candidate routes evaluated; bounded replay failure reproduced; unsupported promotion denied."},
+    {"time":"T+01:26","actor":"HYDRA","event":"Idempotent replay guard changed runtime behavior from exception to safe identical replay handling."},
+    {"time":"T+01:52","actor":"PROOFGRID","event":"Five tests and eight public evidence artifacts verified; mission receipt sealed."},
+    {"time":"2026-07-19T02:38:26Z","actor":"SERVERFORGE","event":"Discord campaign identifier records the HYDRA-SERVERFORGE deployment event; the visible message reports HYDRA gate completion and deployment promotion."},
+    {"time":"T+02:12","actor":"SERVERFORGE","event":"Sanitized campaign state and receipt lineage persisted to the live case-study observability surface."},
+    {"time":"T+02:30","actor":"BUILD TRUTH","event":"Capability reuse verified and promotion authorized for the evidence-supported state."},
+    {"time":"LIVE CHECK","actor":"GITHUB ACTIONS","event":"Clean runner verified the deployed operator console, JavaScript, canonical agent data, telemetry, case-study data, IP boundary, proof totals, and public receipt."}
+  ],
+  "findings": [
+    "The case study is attached to a real persistent Discord server rather than a purely illustrative web mockup.",
+    "A named application, Prometheus Server Forge, published a campaign-specific deployment record to #live-case-study.",
+    "The visible server architecture separates onboarding, narrative publication, proof indexing, mission operations, adversarial records, ProofGrid, transport, telemetry, and rollback concerns.",
+    "The observed ServerForge deployment receipt and the public ProofGrid mission receipt are separate evidence objects with separate purposes.",
+    "The Discord evidence is corroborated by executable repository code, tests, artifact hashes, CI history, and an independently reachable public node.",
+    "PROMETHEUS demonstrates fail-closed behavior: the system records a failure and denies its own promotion before repair and verification.",
+    "ServerForge contributes credibility through externalized operational lineage, but release authority remains with the PROMETHEUS proof chain and Build Truth.",
+    "EDEN demonstrates that the work occurred in a real local engineering environment; the public node demonstrates that inspection does not depend on that machine remaining online.",
+    "Ghost Atlas credibility comes from disciplined object separation, explicit limitations, reproducible verification paths, and refusal to present private architecture as publicly proven fact.",
+    "The public case study communicates institutional engineering maturity without disclosing the mechanisms that constitute protected intellectual property."
+  ],
+  "limitations": [
+    "The screenshots establish the observed Discord state at capture time; they do not independently establish continuous availability before or after capture.",
+    "Collapsed Discord categories prove category presence only. Their internal channels and contents are not inferred.",
+    "The ServerForge message proves that the application published the displayed statement and receipt; the repository and CI provide the stronger technical corroboration for executable behavior.",
+    "No claim is made that Discord itself executes PROMETHEUS. Discord is the observability and case-study publication surface.",
+    "Ghost Atlas Institute is presented as the project’s systems-research and technical publication body, not as an external accreditation claim."
+  ],
+  "credibility_model": [
+    {"principle":"PROVENANCE","test":"Can the origin of the claim be identified?","implementation":"Evidence IDs, application identity, campaign ID, timestamps, receipt digests, repository history, and live-node checks."},
+    {"principle":"SEPARATION","test":"Are different systems and receipts kept distinct?","implementation":"ServerForge deployment receipt, ProofGrid mission receipt, Discord observation, executable verification, and public presentation are separately labeled."},
+    {"principle":"CORROBORATION","test":"Does more than one evidence surface support the narrative?","implementation":"Screenshots, repository artifacts, CI, public receipts, and GitHub Pages verification converge on the same bounded claims."},
+    {"principle":"FAIL-CLOSED CLAIMS","test":"Does uncertainty reduce the claim rather than inflate it?","implementation":"Unexpanded categories are not invented; uptime is not generalized; private transports are not described; unsupported promotion remains blocked."},
+    {"principle":"REPRODUCIBILITY","test":"Can a judge inspect beyond the story?","implementation":"Executable CLI, tests, receipt verification, evidence verification, claims verification, submission check, and machine-readable public artifacts."},
+    {"principle":"DISCLOSURE CONTROL","test":"Is credibility achieved without surrendering proprietary internals?","implementation":"Observable behavior and evidence are public; prompts, credentials, routes, local paths, recursive mechanisms, and patent-sensitive algorithms remain withheld."}
+  ],
+  "ip_boundary": {
+    "disclosed": [
+      "Canonical system responsibilities and state transitions",
+      "Observed Discord channel architecture and application publication",
+      "Campaign and receipt identifiers already visible in the supplied evidence",
+      "Bounded failure and repair behavior needed to understand the demonstration",
+      "Public test totals, artifact totals, receipt lineage, and live-node verification",
+      "High-level EDEN-to-ServerForge-to-public-node topology"
+    ],
+    "withheld": [
+      "Private prompts and orchestration instructions",
+      "Credentials, bot tokens, webhooks, server IDs, and private invitation links",
+      "Private machine paths, local state, and unpublished repositories",
+      "Proprietary routing, recursive self-modification, and autonomous recovery internals",
+      "Patent-sensitive algorithms and implementation mechanisms",
+      "Unrelated Ghost Atlas estate architecture"
+    ]
+  },
+  "recording_sequence": [
+    "Show the Operator Console case-study heading and Ghost Atlas Institute report identity.",
+    "Show the five-node EDEN → Codex → PROMETHEUS → ServerForge → Public Node chain.",
+    "Show the sanitized Discord server architecture and identify #live-case-study, #proof-index, #telemetry, and #incidents-and-rollback.",
+    "Show the ServerForge deployment receipt exhibit and explicitly distinguish it from the ProofGrid mission receipt.",
+    "Show the findings and credibility model, then open the machine-readable ProofGrid receipt or Judge Challenge Mode.",
+    "Close by stating that the case study proves observable engineering lineage while preserving protected implementation details."
+  ]
+}
