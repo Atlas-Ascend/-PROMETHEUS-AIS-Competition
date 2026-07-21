@@ -1,0 +1,3 @@
+PROMETHEUS GitHub Pages deployment trigger
+Activated after GitHub Pages source was set to GitHub Actions.
+Date: 2026-07-21
