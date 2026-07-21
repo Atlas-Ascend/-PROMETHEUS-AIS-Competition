@@ -1,0 +1,23 @@
+{
+  "schema": "prometheus.serverforge.publication-envelope.v1",
+  "campaign": "PROMETHEUS-COMPETITION-FINAL",
+  "publisher": "Prometheus Server Forge",
+  "destination": {
+    "server": "PROMETHEUS Forge — Live Case Study",
+    "primary_channel": "#live-case-study",
+    "proof_channel": "#proof-index"
+  },
+  "transport": {
+    "authority": "EDEN",
+    "mode": "EXISTING_SERVERFORGE_CONNECTION",
+    "credentials_embedded": false,
+    "webhook_embedded": false,
+    "reconfiguration_required": false
+  },
+  "publication": {
+    "state": "READY_FOR_SERVERFORGE",
+    "payload": "docs/data/case-study.json",
+    "receipt_required": true,
+    "proof_index_required": true
+  }
+}
