@@ -1,0 +1,24 @@
+name: Command-to-Proof CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e .
+      - run: python -m unittest discover -s tests -v
+      - run: python -m prometheus.cli doctor --json
+      - run: python -m prometheus.cli demo reset
+      - run: python -m prometheus.cli demo competition
+      - run: python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json
+      - run: python -m prometheus.cli contest claims-verify
+      - run: python -m prometheus.cli contest evidence-verify
+      - run: python -m prometheus.cli contest submission-check
