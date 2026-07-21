@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: Deploy PROMETHEUS 2:45 Demo
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
     paths:
       - 'index.html'
       - 'docs/**'
-      - '.nojekyll'
       - 'README.md'
       - 'BUILD_TRUTH.md'
       - '.github/workflows/deploy-pages.yml'
@@ -18,7 +17,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: prometheus-pages
   cancel-in-progress: true
 
 jobs:
@@ -27,46 +26,147 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Checkout
+      - name: Checkout canonical main
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-      - name: Verify elite public entrypoints
+      - name: Verify canonical 2:45 public artifact
         run: |
           set -euo pipefail
 
-          test -f .nojekyll
           test -f docs/.nojekyll
-          test -f index.html
           test -f docs/index.html
           test -f docs/assets/elite-demo.css
           test -f docs/assets/elite-demo.js
+          test -f docs/data/elite-demo-live-release.json
           test -f docs/proofgrid/FINAL_RECEIPT.json
 
-          grep -q 'IGNITE 2:45 DEMONSTRATION' index.html
-          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
-          grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' index.html
           grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' docs/index.html
+          grep -q 'IGNITE 2:45 DEMONSTRATION' docs/index.html
+          grep -q '<span>2:45.</span>' docs/index.html
           grep -q 'const stageStarts = \[0, 18, 39, 59, 77, 101, 125, 145\];' docs/assets/elite-demo.js
           grep -q 'const duration = 165;' docs/assets/elite-demo.js
           grep -q "const finalClock = 'T+02:45';" docs/assets/elite-demo.js
+          grep -q '"duration_seconds": 165' docs/data/elite-demo-live-release.json
+          grep -q '"final_clock": "T+02:45"' docs/data/elite-demo-live-release.json
 
           node --check docs/assets/elite-demo.js
+          python -m json.tool docs/data/elite-demo-live-release.json > /dev/null
+          python -m json.tool docs/proofgrid/FINAL_RECEIPT.json > /dev/null
 
-          if grep -Eni 'elite three-minute|full three-minute|one impossible mission.*three minutes|IGNITE 3:00|T\+03:00|180-second|180 seconds' \
-            index.html docs/index.html docs/assets/elite-demo.js README.md BUILD_TRUTH.md; then
-            echo 'Legacy runtime language detected.'
+          if grep -Eni 'elite three-minute|full three-minute|one impossible mission.*three minutes|IGNITE 3:00|T\+03:00|180-second|180 seconds|"duration_seconds"[[:space:]]*:[[:space:]]*180' \
+            docs/index.html docs/assets/elite-demo.js docs/data/elite-demo-live-release.json; then
+            echo 'Legacy 3:00 runtime language detected in the public artifact.'
             exit 1
           fi
 
-      - name: Upload converged site artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
+      - name: Stamp deployed revision
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
 
-      - name: Deploy to GitHub Pages
+          payload = {
+              "interface": "PROMETHEUS Elite Command-to-Proof Demonstration",
+              "release_id": "PROMETHEUS-ELITE-DEMO-2-45-20260721",
+              "revision": os.environ["GITHUB_SHA"],
+              "deployed_at": datetime.now(timezone.utc).isoformat(),
+              "status": "DEPLOYED",
+              "site": "https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/",
+              "deployment_path": "docs/",
+              "duration_seconds": 165,
+              "final_clock": "T+02:45",
+              "mission": "PROM-COMP-EDGE-001",
+              "systems": ["PROMETHEUS", "AIS-Ω", "Adversarial Twin", "SECA", "HYDRA", "ProofGrid", "Capability Genome", "Build Truth"],
+              "proof": {"candidate_routes": 3, "edge_conditions": 7, "tests": "5/5", "artifacts": "8/8", "blockers": 0}
+          }
+          Path("docs/deployment-status.json").write_text(
+              json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload canonical docs artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+      - name: Deploy canonical site
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-live:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Wait for the 2:45 release and verify the public URL
+        env:
+          SITE_URL: https://atlas-ascend.github.io/-PROMETHEUS-AIS-Competition/
+        run: |
+          set -euo pipefail
+
+          live=0
+          for attempt in $(seq 1 48); do
+            echo "Live verification attempt ${attempt}/48"
+            if curl -fsSL --retry 2 --retry-delay 1 -H 'Cache-Control: no-cache' \
+              "${SITE_URL}?release=${GITHUB_SHA}&attempt=${attempt}" -o /tmp/index.html; then
+              if grep -q 'ELITE 2:45 COMMAND-TO-PROOF DEMONSTRATION' /tmp/index.html \
+                && grep -q 'IGNITE 2:45 DEMONSTRATION' /tmp/index.html \
+                && grep -q '<span>2:45.</span>' /tmp/index.html; then
+                live=1
+                break
+              fi
+            fi
+            sleep 5
+          done
+
+          if [ "$live" -ne 1 ]; then
+            echo 'The canonical 2:45 page did not become visible before timeout.' >&2
+            exit 1
+          fi
+
+          curl -fsSL -H 'Cache-Control: no-cache' "${SITE_URL}assets/elite-demo.js?release=${GITHUB_SHA}" -o /tmp/elite-demo.js
+          curl -fsSL -H 'Cache-Control: no-cache' "${SITE_URL}assets/elite-demo.css?release=${GITHUB_SHA}" -o /tmp/elite-demo.css
+          curl -fsSL -H 'Cache-Control: no-cache' "${SITE_URL}data/elite-demo-live-release.json?release=${GITHUB_SHA}" -o /tmp/release.json
+          curl -fsSL -H 'Cache-Control: no-cache' "${SITE_URL}deployment-status.json?release=${GITHUB_SHA}" -o /tmp/deployment-status.json
+          curl -fsSL -H 'Cache-Control: no-cache' "${SITE_URL}proofgrid/FINAL_RECEIPT.json?release=${GITHUB_SHA}" -o /tmp/receipt.json
+
+          node --check /tmp/elite-demo.js
+          python -m json.tool /tmp/release.json > /dev/null
+          python -m json.tool /tmp/deployment-status.json > /dev/null
+          python -m json.tool /tmp/receipt.json > /dev/null
+
+          grep -q 'const duration = 165;' /tmp/elite-demo.js
+          grep -q "const finalClock = 'T+02:45';" /tmp/elite-demo.js
+          grep -q '"duration_seconds": 165' /tmp/release.json
+          grep -q '"final_clock": "T+02:45"' /tmp/release.json
+          grep -q '"status": "DEPLOYED"' /tmp/deployment-status.json
+          grep -q "${GITHUB_SHA}" /tmp/deployment-status.json
+
+          if grep -Eni 'elite three-minute|full three-minute|IGNITE 3:00|T\+03:00|180-second|180 seconds|"duration_seconds"[[:space:]]*:[[:space:]]*180' \
+            /tmp/index.html /tmp/elite-demo.js /tmp/release.json; then
+            echo 'Legacy 3:00 content remains on the public URL.' >&2
+            exit 1
+          fi
+
+          echo 'LIVE PROMETHEUS 2:45 PAGE VERIFIED'
