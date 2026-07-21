@@ -1,7 +1,7 @@
 {
   "release": "PROMETHEUS-ELITE-DEMO-LIVE",
   "mission": "PROM-COMP-EDGE-001",
-  "duration_seconds": 180,
+  "duration_seconds": 165,
   "systems": [
     "PROMETHEUS",
     "AIS-Ω",
