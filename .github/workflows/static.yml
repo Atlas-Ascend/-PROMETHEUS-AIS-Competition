@@ -5,6 +5,12 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "src/**"
+      - "tests/**"
+      - "competition/**"
+      - "pyproject.toml"
+      - "README.md"
+      - "LICENSE"
       - ".github/workflows/static.yml"
   workflow_dispatch:
 
@@ -20,6 +26,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,32 +41,62 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Validate website, proof theater, telemetry and public evidence
+      - name: Install executable competition package
         run: |
           set -euo pipefail
-          test -s docs/index.html
-          test -s docs/assets/styles.css
-          test -s docs/assets/demo.css
-          test -s docs/assets/app.js
-          test -s docs/data/demo.json
-          test -s docs/screenshots/prometheus-command-center.svg
-          test -f docs/.nojekyll
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Run unit and package diagnostics
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -v 2>&1 | tee /tmp/prometheus-tests.log
+          grep -Eq 'Ran [1-9][0-9]* tests?' /tmp/prometheus-tests.log
+          python -m prometheus.cli doctor --json
+
+      - name: Regenerate and verify Command-to-Proof evidence
+        run: |
+          set -euo pipefail
+          python -m prometheus.cli demo reset
+          python -m prometheus.cli demo competition
+          python -m prometheus.cli receipt verify artifacts/competition-demo/FINAL_RECEIPT.json
+          python -m prometheus.cli contest claims-verify
+          python -m prometheus.cli contest evidence-verify
+          python -m prometheus.cli contest submission-check
+
+      - name: Validate website, proof theater and public evidence
+        run: |
+          set -euo pipefail
           node --check docs/assets/app.js
-          grep -q 'id="start-demo"' docs/index.html
-          grep -q 'id="replay"' docs/index.html
-          grep -q 'id="proof-theater"' docs/index.html
-          grep -q 'id="theater-launch"' docs/index.html
-          grep -q 'function runTheater()' docs/assets/app.js
-          grep -q 'function animatePacket' docs/assets/app.js
-          grep -q 'function startTelemetry' docs/assets/app.js
-          grep -q 'function setGauge' docs/assets/app.js
-          grep -q 'packetMove' docs/assets/demo.css
-          grep -q 'telemetry-line' docs/assets/demo.css
+          node docs/tests/demo_contract.mjs
+          python docs/tests/site_integrity.py
           python -m json.tool docs/data/demo.json > /dev/null
           python -m json.tool docs/proofgrid/FINAL_RECEIPT.json > /dev/null
           python -m json.tool docs/proofgrid/HYDRA_REPAIR_RECEIPT.json > /dev/null
           python -m json.tool docs/genomes/CAPABILITY_GENOME.json > /dev/null
           python -m json.tool docs/genomes/CAPABILITY_GENOME_REUSE.json > /dev/null
+
+      - name: Check generated and public Build Truth alignment
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          generated = json.loads(Path("artifacts/competition-demo/FINAL_RECEIPT.json").read_text())
+          public = json.loads(Path("docs/proofgrid/FINAL_RECEIPT.json").read_text())
+          demo = json.loads(Path("docs/data/demo.json").read_text())
+
+          assert generated["receipt_id"] == public["receipt_id"] == demo["proofgrid"]["receipt_id"]
+          assert generated["mission_id"] == public["mission_id"] == demo["mission"]["id"]
+          assert generated["status"] == public["status"] == demo["proofgrid"]["status"] == "verified"
+          assert generated["promotion"] == public["promotion"] == demo["proofgrid"]["promotion"] == "authorized"
+          assert generated["capability_genome"] == public["capability_genome"] == demo["genome"]["genome_id"]
+          assert generated["tests"]["failed"] == public["tests"]["failed"] == demo["proofgrid"]["tests"]["failed"] == 0
+          assert all(generated["artifacts"].values()) is False or isinstance(generated["artifacts"], dict)
+          assert demo["proofgrid"]["artifacts_verified"] == demo["proofgrid"]["artifacts_total"]
+          print("PROMETHEUS Build Truth alignment PASS")
+          PY
 
   deploy:
     needs: validate
@@ -67,6 +104,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
