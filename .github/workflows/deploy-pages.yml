@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'index.html'
       - 'docs/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
@@ -30,10 +31,19 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload site artifact
+      - name: Verify elite public entrypoints
+        run: |
+          test -f index.html
+          test -f docs/index.html
+          test -f docs/assets/elite-demo.css
+          test -f docs/assets/elite-demo.js
+          grep -q 'One impossible mission. Eight systems. Three minutes.' index.html
+          grep -q 'One impossible mission. Eight systems. Three minutes.' docs/index.html
+
+      - name: Upload converged site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
