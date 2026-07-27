@@ -1,0 +1,122 @@
+{
+  "schema": "ghost-atlas.public-observatory-state.v1",
+  "generated_at": "2026-07-27T23:53:24Z",
+  "classification": "PUBLIC_SAFE_READ_ONLY",
+  "product": {
+    "name": "OmniMind 4.0.2",
+    "surface": "Proof Cockpit",
+    "freeze_id": "OMNIMIND-4.0.2-CANONICAL-INTERFACE",
+    "status": "REMOTE_DELIVERY_IMPLEMENTED_PHYSICAL_ACCEPTANCE_PENDING",
+    "visual_contract": "FROZEN",
+    "observation_mode": true
+  },
+  "sources": {
+    "mothership": {
+      "repository": "Atlas-Ascend/Mothership",
+      "main_sha": "fba474860006c1168c216c4c269f014c6663af17",
+      "state": "REMOTE_DELIVERY_IMPLEMENTED"
+    },
+    "janus_prime": {
+      "repository": "Atlas-Ascend/Janus-Prime",
+      "main_sha": "739109d9c36c89fef64660aaad33088c782c69cd",
+      "state": "OMNIMIND_4_0_2_KERNEL_BOUND"
+    },
+    "public_projection": {
+      "repository": "Atlas-Ascend/-PROMETHEUS-AIS-Competition",
+      "main_sha": "e13c5151f3ae4ef2f2858e8bac7cf1b11f6191b4"
+    }
+  },
+  "estate": {
+    "registered_organs": 18,
+    "workspace_count": 22,
+    "architecture": "human-directed command-to-proof estate",
+    "runtime_classification": "PRIVATE",
+    "public_projection_classification": "OBSERVATION_ONLY"
+  },
+  "workspaces": [
+    {"id":"OM-P01","key":"home","name":"Mothership Home","wing":"Command","state":"BLUEPRINTED"},
+    {"id":"OM-P02","key":"pairing","name":"Pairing & Identity Center","wing":"Command","state":"PHYSICAL_GATE"},
+    {"id":"OM-P03","key":"navi","name":"NAVI-LX Command Deck","wing":"Command","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P04","key":"atlas","name":"Atlas Mission Preview","wing":"Command","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P05","key":"janus","name":"Janus Approval Chamber","wing":"Command","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P06","key":"packets","name":"CrownGrid / Packet OS","wing":"Command","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P07","key":"estate","name":"Estate Control Plane","wing":"Estate","state":"BLUEPRINTED"},
+    {"id":"OM-P08","key":"workforce","name":"Workforce & Campaigns","wing":"Estate","state":"BLUEPRINTED"},
+    {"id":"OM-P09","key":"github","name":"GitHub Supply Chain","wing":"Engineering","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P10","key":"sdlc","name":"Full SDLC Mission","wing":"Engineering","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P11","key":"prometheus","name":"PROMETHEUS","wing":"Verification","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P12","key":"seca","name":"SECA / DevOS","wing":"Verification","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P13","key":"medusa","name":"Medusa Security","wing":"Verification","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P14","key":"proof","name":"ProofGrid Explorer","wing":"Proof","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P15","key":"thoth","name":"Thoth Memory","wing":"Proof","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P16","key":"osiris","name":"Osiris Recovery","wing":"Proof","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P17","key":"metaforge","name":"MetaForge Provenance","wing":"Publication","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P18","key":"serverforge","name":"ServerForge Publication","wing":"Publication","state":"REGISTERED"},
+    {"id":"OM-P19","key":"mobile","name":"Advanced Mobile Operations","wing":"Operations","state":"ARTIFACT_BUILT_PHYSICAL_GATE"},
+    {"id":"OM-P20","key":"settings","name":"Settings & Security","wing":"Operations","state":"REPOSITORY_IMPLEMENTED"},
+    {"id":"OM-P21","key":"release","name":"Release & Promotion","wing":"Operations","state":"PROMOTION_LOCKED"},
+    {"id":"OM-P22","key":"console","name":"System Console","wing":"Operations","state":"REPOSITORY_IMPLEMENTED"}
+  ],
+  "features": [
+    {"id":"F02","name":"PAIRING_AND_TRANSPORT","state":"PHYSICAL_GATE","dependency_verified":true,"physically_verified":false},
+    {"id":"F03","name":"COMMAND_AND_AUTHORITY","state":"REPOSITORY_IMPLEMENTED","dependency":"F02","physically_verified":false},
+    {"id":"F04","name":"ESTATE_CONTROL_PLANE","state":"REPOSITORY_IMPLEMENTED","dependency":"F03","physically_verified":false},
+    {"id":"F05","name":"FULL_SDLC","state":"REPOSITORY_IMPLEMENTED","dependency":"F04","physically_verified":false},
+    {"id":"F06","name":"PROOF_MEMORY_RECOVERY","state":"REPOSITORY_IMPLEMENTED","dependency":"F05","physically_verified":false},
+    {"id":"F07","name":"ADVANCED_MOBILE_OPERATIONS","state":"ARTIFACT_BUILT","dependency":"F06","physically_verified":false}
+  ],
+  "construction": {
+    "meta_fate": "MF-20260727-MF01-102",
+    "program": "OmniMind 4.0.2 Master Architectural Blueprint",
+    "completed_through": "remote-first delivery implementation and public observatory projection",
+    "current_phase": "PUBLIC_OBSERVATORY_AND_PHYSICAL_ACCEPTANCE",
+    "page_clearance_claim": "NOT_YET_COMPLETE",
+    "strict_dependency_order": ["F02","F03","F04","F05","F06","F07"]
+  },
+  "proof": {
+    "public_receipts": [
+      {"name":"Canonical OmniMind 4.0.2 release","verdict":"SEALED","coordinate":"Mothership release receipt"},
+      {"name":"Remote delivery implementation","verdict":"REPOSITORY_IMPLEMENTED","source_sha":"fba474860006c1168c216c4c269f014c6663af17"},
+      {"name":"Janus kernel binding","verdict":"PASS","source_sha":"739109d9c36c89fef64660aaad33088c782c69cd"},
+      {"name":"Physical F02 reconnect","verdict":"PENDING","coordinate":"signed reconnect receipt"},
+      {"name":"Final golden mission","verdict":"PENDING","coordinate":"ProofGrid + Thoth + Osiris return"}
+    ],
+    "private_receipts_exposed": false,
+    "secrets_exposed": false
+  },
+  "releases": [
+    {
+      "version": "4.0.2",
+      "name": "OmniMind 4.0.2 Canonical Release",
+      "state": "SEALED",
+      "artifact_sha256": "sha256:a0e848d10d9d7cdbda902e543ebd8f1afab753f40a5ca3145bb46aea148521ff",
+      "signer_certificate_sha256": "sha256:59873cbe3689de29c7bccd7150aadc803badaa2f4beb855d845a4703120bd536",
+      "known_limitations": ["physical pairing receipt pending","remote-sync shell physical installation pending","final golden mission pending"]
+    }
+  ],
+  "current_gate": {
+    "id": "F02_SIGNED_RECONNECT",
+    "state": "PHYSICAL_ACTION_REQUIRED",
+    "public_description": "Physical mobile pairing and signed reconnect evidence remain pending before command authority can be physically verified."
+  },
+  "freshness": {
+    "observed_at": "2026-07-27T23:53:24Z",
+    "source": "sanitized GitHub public projection",
+    "state": "CURRENT_AT_PUBLICATION",
+    "stale_after_seconds": 900
+  },
+  "public_capabilities": {
+    "observation": true,
+    "navigation": true,
+    "filtering": true,
+    "public_report_download": true,
+    "commands": false,
+    "approvals": false,
+    "pairing": false,
+    "repository_mutation": false,
+    "deployment": false,
+    "publication": false,
+    "rollback": false,
+    "promotion": false
+  }
+}
