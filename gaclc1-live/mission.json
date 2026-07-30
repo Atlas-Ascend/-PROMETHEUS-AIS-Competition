@@ -1,0 +1,41 @@
+{
+  "schema": "ghost-atlas.gaclc.mission.v1",
+  "mission_id": "ATS-THERMAL-QUAL-001",
+  "title": "10 kW closed-loop thermal qualification",
+  "simulation_seed": 20260729,
+  "target_thermal_load_kw": 10.0,
+  "test_duration_minutes": 120,
+  "full_load_hold_minutes": 60,
+  "sample_interval_seconds": 30,
+  "coolant": {
+    "name": "water-propylene-glycol-25pct",
+    "specific_heat_kj_kg_k": 3.85,
+    "density_kg_l": 1.03,
+    "initial_inventory_liters": 80.0
+  },
+  "plant": {
+    "design_flow_lpm": 20.0,
+    "supply_setpoint_c": 35.0,
+    "primary_pump_kw": 0.18,
+    "secondary_pump_kw": 0.18,
+    "dry_cooler_kw": 0.42,
+    "controls_kw": 0.08,
+    "heat_recovery_fraction": 0.78
+  },
+  "fault": {
+    "type": "primary_pump_failure",
+    "inject_after_minutes": 86,
+    "detection_seconds": 2.0,
+    "redundant_start_seconds": 18.0
+  },
+  "acceptance": {
+    "max_supply_temperature_c": 40.0,
+    "max_return_temperature_c": 50.0,
+    "max_recovery_seconds": 30.0,
+    "min_heat_capture_fraction": 0.95,
+    "min_useful_heat_fraction": 0.70,
+    "max_external_cooling_water_liters": 0.0,
+    "max_coolant_loss_liters": 0.05,
+    "max_cooling_power_kw": 1.0
+  }
+}
